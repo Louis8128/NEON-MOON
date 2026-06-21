@@ -1,19 +1,14 @@
+import PageHeader from "@/components/PageHeader";
+
 export default function BlogPage() {
   return (
     <main className="min-h-screen bg-slate-950 text-white">
       <section className="mx-auto max-w-4xl px-6 py-20">
-        <p className="mb-4 text-sm font-medium uppercase tracking-[0.3em] text-slate-400">
-          Blog
-        </p>
-
-        <h1 className="mb-6 text-4xl font-bold tracking-tight">
-          My Blog
-        </h1>
-
-        <p className="mb-10 max-w-2xl text-lg leading-8 text-slate-300">
-          This page will be used to publish my technical notes, project logs,
-          life reflections, and long-form articles.
-        </p>
+        <PageHeader
+            eyebrow="Blog"
+            title="My Blog"
+            description="This page will be used to publish my technical notes, project logs, life reflections, and long-form articles."
+        />
 
         <div className="space-y-4">
           <article className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
