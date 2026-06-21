@@ -1,3 +1,5 @@
+import PageHeader from "@/components/PageHeader";
+
 const mediaItems = [
   {
     title: "Interstellar",
@@ -35,19 +37,11 @@ export default function MediaPage() {
   return (
     <main className="min-h-screen bg-slate-950 text-white">
       <section className="mx-auto max-w-6xl px-6 py-20">
-        <p className="mb-4 text-sm font-medium uppercase tracking-[0.3em] text-slate-400">
-          Media Library
-        </p>
-
-        <h1 className="mb-6 text-4xl font-bold tracking-tight">
-          My Media Collection
-        </h1>
-
-        <p className="mb-10 max-w-2xl text-lg leading-8 text-slate-300">
-          A personal collection of music, books, movies, anime, and games that I
-          like. Later, this page will be connected to a MySQL database and
-          support category filtering.
-        </p>
+        <PageHeader
+          eyebrow="Media Library"
+          title="My Media Collection"
+          description="A personal collection of music, books, movies, anime, and games that I like. Later, this page will be connected to a MySQL database and support category filtering."
+        />
 
         <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {mediaItems.map((item) => (

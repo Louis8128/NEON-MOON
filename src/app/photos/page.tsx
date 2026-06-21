@@ -1,3 +1,5 @@
+import PageHeader from "@/components/PageHeader";
+
 const photos = [
   {
     title: "City Night Walk",
@@ -35,19 +37,11 @@ export default function PhotosPage() {
   return (
     <main className="min-h-screen bg-slate-950 text-white">
       <section className="mx-auto max-w-6xl px-6 py-20">
-        <p className="mb-4 text-sm font-medium uppercase tracking-[0.3em] text-slate-400">
-          Photo Wall
-        </p>
-
-        <h1 className="mb-6 text-4xl font-bold tracking-tight">
-          My Photography
-        </h1>
-
-        <p className="mb-10 max-w-2xl text-lg leading-8 text-slate-300">
-          A visual archive of travel, daily life, city walks, and personal
-          memories. Later, this page will display real image files with titles,
-          locations, and descriptions stored in the database.
-        </p>
+        <PageHeader
+          eyebrow="Photo Wall"
+          title="My Photography"
+          description="A visual archive of travel, daily life, city walks, and personal memories. Later, this page will display real image files with titles, locations, and descriptions stored in the database."
+        />
 
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {photos.map((photo) => (
@@ -60,9 +54,7 @@ export default function PhotosPage() {
               </div>
 
               <div className="p-6">
-                <p className="mb-2 text-sm text-slate-500">
-                  {photo.location}
-                </p>
+                <p className="mb-2 text-sm text-slate-500">{photo.location}</p>
 
                 <h2 className="text-2xl font-semibold">{photo.title}</h2>
 
