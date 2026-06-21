@@ -1,0 +1,17 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: neon-moon-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: neon_moon
+      MYSQL_USER: neon_user
+      MYSQL_PASSWORD: neon_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - neon_moon_mysql_data:/var/lib/mysql
+
+volumes:
+  neon_moon_mysql_data:
