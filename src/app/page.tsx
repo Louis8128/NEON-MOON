@@ -1,7 +1,27 @@
+import Link from "next/link";
+
+const featureCards = [
+  {
+    title: "Blog",
+    href: "/blog",
+    description: "Technical notes and life reflections.",
+  },
+  {
+    title: "Media Library",
+    href: "/media",
+    description: "Music, books, movies, anime, and games I like.",
+  },
+  {
+    title: "Photos",
+    href: "/photos",
+    description: "Travel and daily-life photography.",
+  },
+];
+
 export default function Home() {
   return (
     <main className="min-h-screen bg-slate-950 text-white">
-      <section className="mx-auto flex min-h-screen max-w-5xl flex-col justify-center px-6">
+      <section className="mx-auto flex min-h-[calc(100vh-65px)] max-w-5xl flex-col justify-center px-6 py-20">
         <p className="mb-4 text-sm font-medium uppercase tracking-[0.3em] text-slate-400">
           Personal Full-Stack Website
         </p>
@@ -16,26 +36,18 @@ export default function Home() {
         </p>
 
         <div className="mt-10 grid gap-4 sm:grid-cols-3">
-          <div className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
-            <h2 className="text-xl font-semibold">Blog</h2>
-            <p className="mt-2 text-sm text-slate-400">
-              Technical notes and life reflections.
-            </p>
-          </div>
-
-          <div className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
-            <h2 className="text-xl font-semibold">Media Library</h2>
-            <p className="mt-2 text-sm text-slate-400">
-              Music, books, movies, anime, and games I like.
-            </p>
-          </div>
-
-          <div className="rounded-2xl border border-slate-800 bg-slate-900 p-5">
-            <h2 className="text-xl font-semibold">Photos</h2>
-            <p className="mt-2 text-sm text-slate-400">
-              Travel and daily-life photography.
-            </p>
-          </div>
+          {featureCards.map((card) => (
+            <Link
+              key={card.href}
+              href={card.href}
+              className="rounded-2xl border border-slate-800 bg-slate-900 p-5 transition hover:-translate-y-1 hover:border-slate-600 hover:bg-slate-800"
+            >
+              <h2 className="text-xl font-semibold">{card.title}</h2>
+              <p className="mt-2 text-sm text-slate-400">
+                {card.description}
+              </p>
+            </Link>
+          ))}
         </div>
       </section>
     </main>
