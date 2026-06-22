@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import PageHeader from "@/components/PageHeader";
 import { prisma } from "@/lib/prisma";
 
@@ -36,51 +37,58 @@ export default async function PhotosPage() {
           </section>
         ) : (
           <section className="grid gap-6 md:grid-cols-2">
-            {/* Each Photo database record becomes one photo card. */}
-            {/* 数据库照片记录 map 成照片卡片。 */}
+            {/* Each Photo database record becomes one clickable photo card. */}
+            {/* 数据库照片记录 map 成可点击照片卡片。 */}
             {photos.map((photo) => (
-              <article
+              <Link
                 key={photo.id}
-                className="overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/70 shadow-lg shadow-black/20 transition hover:-translate-y-1 hover:border-cyan-400/60"
+                href={`/photos/${photo.id}`}
+                className="group block overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/70 shadow-lg shadow-black/20 transition hover:-translate-y-1 hover:border-cyan-400/60"
               >
-                {/* Real image rendered from public/photos through the database imageUrl. */}
-                {/* 真实图片展示：数据库 imageUrl 对应 public/photos 里的图片文件。 */}
-                <div className="relative h-64 w-full overflow-hidden bg-slate-900">
-                  <Image
-                    src={photo.imageUrl}
-                    alt={photo.title}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                    className="object-cover transition duration-500 hover:scale-105"
-                  />
-                </div>
-
-                <div className="p-6">
-                  <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-                    <h2 className="text-2xl font-bold text-white">
-                      {photo.title}
-                    </h2>
-
-                    {photo.takenAt && (
-                      <span className="rounded-full border border-cyan-400/40 px-3 py-1 text-xs font-semibold text-cyan-300">
-                        {photo.takenAt.toLocaleDateString("en-AU")}
-                      </span>
-                    )}
+                <article>
+                  {/* Real image rendered from public/photos or public/uploads/photos through imageUrl. */}
+                  {/* 真实图片展示：数据库 imageUrl 对应 public/photos 或 public/uploads/photos。 */}
+                  <div className="relative h-64 w-full overflow-hidden bg-slate-900">
+                    <Image
+                      src={photo.imageUrl}
+                      alt={photo.title}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                      className="object-cover transition duration-500 group-hover:scale-105"
+                    />
                   </div>
 
-                  {photo.location && (
-                    <p className="text-sm font-medium text-slate-400">
-                      Location: {photo.location}
-                    </p>
-                  )}
+                  <div className="p-6">
+                    <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+                      <h2 className="text-2xl font-bold text-white">
+                        {photo.title}
+                      </h2>
 
-                  {photo.description && (
-                    <p className="mt-4 text-sm leading-6 text-slate-300">
-                      {photo.description}
+                      {photo.takenAt && (
+                        <span className="rounded-full border border-cyan-400/40 px-3 py-1 text-xs font-semibold text-cyan-300">
+                          {photo.takenAt.toLocaleDateString("en-AU")}
+                        </span>
+                      )}
+                    </div>
+
+                    {photo.location && (
+                      <p className="text-sm font-medium text-slate-400">
+                        Location: {photo.location}
+                      </p>
+                    )}
+
+                    {photo.description && (
+                      <p className="mt-4 text-sm leading-6 text-slate-300">
+                        {photo.description}
+                      </p>
+                    )}
+
+                    <p className="mt-5 text-sm font-semibold text-cyan-300 transition group-hover:text-cyan-200">
+                      View details →
                     </p>
-                  )}
-                </div>
-              </article>
+                  </div>
+                </article>
+              </Link>
             ))}
           </section>
         )}
