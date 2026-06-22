@@ -136,36 +136,36 @@ async function seedPhotos() {
   await prisma.photo.createMany({
     data: [
       {
-        title: "Tokyo Night Street",
-        imageUrl: "/photos/tokyo-night-street.jpg",
-        location: "Tokyo, Japan",
+        title: "Coastal Beach Lookout",
+        imageUrl: "/photos/coastal-beach-lookout.jpg",
+        location: "Queensland, Australia",
         description:
-          "A night street scene with neon lights, quiet corners, and city movement.",
-        takenAt: new Date("2026-01-12"),
+          "A wide coastal view with clear blue water, white waves, and a quiet beach framed by green hills.",
+        takenAt: new Date("2026-06-01"),
       },
       {
-        title: "Brisbane River Walk",
-        imageUrl: "/photos/brisbane-river-walk.jpg",
-        location: "Brisbane, Australia",
+        title: "Ocean Sunset",
+        imageUrl: "/photos/ocean-sunset.jpg",
+        location: "Queensland, Australia",
         description:
-          "A calm walk near the river, with warm light and open sky.",
-        takenAt: new Date("2026-03-20"),
-      },
-      {
-        title: "Coffee and Notes",
-        imageUrl: "/photos/coffee-and-notes.jpg",
-        location: "Home Desk",
-        description:
-          "A simple desk moment with coffee, notes, and unfinished ideas.",
-        takenAt: new Date("2026-05-08"),
-      },
-      {
-        title: "Train Window",
-        imageUrl: "/photos/train-window.jpg",
-        location: "Somewhere in transit",
-        description:
-          "A view from a train window, somewhere between leaving and arriving.",
+          "A warm orange sunset over the ocean, with soft waves and sunlight reflecting across the water.",
         takenAt: new Date("2026-06-02"),
+      },
+      {
+        title: "Moonlit Ocean",
+        imageUrl: "/photos/moonlit-ocean.jpg",
+        location: "Queensland, Australia",
+        description:
+          "A calm night ocean scene with moonlight reflected on the water and distant lights near the horizon.",
+        takenAt: new Date("2026-06-03"),
+      },
+      {
+        title: "Canberra Lake View",
+        imageUrl: "/photos/canberra-lake-view.jpg",
+        location: "Canberra, Australia",
+        description:
+          "A clear view across the lake toward the Australian War Memorial and Mount Ainslie.",
+        takenAt: new Date("2026-06-04"),
       },
     ],
   });

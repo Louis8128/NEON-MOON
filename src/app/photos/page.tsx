@@ -1,3 +1,4 @@
+import Image from "next/image";
 import PageHeader from "@/components/PageHeader";
 import { prisma } from "@/lib/prisma";
 
@@ -42,18 +43,16 @@ export default async function PhotosPage() {
                 key={photo.id}
                 className="overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/70 shadow-lg shadow-black/20 transition hover:-translate-y-1 hover:border-cyan-400/60"
               >
-                {/* Temporary visual placeholder.
-                    Later, this can be replaced with Next.js <Image /> once real image files exist in public/photos. */}
-                {/* 临时图片占位区，之后可替换成真实图片。 */}
-                <div className="flex h-56 items-center justify-center bg-gradient-to-br from-slate-800 via-slate-900 to-cyan-950">
-                  <div className="text-center">
-                    <p className="text-xs font-semibold uppercase tracking-[0.4em] text-cyan-300">
-                      Photo
-                    </p>
-                    <p className="mt-3 text-3xl font-bold text-white">
-                      {photo.title}
-                    </p>
-                  </div>
+                {/* Real image rendered from public/photos through the database imageUrl. */}
+                {/* 真实图片展示：数据库 imageUrl 对应 public/photos 里的图片文件。 */}
+                <div className="relative h-64 w-full overflow-hidden bg-slate-900">
+                  <Image
+                    src={photo.imageUrl}
+                    alt={photo.title}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    className="object-cover transition duration-500 hover:scale-105"
+                  />
                 </div>
 
                 <div className="p-6">
@@ -80,12 +79,6 @@ export default async function PhotosPage() {
                       {photo.description}
                     </p>
                   )}
-
-                  {/* Keep the image path visible during development for debugging. */}
-                  {/* 开发阶段显示图片路径，方便之后接入真实图片。 */}
-                  <p className="mt-4 text-xs text-slate-600">
-                    Image path: {photo.imageUrl}
-                  </p>
                 </div>
               </article>
             ))}
