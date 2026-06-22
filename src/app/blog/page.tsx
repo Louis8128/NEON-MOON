@@ -1,39 +1,73 @@
+import Link from "next/link";
 import PageHeader from "@/components/PageHeader";
+import { prisma } from "@/lib/prisma";
 
-export default function BlogPage() {
+export const dynamic = "force-dynamic";
+
+export default async function BlogPage() {
+  const posts = await prisma.blogPost.findMany({
+    where: {
+      published: true,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
   return (
-    <main className="min-h-screen bg-slate-950 text-white">
-      <section className="mx-auto max-w-4xl px-6 py-20">
+    <main className="min-h-screen bg-slate-950 px-6 py-20 text-white">
+      <div className="mx-auto max-w-5xl">
         <PageHeader
-            eyebrow="Blog"
-            title="My Blog"
-            description="This page will be used to publish my technical notes, project logs, life reflections, and long-form articles."
+          eyebrow="Blog"
+          title="Notes, essays, and development logs"
+          description="A personal writing space for technical notes, reflections, music thoughts, and project updates."
         />
 
-        <div className="space-y-4">
-          <article className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
-            <p className="mb-2 text-sm text-slate-500">Coming soon</p>
-            <h2 className="text-2xl font-semibold">
-              Building My Personal Full-Stack Website
-            </h2>
-            <p className="mt-3 text-slate-400">
-              A development journal about learning Next.js, MySQL, Prisma,
-              Linux deployment, and Raspberry Pi hosting from scratch.
+        {posts.length === 0 ? (
+          <section className="rounded-3xl border border-dashed border-slate-700 bg-slate-900/50 p-10 text-center">
+            <p className="text-lg font-semibold text-slate-200">
+              No blog posts yet.
             </p>
-          </article>
+            <p className="mt-2 text-sm text-slate-400">
+              Add posts to the database and they will appear here.
+            </p>
+          </section>
+        ) : (
+          <section className="space-y-6">
+            {posts.map((post) => (
+              <article
+                key={post.id}
+                className="rounded-3xl border border-slate-800 bg-slate-900/70 p-6 shadow-lg shadow-black/20 transition hover:-translate-y-1 hover:border-cyan-400/60"
+              >
+                <div className="mb-4 flex items-center justify-between gap-4">
+                  <span className="rounded-full border border-cyan-400/40 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-cyan-300">
+                    Published
+                  </span>
 
-          <article className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
-            <p className="mb-2 text-sm text-slate-500">Coming soon</p>
-            <h2 className="text-2xl font-semibold">
-              Notes on Music, Books, and Daily Life
-            </h2>
-            <p className="mt-3 text-slate-400">
-              Personal essays and short reflections about the things I read,
-              watch, listen to, and experience.
-            </p>
-          </article>
-        </div>
-      </section>
+                  <span className="text-xs text-slate-500">
+                    {post.createdAt.toLocaleDateString("en-AU")}
+                  </span>
+                </div>
+
+                <h2 className="text-2xl font-bold text-white">{post.title}</h2>
+
+                {post.excerpt && (
+                  <p className="mt-3 text-sm leading-6 text-slate-300">
+                    {post.excerpt}
+                  </p>
+                )}
+
+                <Link
+                  href={`/blog/${post.slug}`}
+                  className="mt-5 inline-flex text-sm font-semibold text-cyan-300 transition hover:text-cyan-200"
+                >
+                  Read more →
+                </Link>
+              </article>
+            ))}
+          </section>
+        )}
+      </div>
     </main>
   );
 }
