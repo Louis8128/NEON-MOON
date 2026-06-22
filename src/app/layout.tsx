@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import Link from "next/link";
 import "./globals.css";
 
@@ -18,28 +19,48 @@ const navItems = [
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: ReactNode;
 }>) {
   return (
     <html lang="en">
       <body>
         <header className="sticky top-0 z-50 border-b border-slate-800 bg-slate-950/90 backdrop-blur">
-          <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-            <Link href="/" className="text-lg font-bold tracking-[0.25em] text-white">
-              NEON MOON
-            </Link>
+          <nav className="mx-auto flex max-w-6xl flex-col gap-4 px-6 py-4 lg:flex-row lg:items-center lg:justify-between">
+            <div className="flex flex-wrap items-center gap-6">
+              <Link
+                href="/"
+                className="text-lg font-bold tracking-[0.25em] text-white"
+              >
+                NEON MOON
+              </Link>
 
-            <div className="flex items-center gap-5 text-sm text-slate-300">
-              {navItems.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="transition hover:text-white"
-                >
-                  {item.label}
-                </Link>
-              ))}
+              <div className="flex items-center gap-5 text-sm text-slate-300">
+                {navItems.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className="transition hover:text-white"
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+              </div>
             </div>
+
+            <form action="/search" className="flex items-center gap-2">
+              <input
+                type="search"
+                name="q"
+                placeholder="Search..."
+                className="w-40 rounded-full border border-slate-700 bg-slate-900 px-4 py-2 text-sm text-white placeholder:text-slate-500 outline-none transition focus:border-cyan-400 md:w-56"
+              />
+              <button
+                type="submit"
+                className="rounded-full bg-cyan-400 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-cyan-300"
+              >
+                Search
+              </button>
+            </form>
           </nav>
         </header>
 
