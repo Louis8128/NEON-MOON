@@ -28,11 +28,31 @@ export async function POST(request: Request) {
   try {
     const formData = await request.formData();
 
+    const adminPassword = formData.get("adminPassword");
     const file = formData.get("file");
     const title = formData.get("title");
     const location = formData.get("location");
     const description = formData.get("description");
     const takenAt = formData.get("takenAt");
+
+    const expectedPassword = process.env.ADMIN_UPLOAD_PASSWORD;
+
+    if (!expectedPassword) {
+      return NextResponse.json(
+        { error: "Upload password is not configured on the server." },
+        { status: 500 },
+      );
+    }
+
+    if (
+      typeof adminPassword !== "string" ||
+      adminPassword !== expectedPassword
+    ) {
+      return NextResponse.json(
+        { error: "Invalid upload password." },
+        { status: 401 },
+      );
+    }
 
     if (!(file instanceof File)) {
       return NextResponse.json(
