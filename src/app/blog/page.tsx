@@ -5,6 +5,9 @@ import { prisma } from "@/lib/prisma";
 export const dynamic = "force-dynamic";
 
 export default async function BlogPage() {
+  // Query only published blog posts for the public blog page.
+  // Newer posts are shown first.
+  // 只显示已发布文章，按创建时间倒序排列。
   const posts = await prisma.blogPost.findMany({
     where: {
       published: true,
@@ -24,6 +27,8 @@ export default async function BlogPage() {
         />
 
         {posts.length === 0 ? (
+          // Empty state shown when there are no published posts in the database.
+          // 数据库没有已发布文章时显示空状态。
           <section className="rounded-3xl border border-dashed border-slate-700 bg-slate-900/50 p-10 text-center">
             <p className="text-lg font-semibold text-slate-200">
               No blog posts yet.
@@ -34,6 +39,8 @@ export default async function BlogPage() {
           </section>
         ) : (
           <section className="space-y-6">
+            {/* Each BlogPost database record becomes one blog preview card. */}
+            {/* 数据库文章记录 map 成博客预览卡片。 */}
             {posts.map((post) => (
               <article
                 key={post.id}
@@ -57,6 +64,8 @@ export default async function BlogPage() {
                   </p>
                 )}
 
+                {/* Link to the dynamic blog detail route: /blog/[slug]. */}
+                {/* 用 slug 跳转到博客详情页。 */}
                 <Link
                   href={`/blog/${post.slug}`}
                   className="mt-5 inline-flex text-sm font-semibold text-cyan-300 transition hover:text-cyan-200"

@@ -4,6 +4,8 @@ type PageHeaderProps = {
   description: string;
 };
 
+// Shared heading block used at the top of major pages.
+// 复用页面标题组件，避免每个页面重复写标题结构。
 export default function PageHeader({
   eyebrow,
   title,

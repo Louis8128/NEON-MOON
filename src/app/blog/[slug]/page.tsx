@@ -11,14 +11,23 @@ type BlogPostPageProps = {
 };
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
+  // Read the dynamic route parameter from the URL.
+  // Example: /blog/building-neon-moon gives slug = "building-neon-moon".
+  // 动态路由参数，读取 URL 中的 slug。
   const { slug } = await params;
 
+  // Find one blog post by its unique slug.
+  // The slug field is marked as @unique in schema.prisma, so it can identify one post.
+  // 用 slug 查询唯一文章。
   const post = await prisma.blogPost.findUnique({
     where: {
       slug,
     },
   });
 
+  // Do not show missing or unpublished posts to public visitors.
+  // notFound() renders Next.js's 404 page.
+  // 文章不存在或未发布时显示 404。
   if (!post || !post.published) {
     notFound();
   }
@@ -53,6 +62,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           )}
 
           <div className="mt-10 rounded-3xl border border-slate-800 bg-slate-900/70 p-8 shadow-lg shadow-black/20">
+            {/* Preserve line breaks from the plain text content stored in the database. */}
+            {/* 保留数据库文章内容里的换行。 */}
             <p className="whitespace-pre-line text-base leading-8 text-slate-200">
               {post.content}
             </p>

@@ -2,6 +2,8 @@ import "dotenv/config";
 import { PrismaMariaDb } from "@prisma/adapter-mariadb";
 import { MediaCategory, PrismaClient } from "@prisma/client";
 
+// Read required database settings from .env and fail early if any value is missing.
+// 读取 .env，提前发现数据库配置缺失。
 function getRequiredEnv(name: string) {
   const value = process.env[name];
 
@@ -12,6 +14,8 @@ function getRequiredEnv(name: string) {
   return value;
 }
 
+// This script runs outside the Next.js app, so it creates its own Prisma Client.
+// seed 脚本独立运行，需要自己创建 Prisma Client。
 const adapter = new PrismaMariaDb({
   host: getRequiredEnv("DATABASE_HOST"),
   port: Number(getRequiredEnv("DATABASE_PORT")),
@@ -19,11 +23,16 @@ const adapter = new PrismaMariaDb({
   password: getRequiredEnv("DATABASE_PASSWORD"),
   database: getRequiredEnv("DATABASE_NAME"),
   connectionLimit: 5,
+
+  // Required for the local Docker MySQL 8 setup when using this adapter.
+  // 允许本地开发环境获取 MySQL RSA 公钥。
   allowPublicKeyRetrieval: true,
 });
 
 const prisma = new PrismaClient({ adapter });
 
+// Reset and insert sample MediaItem records for the media library.
+// 重置媒体测试数据。
 async function seedMediaItems() {
   await prisma.mediaItem.deleteMany();
 
@@ -78,6 +87,8 @@ async function seedMediaItems() {
   });
 }
 
+// Reset and insert sample BlogPost records for the blog list and dynamic detail pages.
+// 重置博客测试数据，用于 /blog 和 /blog/[slug]。
 async function seedBlogPosts() {
   await prisma.blogPost.deleteMany();
 
@@ -117,6 +128,8 @@ async function seedBlogPosts() {
   });
 }
 
+// Reset and insert sample Photo records for the photo archive page.
+// 重置照片测试数据，用于 /photos。
 async function seedPhotos() {
   await prisma.photo.deleteMany();
 
@@ -161,10 +174,14 @@ async function seedPhotos() {
 async function main() {
   console.log("Seeding database...");
 
+  // Run each seed step in a controlled order.
+  // 按顺序重置三张表的测试数据。
   await seedMediaItems();
   await seedBlogPosts();
   await seedPhotos();
 
+  // Count inserted records as a simple success check.
+  // 中文关键词：统计插入结果，确认 seed 是否成功。
   const mediaCount = await prisma.mediaItem.count();
   const blogCount = await prisma.blogPost.count();
   const photoCount = await prisma.photo.count();
@@ -182,5 +199,7 @@ main()
     process.exit(1);
   })
   .finally(async () => {
+    // Always close the database connection when the script finishes.
+    // 脚本结束后断开数据库连接。
     await prisma.$disconnect();
   });

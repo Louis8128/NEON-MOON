@@ -11,6 +11,8 @@ type MediaPageProps = {
   }>;
 };
 
+// Tab config for the media category filter.
+// 分类标签配置，用 URL 参数控制筛选。
 const categoryTabs = [
   {
     label: "All",
@@ -44,18 +46,29 @@ const categoryTabs = [
   },
 ];
 
+// Convert the Prisma enum into a list of allowed category values.
+// 合法分类列表，用来校验 URL 里的 category。
 const validCategories = Object.values(MediaCategory);
 
 export default async function MediaPage({ searchParams }: MediaPageProps) {
+  // In Next.js App Router, searchParams contains URL query values.
+  // Example: /media?category=MOVIE gives categoryParam = "MOVIE".
+  // 读取 URL 查询参数。
   const params = await searchParams;
   const categoryParam = params.category;
 
+  // Only allow valid enum values before passing the category into Prisma.
+  // This prevents invalid URLs such as /media?category=abc from affecting the query.
+  // URL 参数校验，防止无效分类进入数据库查询。
   const selectedCategory = validCategories.includes(
     categoryParam as MediaCategory,
   )
     ? (categoryParam as MediaCategory)
     : undefined;
 
+  // Query MediaItem records from MySQL through Prisma.
+  // If selectedCategory exists, add a where filter; otherwise, return all media items.
+  // Prisma 条件查询，分类筛选。
   const mediaItems = await prisma.mediaItem.findMany({
     where: selectedCategory
       ? {
@@ -76,6 +89,8 @@ export default async function MediaPage({ searchParams }: MediaPageProps) {
           description="A personal archive of media I care about, now loaded from the MySQL database through Prisma."
         />
 
+        {/* Category filter tabs. The active tab is highlighted based on selectedCategory. */}
+        {/* 分类筛选按钮，当前分类高亮。 */}
         <section className="mb-10 flex flex-wrap gap-3">
           {categoryTabs.map((tab) => {
             const isActive = tab.value === selectedCategory;
@@ -107,6 +122,8 @@ export default async function MediaPage({ searchParams }: MediaPageProps) {
           </section>
         ) : (
           <section className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {/* Each database row becomes one media card on the page. */}
+            {/* 数据库记录 map 成页面卡片。 */}
             {mediaItems.map((item) => (
               <article
                 key={item.id}

@@ -1,11 +1,19 @@
+prisma id="f4ny9o"
 generator client {
+  // Generates the Prisma Client used by the Next.js app and scripts.
+  // 生成 TypeScript 可用的 Prisma Client。
   provider = "prisma-client-js"
 }
 
 datasource db {
+  // The database provider is MySQL.
+  // In Prisma 7, the connection URL is configured in prisma.config.ts.
+  // 数据库类型是 MySQL，连接地址在 prisma.config.ts。
   provider = "mysql"
 }
 
+// Fixed category values for media records.
+// 媒体分类枚举，限制 category 只能使用这些值。
 enum MediaCategory {
   MUSIC
   BOOK
@@ -14,6 +22,8 @@ enum MediaCategory {
   GAME
 }
 
+// Stores personal media items shown on /media.
+// 媒体收藏表，用于电影、音乐、书、动画、游戏。
 model MediaItem {
   id          Int           @id @default(autoincrement())
   title       String
@@ -23,29 +33,52 @@ model MediaItem {
   coverUrl    String?
   rating      Float?
   note        String?       @db.Text
+
+  // Automatically set when the record is created.
+  // 创建时间。
   createdAt   DateTime      @default(now())
+
+  // Automatically updated whenever the record changes.
+  // 更新时间。
   updatedAt   DateTime      @updatedAt
 }
 
+// Stores blog posts shown on /blog and /blog/[slug].
+// 博客文章表，用于列表页和详情页。
 model BlogPost {
   id            Int      @id @default(autoincrement())
   title         String
+
+  // Unique URL identifier for dynamic blog routes.
+  // Example: /blog/building-neon-moon
+  // 唯一 slug，用于动态路由 /blog/[slug]。
   slug          String   @unique
+
   excerpt       String?  @db.Text
   content       String   @db.Text
   coverImageUrl String?
+
+  // Only published posts are visible on public pages.
+  // 发布状态，未发布文章不公开显示。
   published     Boolean  @default(false)
+
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 }
 
+// Stores photo records shown on /photos.
+// 照片记录表，目前保存图片路径和文字信息。
 model Photo {
   id          Int       @id @default(autoincrement())
   title       String
   imageUrl    String
   location    String?
   description String?   @db.Text
+
+  // Optional date when the photo was taken.
+  // 拍摄时间，可为空。
   takenAt     DateTime?
+
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 }

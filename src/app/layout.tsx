@@ -9,6 +9,8 @@ export const metadata: Metadata = {
     "A personal full-stack portfolio website for blogs, media collections, and photography.",
 };
 
+// Central navigation config used by the shared site header.
+// 导航配置数组，避免重复手写多个 Link。
 const navItems = [
   { label: "Home", href: "/" },
   { label: "Blog", href: "/blog" },
@@ -24,6 +26,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        {/* Shared header shown on every route in the App Router. */}
+        {/* 全站共享布局，所有页面都会包在 layout 里面。 */}
         <header className="sticky top-0 z-50 border-b border-slate-800 bg-slate-950/90 backdrop-blur">
           <nav className="mx-auto flex max-w-6xl flex-col gap-4 px-6 py-4 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex flex-wrap items-center gap-6">
@@ -47,6 +51,8 @@ export default function RootLayout({
               </div>
             </div>
 
+            {/* Plain HTML form for global site search. */}
+            {/* 全站搜索入口，提交后跳转到 /search?q=关键词。 */}
             <form action="/search" className="flex items-center gap-2">
               <input
                 type="search"
@@ -64,6 +70,8 @@ export default function RootLayout({
           </nav>
         </header>
 
+        {/* Current route content is rendered here. */}
+        {/* children 代表当前页面内容，例如 /media 或 /blog。 */}
         {children}
       </body>
     </html>
