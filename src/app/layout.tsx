@@ -15,7 +15,6 @@ const navItems = [
   { label: "Home", href: "/" },
   { label: "Blog", href: "/blog" },
   { label: "Media", href: "/media" },
-  { label: "Photos", href: "/photos" },
 ];
 
 export default function RootLayout({
@@ -30,7 +29,7 @@ export default function RootLayout({
         {/* 全站共享布局，所有页面都会包在 layout 里面。 */}
         <header className="sticky top-0 z-50 border-b border-slate-800 bg-slate-950/90 backdrop-blur">
           <nav className="mx-auto flex max-w-6xl flex-col gap-4 px-6 py-4 lg:flex-row lg:items-center lg:justify-between">
-            <div className="flex flex-wrap items-center gap-6">
+            <div className="flex flex-wrap items-center gap-7">
               <Link
                 href="/"
                 className="text-lg font-bold tracking-[0.25em] text-white"
@@ -38,16 +37,53 @@ export default function RootLayout({
                 NEON MOON
               </Link>
 
-              <div className="flex items-center gap-5 text-sm text-slate-300">
+              <div className="flex items-center gap-2 text-[15px] font-medium text-slate-300">
                 {navItems.map((item) => (
                   <Link
                     key={item.href}
                     href={item.href}
-                    className="transition hover:text-white"
+                    className="rounded-xl px-3 py-2 transition hover:bg-slate-800/70 hover:text-white"
                   >
                     {item.label}
                   </Link>
                 ))}
+
+                {/* Photos dropdown navigation. */}
+                {/* Photos 下拉菜单，Gallery 和 Upload 共用一个入口。 */}
+                <div className="group relative w-28">
+                  <button
+                    type="button"
+                    className="flex w-full items-center justify-center gap-1 rounded-xl px-3 py-2 text-[15px] font-medium text-slate-300 transition hover:bg-slate-800/70 hover:text-white"
+                  >
+                    Photos
+                    <span className="text-xs text-slate-500 transition group-hover:text-cyan-300">
+                      ▾
+                    </span>
+                  </button>
+
+                  {/*
+                    Use pt-2 instead of margin-top.
+                    This keeps the hover area connected while moving the mouse down.
+                    用 padding 连接悬停区域，避免鼠标下移时菜单消失。
+                  */}
+                  <div className="invisible absolute left-0 top-full z-50 w-full pt-2 opacity-0 transition group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+                    <div className="rounded-2xl border border-slate-800 bg-slate-950/95 p-1.5 shadow-xl shadow-black/30">
+                      <Link
+                        href="/photos"
+                        className="block rounded-xl px-3 py-2 text-center text-sm text-slate-300 transition hover:bg-slate-800 hover:text-white"
+                      >
+                        Gallery
+                      </Link>
+
+                      <Link
+                        href="/photos/upload"
+                        className="block rounded-xl px-3 py-2 text-center text-sm text-slate-300 transition hover:bg-slate-800 hover:text-white"
+                      >
+                        Upload
+                      </Link>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
