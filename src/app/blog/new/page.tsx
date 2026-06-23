@@ -20,6 +20,7 @@ export default function NewBlogPostPage() {
   const [adminPassword, setAdminPassword] = useState("");
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [unlockError, setUnlockError] = useState("");
+  const [isUnlocking, setIsUnlocking] = useState(false);
 
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
@@ -39,17 +40,36 @@ export default function NewBlogPostPage() {
     }
   }
 
-  function handleUnlock(event: FormEvent<HTMLFormElement>) {
+  async function handleUnlock(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     setUnlockError("");
+    setIsUnlocking(true);
 
-    if (!adminPassword.trim()) {
-      setUnlockError("Admin password is required.");
-      return;
+    try {
+      const response = await fetch("/api/blog/auth", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          password: adminPassword,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        setUnlockError(result.error ?? "Invalid admin password.");
+        return;
+      }
+
+      setIsUnlocked(true);
+    } catch {
+      setUnlockError("Something went wrong while checking the password.");
+    } finally {
+      setIsUnlocking(false);
     }
-
-    setIsUnlocked(true);
   }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -156,9 +176,10 @@ export default function NewBlogPostPage() {
 
             <button
               type="submit"
-              className="w-full rounded-full bg-cyan-400 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-cyan-300"
+              disabled={isUnlocking}
+              className="w-full rounded-full bg-cyan-400 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-cyan-300 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              Unlock editor
+              {isUnlocking ? "Checking..." : "Unlock editor"}
             </button>
           </form>
         ) : (
