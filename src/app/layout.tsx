@@ -9,12 +9,9 @@ export const metadata: Metadata = {
     "A personal full-stack portfolio website for blogs, media collections, and photography.",
 };
 
-// Central navigation config used by the shared site header.
-// 导航配置数组，避免重复手写多个 Link。
-const navItems = [
-  { label: "Home", href: "/" },
-  { label: "Media", href: "/media" },
-];
+// Main navigation items that do not need dropdown menus.
+// 普通导航链接，不包含 Blog 和 Photos 这种下拉菜单。
+const navItems = [{ label: "Media", href: "/media" }];
 
 export default function RootLayout({
   children,
@@ -25,7 +22,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         {/* Shared header shown on every route in the App Router. */}
-        {/* 中文关键词：全站共享布局，所有页面都会包在 layout 里面。 */}
+        {/* 全站共享布局，所有页面都会包在 layout 里面。 */}
         <header className="sticky top-0 z-50 border-b border-slate-800 bg-slate-950/90 backdrop-blur">
           <nav className="mx-auto flex max-w-6xl flex-col gap-4 px-6 py-4 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex flex-wrap items-center gap-7">
@@ -45,8 +42,8 @@ export default function RootLayout({
                 </Link>
 
                 {/* Blog dropdown navigation. */}
-                {/* Blog 下拉菜单，区分文章列表和新建文章。 */}
-                <div className="group relative w-24">
+                {/* Blog 下拉菜单，包含文章列表、新建文章和后台管理。 */}
+                <div className="group relative w-28">
                   <button
                     type="button"
                     className="flex w-full items-center justify-center gap-1 rounded-xl px-3 py-2 text-[15px] font-medium text-slate-300 transition hover:bg-slate-800/70 hover:text-white"
@@ -77,21 +74,26 @@ export default function RootLayout({
                       >
                         New
                       </Link>
+
+                      <Link
+                        href="/blog/admin"
+                        className="block rounded-xl px-3 py-2 text-center text-sm text-slate-300 transition hover:bg-slate-800 hover:text-white"
+                      >
+                        Admin
+                      </Link>
                     </div>
                   </div>
                 </div>
 
-                {navItems
-                  .filter((item) => item.href !== "/")
-                  .map((item) => (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      className="rounded-xl px-3 py-2 transition hover:bg-slate-800/70 hover:text-white"
-                    >
-                      {item.label}
-                    </Link>
-                  ))}
+                {navItems.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className="rounded-xl px-3 py-2 transition hover:bg-slate-800/70 hover:text-white"
+                  >
+                    {item.label}
+                  </Link>
+                ))}
 
                 {/* Photos dropdown navigation. */}
                 {/* Photos 下拉菜单，Gallery 和 Upload 共用一个入口。 */}

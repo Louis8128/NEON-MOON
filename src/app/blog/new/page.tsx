@@ -222,11 +222,12 @@ export default function NewBlogPostPage() {
                 required
                 value={slug}
                 onChange={(event) => setSlug(event.target.value)}
-                placeholder="my-first-post"
+                placeholder="Enter a URL slug"
                 className="mt-2 w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white placeholder:text-slate-500 outline-none transition focus:border-cyan-400"
               />
               <p className="mt-2 text-xs text-slate-500">
-                Used in the URL. Example: /blog/my-first-post
+                Used in the URL. Use lowercase letters, numbers, and hyphens
+                only.
               </p>
             </div>
 
@@ -259,7 +260,7 @@ export default function NewBlogPostPage() {
                 type="text"
                 value={coverImageUrl}
                 onChange={(event) => setCoverImageUrl(event.target.value)}
-                placeholder="/photos/ocean-sunset.jpg"
+                placeholder="Optional cover image path"
                 className="mt-2 w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white placeholder:text-slate-500 outline-none transition focus:border-cyan-400"
               />
             </div>
