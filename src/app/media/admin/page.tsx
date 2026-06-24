@@ -115,7 +115,7 @@ export default function MediaAdminPage() {
   }, [loadMediaItems]);
 
   // Handle the first password unlock form.
-  // 中文关键词：处理管理员密码解锁表单。
+  // 处理管理员密码解锁表单。
   async function handleUnlock(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
@@ -323,9 +323,25 @@ export default function MediaAdminPage() {
                       </div>
 
                       <div className="col-span-2 text-right">
+                        {" "}
                         <p className="text-xs text-slate-500">
-                          {new Date(item.updatedAt).toLocaleDateString("en-AU")}
-                        </p>
+                          {" "}
+                          {new Date(item.updatedAt).toLocaleDateString(
+                            "en-AU",
+                          )}{" "}
+                        </p>{" "}
+                        {/* Row action for editing one media item. */}{" "}
+                        {/* 中文关键词：编辑单条媒体收藏记录。 */}{" "}
+                        <div className="mt-2">
+                          {" "}
+                          <Link
+                            href={`/media/admin/edit/${item.id}`}
+                            className="text-xs font-semibold text-cyan-300 transition hover:text-cyan-200"
+                          >
+                            {" "}
+                            Edit{" "}
+                          </Link>{" "}
+                        </div>{" "}
                       </div>
                     </article>
                   ))}

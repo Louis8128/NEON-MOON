@@ -1,0 +1,455 @@
+"use client";
+
+import type { FormEvent } from "react";
+import { useCallback, useEffect, useState } from "react";
+import Link from "next/link";
+import { useParams, useRouter } from "next/navigation";
+
+type MediaCategory = "MUSIC" | "BOOK" | "MOVIE" | "ANIME" | "GAME";
+
+type MediaItemFormData = {
+  id: number;
+  title: string;
+  category: MediaCategory;
+  creator: string | null;
+  releaseYear: number | null;
+  coverUrl: string | null;
+  rating: number | null;
+  note: string | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
+const mediaCategories: MediaCategory[] = [
+  "MOVIE",
+  "MUSIC",
+  "BOOK",
+  "ANIME",
+  "GAME",
+];
+
+function formatCategory(category: MediaCategory) {
+  return category.charAt(0) + category.slice(1).toLowerCase();
+}
+
+export default function EditMediaItemPage() {
+  const router = useRouter();
+  const params = useParams<{ id: string }>();
+
+  // Media item id from the dynamic route: /media/admin/edit/[id]
+  // 从动态路由里读取媒体条目 id。
+  const mediaItemId = params.id;
+
+  // Admin password used by protected admin APIs.
+  // 管理员密码，用于读取和更新媒体记录。
+  const [adminPassword, setAdminPassword] = useState("");
+
+  // Whether the editor has been unlocked and the media item has been loaded.
+  // 是否已经解锁并成功读取原始媒体数据。
+  const [isUnlocked, setIsUnlocked] = useState(false);
+
+  // Loading state for password unlock and item loading.
+  // 加载原始媒体数据时的状态。
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Submit state for saving changes.
+  // 保存修改时的提交状态。
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // General page error.
+  // 页面错误提示。
+  const [error, setError] = useState("");
+
+  // Form fields.
+  // 编辑表单字段。
+  const [title, setTitle] = useState("");
+  const [category, setCategory] = useState<MediaCategory>("MOVIE");
+  const [creator, setCreator] = useState("");
+  const [releaseYear, setReleaseYear] = useState("");
+  const [coverUrl, setCoverUrl] = useState("");
+  const [rating, setRating] = useState("");
+  const [note, setNote] = useState("");
+
+  // Metadata shown in the editor.
+  // 显示创建和更新时间，不参与编辑。
+  const [createdAt, setCreatedAt] = useState("");
+  const [updatedAt, setUpdatedAt] = useState("");
+
+  // Load the media item from the protected admin item API.
+  // This function also verifies the admin password.
+  // 读取单个媒体记录，同时验证管理员密码。
+  const loadMediaItem = useCallback(
+    async function loadMediaItem(password: string) {
+      const response = await fetch("/api/media/admin/item", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: mediaItemId,
+          adminPassword: password,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error ?? "Failed to load media item.");
+      }
+
+      const mediaItem = result.mediaItem as MediaItemFormData | undefined;
+
+      if (!mediaItem) {
+        throw new Error("Media item response is missing.");
+      }
+
+      setTitle(mediaItem.title);
+      setCategory(mediaItem.category);
+      setCreator(mediaItem.creator ?? "");
+      setReleaseYear(
+        mediaItem.releaseYear === null ? "" : String(mediaItem.releaseYear),
+      );
+      setCoverUrl(mediaItem.coverUrl ?? "");
+      setRating(mediaItem.rating === null ? "" : String(mediaItem.rating));
+      setNote(mediaItem.note ?? "");
+      setCreatedAt(mediaItem.createdAt);
+      setUpdatedAt(mediaItem.updatedAt);
+
+      setAdminPassword(password);
+      sessionStorage.setItem("neonMoonAdminPassword", password);
+      setIsUnlocked(true);
+    },
+    [mediaItemId],
+  );
+
+  // Try to reuse the saved admin password during the same browser session.
+  // 自动读取 sessionStorage，避免重复输入管理员密码。
+  useEffect(() => {
+    const savedPassword = sessionStorage.getItem("neonMoonAdminPassword");
+
+    if (!savedPassword) {
+      return;
+    }
+
+    async function unlockWithSavedPassword(password: string) {
+      setError("");
+      setIsLoading(true);
+
+      try {
+        await loadMediaItem(password);
+      } catch (error) {
+        sessionStorage.removeItem("neonMoonAdminPassword");
+        setError(
+          error instanceof Error
+            ? error.message
+            : "Saved admin session expired. Please enter the password again.",
+        );
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    void unlockWithSavedPassword(savedPassword);
+  }, [loadMediaItem]);
+
+  // Handle manual password unlock.
+  // 处理手动输入管理员密码解锁。
+  async function handleUnlock(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    setError("");
+    setIsLoading(true);
+
+    try {
+      await loadMediaItem(adminPassword);
+    } catch (error) {
+      setError(
+        error instanceof Error
+          ? error.message
+          : "Something went wrong while loading the media item.",
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  // Save edited media item data back to the database.
+  // 把编辑后的媒体信息保存回数据库。
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    setError("");
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch("/api/media/admin/update", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: mediaItemId,
+          adminPassword,
+          title,
+          category,
+          creator,
+          releaseYear,
+          coverUrl,
+          rating,
+          note,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        setError(result.error ?? "Failed to update media item.");
+        return;
+      }
+
+      router.push("/media/admin");
+      router.refresh();
+    } catch {
+      setError("Something went wrong while updating the media item.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
+
+  return (
+    <main className="min-h-screen bg-slate-950 px-6 py-20 text-white">
+      <div className="mx-auto max-w-3xl">
+        <Link
+          href="/media/admin"
+          className="text-sm font-semibold text-cyan-300 transition hover:text-cyan-200"
+        >
+          ← Back to Media Admin
+        </Link>
+
+        <div className="mt-10">
+          <p className="text-xs font-semibold uppercase tracking-[0.4em] text-cyan-300">
+            Media Admin
+          </p>
+
+          <h1 className="mt-4 text-4xl font-bold tracking-tight text-white md:text-5xl">
+            Edit media item
+          </h1>
+
+          <p className="mt-4 max-w-2xl text-lg leading-8 text-slate-300">
+            Update the title, category, creator, release year, rating, cover
+            URL, and personal note for this media item.
+          </p>
+        </div>
+
+        {!isUnlocked ? (
+          // Password form shown before the editor is unlocked.
+          // 未解锁时显示管理员密码表单。
+          <form
+            onSubmit={handleUnlock}
+            className="mt-10 space-y-6 rounded-3xl border border-slate-800 bg-slate-900/70 p-6 shadow-lg shadow-black/20"
+          >
+            <div>
+              <label
+                htmlFor="adminPassword"
+                className="block text-sm font-semibold text-slate-200"
+              >
+                Admin password
+              </label>
+              <input
+                id="adminPassword"
+                type="password"
+                required
+                value={adminPassword}
+                onChange={(event) => setAdminPassword(event.target.value)}
+                placeholder="Enter admin password"
+                className="mt-2 w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white placeholder:text-slate-500 outline-none transition focus:border-cyan-400"
+              />
+              <p className="mt-2 text-xs text-slate-500">
+                The server checks this password before loading the media item.
+              </p>
+            </div>
+
+            {error && (
+              <div className="rounded-2xl border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+                {error}
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full rounded-full bg-cyan-400 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-cyan-300 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {isLoading ? "Loading..." : "Unlock editor"}
+            </button>
+          </form>
+        ) : (
+          // Main edit form after the media item has been loaded.
+          // 解锁并读取数据后的编辑表单。
+          <form
+            onSubmit={handleSubmit}
+            className="mt-10 space-y-6 rounded-3xl border border-slate-800 bg-slate-900/70 p-6 shadow-lg shadow-black/20"
+          >
+            <div className="rounded-2xl border border-cyan-400/30 bg-cyan-400/10 px-4 py-3 text-sm text-cyan-100">
+              Editing media item #{mediaItemId}
+              {updatedAt && (
+                <span className="block pt-1 text-xs text-cyan-100/80">
+                  Last updated on{" "}
+                  {new Date(updatedAt).toLocaleDateString("en-AU")}
+                </span>
+              )}
+              {createdAt && (
+                <span className="block pt-1 text-xs text-cyan-100/70">
+                  Created on {new Date(createdAt).toLocaleDateString("en-AU")}
+                </span>
+              )}
+            </div>
+
+            <div>
+              <label
+                htmlFor="title"
+                className="block text-sm font-semibold text-slate-200"
+              >
+                Title
+              </label>
+              <input
+                id="title"
+                type="text"
+                required
+                value={title}
+                onChange={(event) => setTitle(event.target.value)}
+                placeholder="Enter a title"
+                className="mt-2 w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white placeholder:text-slate-500 outline-none transition focus:border-cyan-400"
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="category"
+                className="block text-sm font-semibold text-slate-200"
+              >
+                Category
+              </label>
+              <select
+                id="category"
+                value={category}
+                onChange={(event) =>
+                  setCategory(event.target.value as MediaCategory)
+                }
+                className="mt-2 w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white outline-none transition focus:border-cyan-400"
+              >
+                {mediaCategories.map((mediaCategory) => (
+                  <option key={mediaCategory} value={mediaCategory}>
+                    {formatCategory(mediaCategory)}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label
+                htmlFor="creator"
+                className="block text-sm font-semibold text-slate-200"
+              >
+                Creator
+              </label>
+              <input
+                id="creator"
+                type="text"
+                value={creator}
+                onChange={(event) => setCreator(event.target.value)}
+                placeholder="Director, artist, author, studio..."
+                className="mt-2 w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white placeholder:text-slate-500 outline-none transition focus:border-cyan-400"
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="releaseYear"
+                className="block text-sm font-semibold text-slate-200"
+              >
+                Release year
+              </label>
+              <input
+                id="releaseYear"
+                type="number"
+                value={releaseYear}
+                onChange={(event) => setReleaseYear(event.target.value)}
+                placeholder="Optional release year"
+                className="mt-2 w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white placeholder:text-slate-500 outline-none transition focus:border-cyan-400"
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="rating"
+                className="block text-sm font-semibold text-slate-200"
+              >
+                Rating
+              </label>
+              <input
+                id="rating"
+                type="number"
+                min="0"
+                max="10"
+                step="0.1"
+                value={rating}
+                onChange={(event) => setRating(event.target.value)}
+                placeholder="Optional rating from 0 to 10"
+                className="mt-2 w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white placeholder:text-slate-500 outline-none transition focus:border-cyan-400"
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="coverUrl"
+                className="block text-sm font-semibold text-slate-200"
+              >
+                Cover URL
+              </label>
+              <input
+                id="coverUrl"
+                type="text"
+                value={coverUrl}
+                onChange={(event) => setCoverUrl(event.target.value)}
+                placeholder="Optional cover image path or URL"
+                className="mt-2 w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white placeholder:text-slate-500 outline-none transition focus:border-cyan-400"
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="note"
+                className="block text-sm font-semibold text-slate-200"
+              >
+                Note
+              </label>
+              <textarea
+                id="note"
+                rows={6}
+                value={note}
+                onChange={(event) => setNote(event.target.value)}
+                placeholder="Write a short note about this media item..."
+                className="mt-2 w-full resize-none rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm leading-6 text-white placeholder:text-slate-500 outline-none transition focus:border-cyan-400"
+              />
+            </div>
+
+            {error && (
+              <div className="rounded-2xl border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+                {error}
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full rounded-full bg-cyan-400 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-cyan-300 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {isSubmitting ? "Saving..." : "Save changes"}
+            </button>
+          </form>
+        )}
+      </div>
+    </main>
+  );
+}

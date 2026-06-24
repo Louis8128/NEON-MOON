@@ -9,10 +9,6 @@ export const metadata: Metadata = {
     "A personal full-stack portfolio website for blogs, media collections, and photography.",
 };
 
-// Main navigation items that do not need dropdown menus.
-// 普通导航链接，不包含 Blog 和 Photos 这种下拉菜单。
-const navItems = [{ label: "Media", href: "/media" }];
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -42,7 +38,7 @@ export default function RootLayout({
                 </Link>
 
                 {/* Blog dropdown navigation. */}
-                {/* Blog 下拉菜单，包含文章列表、新建文章和后台管理。 */}
+                {/* Blog 下拉菜单，包含文章列表和后台管理。 */}
                 <div className="group relative w-28">
                   <button
                     type="button"
@@ -78,15 +74,48 @@ export default function RootLayout({
                   </div>
                 </div>
 
-                {navItems.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className="rounded-xl px-3 py-2 transition hover:bg-slate-800/70 hover:text-white"
+                {/* Media dropdown navigation. */}
+                {/* Media 下拉菜单，包含公开收藏、后台管理和新增媒体。 */}
+                <div className="group relative w-32">
+                  <button
+                    type="button"
+                    className="flex w-full items-center justify-center gap-1 rounded-xl px-3 py-2 text-[15px] font-medium text-slate-300 transition hover:bg-slate-800/70 hover:text-white"
                   >
-                    {item.label}
-                  </Link>
-                ))}
+                    Media
+                    <span className="text-xs text-slate-500 transition group-hover:text-cyan-300">
+                      ▾
+                    </span>
+                  </button>
+
+                  {/*
+                    Keep the dropdown hover area connected.
+                    用 padding 连接悬停区域，避免鼠标下移时菜单消失。
+                  */}
+                  <div className="invisible absolute left-0 top-full z-50 w-full pt-2 opacity-0 transition group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+                    <div className="rounded-2xl border border-slate-800 bg-slate-950/95 p-1.5 shadow-xl shadow-black/30">
+                      <Link
+                        href="/media"
+                        className="block rounded-xl px-3 py-2 text-center text-sm text-slate-300 transition hover:bg-slate-800 hover:text-white"
+                      >
+                        Collection
+                      </Link>
+
+                      <Link
+                        href="/media/admin"
+                        className="block rounded-xl px-3 py-2 text-center text-sm text-slate-300 transition hover:bg-slate-800 hover:text-white"
+                      >
+                        Admin
+                      </Link>
+
+                      <Link
+                        href="/media/admin/new"
+                        className="block rounded-xl px-3 py-2 text-center text-sm text-slate-300 transition hover:bg-slate-800 hover:text-white"
+                      >
+                        New item
+                      </Link>
+                    </div>
+                  </div>
+                </div>
 
                 {/* Photos dropdown navigation. */}
                 {/* Photos 下拉菜单，Gallery 和 Upload 共用一个入口。 */}
@@ -136,6 +165,7 @@ export default function RootLayout({
                 placeholder="Search..."
                 className="w-40 rounded-full border border-slate-700 bg-slate-900 px-4 py-2 text-sm text-white placeholder:text-slate-500 outline-none transition focus:border-cyan-400 md:w-56"
               />
+
               <button
                 type="submit"
                 className="rounded-full bg-cyan-400 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-cyan-300"
