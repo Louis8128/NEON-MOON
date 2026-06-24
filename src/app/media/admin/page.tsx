@@ -228,10 +228,19 @@ export default function MediaAdminPage() {
           // 解锁后显示媒体收藏管理列表。
           <section className="mt-10">
             <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
+              {" "}
               <div className="rounded-2xl border border-cyan-400/30 bg-cyan-400/10 px-4 py-3 text-sm text-cyan-100">
-                Media admin unlocked. {mediaItems.length} item
-                {mediaItems.length === 1 ? "" : "s"} found.
-              </div>
+                {" "}
+                Media admin unlocked. {mediaItems.length} item{" "}
+                {mediaItems.length === 1 ? "" : "s"} found.{" "}
+              </div>{" "}
+              <Link
+                href="/media/admin/new"
+                className="rounded-full bg-cyan-400 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-cyan-300"
+              >
+                {" "}
+                New media item{" "}
+              </Link>{" "}
             </div>
 
             {error && (
