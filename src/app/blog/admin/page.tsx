@@ -13,9 +13,12 @@ type BlogPostSummary = {
   updatedAt: string;
 };
 
+type PostFilter = "ALL" | "PUBLISHED" | "DRAFT";
+
 export default function BlogAdminPage() {
   const [adminPassword, setAdminPassword] = useState("");
   const [posts, setPosts] = useState<BlogPostSummary[]>([]);
+  const [filter, setFilter] = useState<PostFilter>("ALL");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isUnlocked, setIsUnlocked] = useState(false);
@@ -88,6 +91,27 @@ export default function BlogAdminPage() {
     } finally {
       setIsLoading(false);
     }
+  }
+
+  const publishedCount = posts.filter((post) => post.published).length;
+  const draftCount = posts.filter((post) => !post.published).length;
+
+  const filteredPosts = posts.filter((post) => {
+    if (filter === "PUBLISHED") {
+      return post.published;
+    }
+
+    if (filter === "DRAFT") {
+      return !post.published;
+    }
+
+    return true;
+  });
+
+  function getFilterButtonClass(targetFilter: PostFilter) {
+    return filter === targetFilter
+      ? "rounded-full bg-cyan-400 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-cyan-300"
+      : "rounded-full border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-300 transition hover:border-cyan-400/60 hover:text-white";
   }
 
   return (
@@ -171,13 +195,39 @@ export default function BlogAdminPage() {
               </Link>
             </div>
 
-            {posts.length === 0 ? (
+            <div className="mb-6 flex flex-wrap items-center gap-3">
+              <button
+                type="button"
+                onClick={() => setFilter("ALL")}
+                className={getFilterButtonClass("ALL")}
+              >
+                All ({posts.length})
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setFilter("PUBLISHED")}
+                className={getFilterButtonClass("PUBLISHED")}
+              >
+                Published ({publishedCount})
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setFilter("DRAFT")}
+                className={getFilterButtonClass("DRAFT")}
+              >
+                Draft ({draftCount})
+              </button>
+            </div>
+
+            {filteredPosts.length === 0 ? (
               <div className="rounded-3xl border border-dashed border-slate-700 bg-slate-900/50 p-10 text-center">
                 <p className="text-lg font-semibold text-slate-200">
-                  No blog posts yet.
+                  No posts in this view.
                 </p>
                 <p className="mt-2 text-sm text-slate-400">
-                  Create your first post from the New post page.
+                  Switch filters or create a new blog post.
                 </p>
               </div>
             ) : (
@@ -190,7 +240,7 @@ export default function BlogAdminPage() {
                 </div>
 
                 <div className="divide-y divide-slate-800">
-                  {posts.map((post) => (
+                  {filteredPosts.map((post) => (
                     <article
                       key={post.id}
                       className="grid grid-cols-12 items-center gap-3 px-5 py-5 text-sm"
