@@ -1,6 +1,7 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import type { FormEvent } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 
 type BlogPostSummary = {
@@ -19,6 +20,57 @@ export default function BlogAdminPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [isUnlocked, setIsUnlocked] = useState(false);
 
+  const loadPosts = useCallback(async function loadPosts(password: string) {
+    const response = await fetch("/api/blog/admin/list", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        adminPassword: password,
+      }),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.error ?? "Failed to load blog posts.");
+    }
+
+    setPosts(result.posts ?? []);
+    setAdminPassword(password);
+    sessionStorage.setItem("neonMoonAdminPassword", password);
+    setIsUnlocked(true);
+  }, []);
+
+  useEffect(() => {
+    const savedPassword = sessionStorage.getItem("neonMoonAdminPassword");
+
+    if (!savedPassword) {
+      return;
+    }
+
+    async function unlockWithSavedPassword(password: string) {
+      setError("");
+      setIsLoading(true);
+
+      try {
+        await loadPosts(password);
+      } catch (error) {
+        sessionStorage.removeItem("neonMoonAdminPassword");
+        setError(
+          error instanceof Error
+            ? error.message
+            : "Saved admin session expired. Please enter the password again.",
+        );
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    void unlockWithSavedPassword(savedPassword);
+  }, [loadPosts]);
+
   async function handleUnlock(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
@@ -26,27 +78,13 @@ export default function BlogAdminPage() {
     setIsLoading(true);
 
     try {
-      const response = await fetch("/api/blog/admin/list", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          adminPassword,
-        }),
-      });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        setError(result.error ?? "Failed to load blog posts.");
-        return;
-      }
-
-      setPosts(result.posts ?? []);
-      setIsUnlocked(true);
-    } catch {
-      setError("Something went wrong while loading blog posts.");
+      await loadPosts(adminPassword);
+    } catch (error) {
+      setError(
+        error instanceof Error
+          ? error.message
+          : "Something went wrong while loading blog posts.",
+      );
     } finally {
       setIsLoading(false);
     }
@@ -126,7 +164,7 @@ export default function BlogAdminPage() {
               </div>
 
               <Link
-                href="/blog/new"
+                href="/blog/admin/new"
                 className="rounded-full bg-cyan-400 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-cyan-300"
               >
                 New post
@@ -186,14 +224,23 @@ export default function BlogAdminPage() {
                           {new Date(post.updatedAt).toLocaleDateString("en-AU")}
                         </p>
 
-                        {post.published && (
+                        <div className="mt-2 flex justify-end gap-3">
                           <Link
-                            href={`/blog/${post.slug}`}
-                            className="mt-2 inline-block text-xs font-semibold text-cyan-300 transition hover:text-cyan-200"
+                            href={`/blog/admin/edit/${post.id}`}
+                            className="text-xs font-semibold text-cyan-300 transition hover:text-cyan-200"
                           >
-                            View →
+                            Edit
                           </Link>
-                        )}
+
+                          {post.published && (
+                            <Link
+                              href={`/blog/${post.slug}`}
+                              className="text-xs font-semibold text-slate-300 transition hover:text-white"
+                            >
+                              View
+                            </Link>
+                          )}
+                        </div>
                       </div>
                     </article>
                   ))}

@@ -69,13 +69,6 @@ export default function RootLayout({
                       </Link>
 
                       <Link
-                        href="/blog/new"
-                        className="block rounded-xl px-3 py-2 text-center text-sm text-slate-300 transition hover:bg-slate-800 hover:text-white"
-                      >
-                        New
-                      </Link>
-
-                      <Link
                         href="/blog/admin"
                         className="block rounded-xl px-3 py-2 text-center text-sm text-slate-300 transition hover:bg-slate-800 hover:text-white"
                       >
