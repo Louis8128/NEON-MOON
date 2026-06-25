@@ -57,6 +57,12 @@ export default function MediaAdminPage() {
   // 是否已经通过密码验证。
   const [isUnlocked, setIsUnlocked] = useState(false);
 
+  // Tracks which media item is currently being deleted.
+  // 记录正在删除的媒体条目 id。
+  const [deletingMediaItemId, setDeletingMediaItemId] = useState<number | null>(
+    null,
+  );
+
   // Load all media items from the protected admin API.
   // 加载后台媒体收藏列表。
   const loadMediaItems = useCallback(async function loadMediaItems(
@@ -85,7 +91,7 @@ export default function MediaAdminPage() {
   }, []);
 
   // Try to reuse the saved admin password during the same browser session.
-  // 中文关键词：复用 sessionStorage 中的管理员密码，避免重复输入。
+  // 复用 sessionStorage 中的管理员密码，避免重复输入。
   useEffect(() => {
     const savedPassword = sessionStorage.getItem("neonMoonAdminPassword");
 
@@ -135,6 +141,51 @@ export default function MediaAdminPage() {
     }
   }
 
+  // Delete one media item after a browser confirmation.
+  // 删除前弹出确认框，确认后才调用删除 API。
+  async function handleDeleteMediaItem(item: MediaItemSummary) {
+    const confirmed = window.confirm(
+      `Delete "${item.title}"? This action cannot be undone.`,
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    setError("");
+    setDeletingMediaItemId(item.id);
+
+    try {
+      const response = await fetch("/api/media/admin/delete", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: item.id,
+          adminPassword,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        setError(result.error ?? "Failed to delete media item.");
+        return;
+      }
+
+      // Remove the deleted item from local React state after database deletion.
+      // 数据库删除成功后，同步从前端列表移除。
+      setMediaItems((currentItems) =>
+        currentItems.filter((mediaItem) => mediaItem.id !== item.id),
+      );
+    } catch {
+      setError("Something went wrong while deleting the media item.");
+    } finally {
+      setDeletingMediaItemId(null);
+    }
+  }
+
   const filteredMediaItems = mediaItems.filter((item) => {
     if (filter === "ALL") {
       return true;
@@ -177,7 +228,8 @@ export default function MediaAdminPage() {
           </h1>
 
           <p className="mt-4 max-w-2xl text-lg leading-8 text-slate-300">
-            Unlock the admin list to view media items stored in the database.
+            Unlock the admin list to view, edit, create, and delete media items
+            stored in the database.
           </p>
         </div>
 
@@ -228,19 +280,17 @@ export default function MediaAdminPage() {
           // 解锁后显示媒体收藏管理列表。
           <section className="mt-10">
             <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-              {" "}
               <div className="rounded-2xl border border-cyan-400/30 bg-cyan-400/10 px-4 py-3 text-sm text-cyan-100">
-                {" "}
-                Media admin unlocked. {mediaItems.length} item{" "}
-                {mediaItems.length === 1 ? "" : "s"} found.{" "}
-              </div>{" "}
+                Media admin unlocked. {mediaItems.length} item
+                {mediaItems.length === 1 ? "" : "s"} found.
+              </div>
+
               <Link
                 href="/media/admin/new"
                 className="rounded-full bg-cyan-400 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-cyan-300"
               >
-                {" "}
-                New media item{" "}
-              </Link>{" "}
+                New media item
+              </Link>
             </div>
 
             {error && (
@@ -275,7 +325,7 @@ export default function MediaAdminPage() {
                   No media items in this view.
                 </p>
                 <p className="mt-2 text-sm text-slate-400">
-                  Switch filters or add new media items later.
+                  Switch filters or add new media items.
                 </p>
               </div>
             ) : (
@@ -285,7 +335,7 @@ export default function MediaAdminPage() {
                   <div className="col-span-2">Category</div>
                   <div className="col-span-2">Creator</div>
                   <div className="col-span-2">Rating</div>
-                  <div className="col-span-2 text-right">Updated</div>
+                  <div className="col-span-2 text-right">Actions</div>
                 </div>
 
                 <div className="divide-y divide-slate-800">
@@ -304,6 +354,11 @@ export default function MediaAdminPage() {
                             Released in {item.releaseYear}
                           </p>
                         )}
+
+                        <p className="mt-1 text-xs text-slate-600">
+                          Updated on{" "}
+                          {new Date(item.updatedAt).toLocaleDateString("en-AU")}
+                        </p>
                       </div>
 
                       <div className="col-span-2">
@@ -323,25 +378,27 @@ export default function MediaAdminPage() {
                       </div>
 
                       <div className="col-span-2 text-right">
-                        {" "}
-                        <p className="text-xs text-slate-500">
-                          {" "}
-                          {new Date(item.updatedAt).toLocaleDateString(
-                            "en-AU",
-                          )}{" "}
-                        </p>{" "}
-                        {/* Row action for editing one media item. */}{" "}
-                        {/* 中文关键词：编辑单条媒体收藏记录。 */}{" "}
-                        <div className="mt-2">
-                          {" "}
+                        {/* Row actions for editing and deleting one media item. */}
+                        {/* 单条媒体收藏的编辑和删除按钮。 */}
+                        <div className="flex justify-end gap-3">
                           <Link
                             href={`/media/admin/edit/${item.id}`}
                             className="text-xs font-semibold text-cyan-300 transition hover:text-cyan-200"
                           >
-                            {" "}
-                            Edit{" "}
-                          </Link>{" "}
-                        </div>{" "}
+                            Edit
+                          </Link>
+
+                          <button
+                            type="button"
+                            disabled={deletingMediaItemId === item.id}
+                            onClick={() => handleDeleteMediaItem(item)}
+                            className="text-xs font-semibold text-red-300 transition hover:text-red-200 disabled:cursor-not-allowed disabled:opacity-50"
+                          >
+                            {deletingMediaItemId === item.id
+                              ? "Deleting..."
+                              : "Delete"}
+                          </button>
+                        </div>
                       </div>
                     </article>
                   ))}
