@@ -175,20 +175,20 @@ export default function NewMediaItemPage() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-950 px-6 py-20 text-white">
+    <main className="min-h-screen bg-[#0077b6] px-6 py-20 text-white">
       <div className="mx-auto max-w-3xl">
         <div className="flex flex-wrap gap-3">
           {" "}
           <Link
             href="/admin"
-            className="text-sm font-semibold text-cyan-300 transition hover:text-cyan-200"
+            className="text-sm font-semibold text-[#caf0f8] transition hover:text-white"
           >
             {" "}
             ← Back to Admin Dashboard{" "}
           </Link>{" "}
           <Link
             href="/media/admin"
-            className="text-sm font-semibold text-slate-400 transition hover:text-white"
+            className="text-sm font-semibold text-[#caf0f8]/80 transition hover:text-white"
           >
             {" "}
             Back to Media Admin{" "}
@@ -196,7 +196,7 @@ export default function NewMediaItemPage() {
         </div>
 
         <div className="mt-10">
-          <p className="text-xs font-semibold uppercase tracking-[0.4em] text-cyan-300">
+          <p className="text-xs font-semibold uppercase tracking-[0.4em] text-[#caf0f8]">
             Media Admin
           </p>
 
@@ -204,7 +204,7 @@ export default function NewMediaItemPage() {
             Add a new media item
           </h1>
 
-          <p className="mt-4 max-w-2xl text-lg leading-8 text-slate-300">
+          <p className="mt-4 max-w-2xl text-lg leading-8 text-[#eaf8ff]">
             Add a movie, music record, book, anime, or game to your personal
             media collection.
           </p>
@@ -215,12 +215,12 @@ export default function NewMediaItemPage() {
           // 未解锁时显示管理员密码表单。
           <form
             onSubmit={handleUnlock}
-            className="mt-10 space-y-6 rounded-3xl border border-slate-800 bg-slate-900/70 p-6 shadow-lg shadow-black/20"
+            className="mt-10 space-y-6 rounded-3xl border border-[#caf0f8]/25 bg-[#023e8a]/75 p-6 shadow-lg shadow-[#03045e]/20 backdrop-blur"
           >
             <div>
               <label
                 htmlFor="adminPassword"
-                className="block text-sm font-semibold text-slate-200"
+                className="block text-sm font-semibold text-[#f8fcff]"
               >
                 Admin password
               </label>
@@ -231,9 +231,9 @@ export default function NewMediaItemPage() {
                 value={adminPassword}
                 onChange={(event) => setAdminPassword(event.target.value)}
                 placeholder="Enter admin password"
-                className="mt-2 w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white placeholder:text-slate-500 outline-none transition focus:border-cyan-400"
+                className="mt-2 w-full rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/45 px-4 py-3 text-sm text-white placeholder:text-[#caf0f8]/60 outline-none transition focus:border-[#caf0f8]"
               />
-              <p className="mt-2 text-xs text-slate-500">
+              <p className="mt-2 text-xs text-[#caf0f8]/65">
                 The password is checked before the media editor is shown.
               </p>
             </div>
@@ -247,7 +247,7 @@ export default function NewMediaItemPage() {
             <button
               type="submit"
               disabled={isUnlocking}
-              className="w-full rounded-full bg-cyan-400 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-cyan-300 disabled:cursor-not-allowed disabled:opacity-60"
+              className="w-full rounded-full bg-[#caf0f8] px-5 py-3 text-sm font-semibold text-[#023e8a] transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
             >
               {isUnlocking ? "Checking..." : "Unlock media editor"}
             </button>
@@ -257,16 +257,16 @@ export default function NewMediaItemPage() {
           // 解锁后的新增媒体收藏表单。
           <form
             onSubmit={handleSubmit}
-            className="mt-10 space-y-6 rounded-3xl border border-slate-800 bg-slate-900/70 p-6 shadow-lg shadow-black/20"
+            className="mt-10 space-y-6 rounded-3xl border border-[#caf0f8]/25 bg-[#023e8a]/75 p-6 shadow-lg shadow-[#03045e]/20 backdrop-blur"
           >
-            <div className="rounded-2xl border border-cyan-400/30 bg-cyan-400/10 px-4 py-3 text-sm text-cyan-100">
+            <div className="rounded-2xl border border-[#caf0f8]/30 bg-[#caf0f8]/10 px-4 py-3 text-sm text-[#caf0f8]">
               Media editor unlocked.
             </div>
 
             <div>
               <label
                 htmlFor="title"
-                className="block text-sm font-semibold text-slate-200"
+                className="block text-sm font-semibold text-[#f8fcff]"
               >
                 Title
               </label>
@@ -277,14 +277,14 @@ export default function NewMediaItemPage() {
                 value={title}
                 onChange={(event) => setTitle(event.target.value)}
                 placeholder="Enter a title"
-                className="mt-2 w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white placeholder:text-slate-500 outline-none transition focus:border-cyan-400"
+                className="mt-2 w-full rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/45 px-4 py-3 text-sm text-white placeholder:text-[#caf0f8]/60 outline-none transition focus:border-[#caf0f8]"
               />
             </div>
 
             <div>
               <label
                 htmlFor="category"
-                className="block text-sm font-semibold text-slate-200"
+                className="block text-sm font-semibold text-[#f8fcff]"
               >
                 Category
               </label>
@@ -294,7 +294,7 @@ export default function NewMediaItemPage() {
                 onChange={(event) =>
                   setCategory(event.target.value as MediaCategory)
                 }
-                className="mt-2 w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white outline-none transition focus:border-cyan-400"
+                className="mt-2 w-full rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/45 px-4 py-3 text-sm text-white outline-none transition focus:border-[#caf0f8]"
               >
                 {mediaCategories.map((mediaCategory) => (
                   <option key={mediaCategory} value={mediaCategory}>
@@ -307,7 +307,7 @@ export default function NewMediaItemPage() {
             <div>
               <label
                 htmlFor="creator"
-                className="block text-sm font-semibold text-slate-200"
+                className="block text-sm font-semibold text-[#f8fcff]"
               >
                 Creator
               </label>
@@ -317,14 +317,14 @@ export default function NewMediaItemPage() {
                 value={creator}
                 onChange={(event) => setCreator(event.target.value)}
                 placeholder="Director, artist, author, studio..."
-                className="mt-2 w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white placeholder:text-slate-500 outline-none transition focus:border-cyan-400"
+                className="mt-2 w-full rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/45 px-4 py-3 text-sm text-white placeholder:text-[#caf0f8]/60 outline-none transition focus:border-[#caf0f8]"
               />
             </div>
 
             <div>
               <label
                 htmlFor="releaseYear"
-                className="block text-sm font-semibold text-slate-200"
+                className="block text-sm font-semibold text-[#f8fcff]"
               >
                 Release year
               </label>
@@ -334,14 +334,14 @@ export default function NewMediaItemPage() {
                 value={releaseYear}
                 onChange={(event) => setReleaseYear(event.target.value)}
                 placeholder="Optional release year"
-                className="mt-2 w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white placeholder:text-slate-500 outline-none transition focus:border-cyan-400"
+                className="mt-2 w-full rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/45 px-4 py-3 text-sm text-white placeholder:text-[#caf0f8]/60 outline-none transition focus:border-[#caf0f8]"
               />
             </div>
 
             <div>
               <label
                 htmlFor="rating"
-                className="block text-sm font-semibold text-slate-200"
+                className="block text-sm font-semibold text-[#f8fcff]"
               >
                 Rating
               </label>
@@ -354,14 +354,14 @@ export default function NewMediaItemPage() {
                 value={rating}
                 onChange={(event) => setRating(event.target.value)}
                 placeholder="Optional rating from 0 to 10"
-                className="mt-2 w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white placeholder:text-slate-500 outline-none transition focus:border-cyan-400"
+                className="mt-2 w-full rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/45 px-4 py-3 text-sm text-white placeholder:text-[#caf0f8]/60 outline-none transition focus:border-[#caf0f8]"
               />
             </div>
 
             <div>
               <label
                 htmlFor="coverUrl"
-                className="block text-sm font-semibold text-slate-200"
+                className="block text-sm font-semibold text-[#f8fcff]"
               >
                 Cover URL
               </label>
@@ -371,14 +371,14 @@ export default function NewMediaItemPage() {
                 value={coverUrl}
                 onChange={(event) => setCoverUrl(event.target.value)}
                 placeholder="Optional cover image path or URL"
-                className="mt-2 w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white placeholder:text-slate-500 outline-none transition focus:border-cyan-400"
+                className="mt-2 w-full rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/45 px-4 py-3 text-sm text-white placeholder:text-[#caf0f8]/60 outline-none transition focus:border-[#caf0f8]"
               />
             </div>
 
             <div>
               <label
                 htmlFor="note"
-                className="block text-sm font-semibold text-slate-200"
+                className="block text-sm font-semibold text-[#f8fcff]"
               >
                 Note
               </label>
@@ -388,7 +388,7 @@ export default function NewMediaItemPage() {
                 value={note}
                 onChange={(event) => setNote(event.target.value)}
                 placeholder="Write a short note about this media item..."
-                className="mt-2 w-full resize-none rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm leading-6 text-white placeholder:text-slate-500 outline-none transition focus:border-cyan-400"
+                className="mt-2 w-full resize-none rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/45 px-4 py-3 text-sm leading-6 text-white placeholder:text-[#caf0f8]/60 outline-none transition focus:border-[#caf0f8]"
               />
             </div>
 
@@ -401,7 +401,7 @@ export default function NewMediaItemPage() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full rounded-full bg-cyan-400 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-cyan-300 disabled:cursor-not-allowed disabled:opacity-60"
+              className="w-full rounded-full bg-[#caf0f8] px-5 py-3 text-sm font-semibold text-[#023e8a] transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
             >
               {isSubmitting ? "Creating..." : "Create media item"}
             </button>

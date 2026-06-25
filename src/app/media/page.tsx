@@ -66,12 +66,12 @@ export default async function MediaPage({ searchParams }: MediaPageProps) {
   });
 
   return (
-    <main className="min-h-screen bg-slate-950 px-6 py-20 text-white">
+    <main className="min-h-screen bg-[#0077b6] px-6 py-20 text-white">
       <section className="mx-auto max-w-6xl">
         {/* Public page header. */}
         {/* 公开媒体页面标题区域，不显示后台管理入口。 */}
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.4em] text-cyan-300">
+          <p className="text-xs font-semibold uppercase tracking-[0.4em] text-[#caf0f8]">
             Media Collection
           </p>
 
@@ -79,7 +79,7 @@ export default async function MediaPage({ searchParams }: MediaPageProps) {
             Movies, music, books, anime, and games
           </h1>
 
-          <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-300">
+          <p className="mt-5 max-w-2xl text-lg leading-8 text-[#eaf8ff]">
             A personal archive of media that shaped my taste, memory, and
             creative references.
           </p>
@@ -94,8 +94,8 @@ export default async function MediaPage({ searchParams }: MediaPageProps) {
               href={getCategoryHref(filter)}
               className={
                 activeFilter === filter
-                  ? "rounded-full bg-cyan-400 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-cyan-300"
-                  : "rounded-full border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-300 transition hover:border-cyan-400/60 hover:text-white"
+                  ? "rounded-full bg-[#caf0f8] px-4 py-2 text-sm font-semibold text-[#023e8a] transition hover:bg-white"
+                  : "rounded-full border border-[#caf0f8]/50 px-4 py-2 text-sm font-semibold text-[#caf0f8] transition hover:bg-[#caf0f8] hover:text-[#023e8a]"
               }
             >
               {filter === "ALL" ? "All" : formatCategory(filter)}
@@ -104,12 +104,12 @@ export default async function MediaPage({ searchParams }: MediaPageProps) {
         </div>
 
         {mediaItems.length === 0 ? (
-          <div className="mt-12 rounded-3xl border border-dashed border-slate-700 bg-slate-900/50 p-10 text-center">
-            <p className="text-lg font-semibold text-slate-200">
+          <div className="mt-12 rounded-3xl border border-dashed border-[#caf0f8]/40 bg-[#03045e]/45 p-10 text-center">
+            <p className="text-lg font-semibold text-[#f8fcff]">
               No media items found.
             </p>
 
-            <p className="mt-2 text-sm text-slate-400">
+            <p className="mt-2 text-sm text-[#caf0f8]/80">
               New media notes will appear here once they are added to the
               collection.
             </p>
@@ -122,7 +122,7 @@ export default async function MediaPage({ searchParams }: MediaPageProps) {
               <Link
                 key={item.id}
                 href={`/media/${item.id}`}
-                className="group overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/70 shadow-lg shadow-black/20 transition hover:-translate-y-1 hover:border-cyan-400/50 hover:bg-slate-900"
+                className="group overflow-hidden rounded-3xl border border-[#caf0f8]/25 bg-[#023e8a]/75 shadow-lg shadow-[#03045e]/20 backdrop-blur transition hover:-translate-y-1 hover:border-[#caf0f8]/50 hover:bg-[#03045e]/65"
               >
                 {item.coverUrl ? (
                   <div
@@ -133,9 +133,9 @@ export default async function MediaPage({ searchParams }: MediaPageProps) {
                     aria-label={`${item.title} cover image`}
                   />
                 ) : (
-                  <div className="flex h-56 items-center justify-center bg-gradient-to-br from-slate-900 via-slate-950 to-cyan-950/40 px-6 text-center">
+                  <div className="flex h-56 items-center justify-center bg-[#03045e]/65 px-6 text-center">
                     <div>
-                      <p className="text-xs font-semibold uppercase tracking-[0.35em] text-cyan-300">
+                      <p className="text-xs font-semibold uppercase tracking-[0.35em] text-[#caf0f8]">
                         {formatCategory(item.category)}
                       </p>
 
@@ -148,7 +148,7 @@ export default async function MediaPage({ searchParams }: MediaPageProps) {
 
                 <div className="p-6">
                   <div className="flex flex-wrap items-center gap-3">
-                    <span className="rounded-full border border-cyan-400/40 bg-cyan-400/10 px-3 py-1 text-xs font-semibold text-cyan-300">
+                    <span className="rounded-full border border-[#caf0f8]/40 bg-[#caf0f8]/10 px-3 py-1 text-xs font-semibold text-[#caf0f8]">
                       {formatCategory(item.category)}
                     </span>
 
@@ -159,23 +159,23 @@ export default async function MediaPage({ searchParams }: MediaPageProps) {
                     )}
                   </div>
 
-                  <h2 className="mt-5 text-2xl font-bold tracking-tight text-white transition group-hover:text-cyan-200">
+                  <h2 className="mt-5 text-2xl font-bold tracking-tight text-white transition group-hover:text-[#caf0f8]">
                     {item.title}
                   </h2>
 
-                  <div className="mt-3 space-y-1 text-sm text-slate-400">
+                  <div className="mt-3 space-y-1 text-sm text-[#caf0f8]/80">
                     <p>{item.creator ?? "Unknown creator"}</p>
 
                     {item.releaseYear && <p>Released in {item.releaseYear}</p>}
                   </div>
 
                   {item.note && (
-                    <p className="mt-5 line-clamp-3 text-sm leading-6 text-slate-400">
+                    <p className="mt-5 line-clamp-3 text-sm leading-6 text-[#caf0f8]/80">
                       {item.note}
                     </p>
                   )}
 
-                  <p className="mt-6 text-xs font-semibold uppercase tracking-[0.25em] text-cyan-300 opacity-80 transition group-hover:opacity-100">
+                  <p className="mt-6 text-xs font-semibold uppercase tracking-[0.25em] text-[#caf0f8] opacity-80 transition group-hover:opacity-100">
                     View detail →
                   </p>
                 </div>

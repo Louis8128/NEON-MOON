@@ -125,26 +125,26 @@ export default function PhotosAdminPage() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-950 px-6 py-20 text-white">
+    <main className="min-h-screen bg-[#0077b6] px-6 py-20 text-white">
       <div className="mx-auto max-w-6xl">
         <div className="flex flex-wrap gap-3">
           <Link
             href="/admin"
-            className="text-sm font-semibold text-cyan-300 transition hover:text-cyan-200"
+            className="text-sm font-semibold text-[#caf0f8] transition hover:text-white"
           >
             ← Back to Admin Dashboard
           </Link>
 
           <Link
             href="/photos"
-            className="text-sm font-semibold text-slate-400 transition hover:text-white"
+            className="text-sm font-semibold text-[#caf0f8]/80 transition hover:text-white"
           >
             View public gallery
           </Link>
         </div>
 
         <div className="mt-10">
-          <p className="text-xs font-semibold uppercase tracking-[0.4em] text-cyan-300">
+          <p className="text-xs font-semibold uppercase tracking-[0.4em] text-[#caf0f8]">
             Photos Admin
           </p>
 
@@ -152,7 +152,7 @@ export default function PhotosAdminPage() {
             Manage photography records
           </h1>
 
-          <p className="mt-4 max-w-2xl text-lg leading-8 text-slate-300">
+          <p className="mt-4 max-w-2xl text-lg leading-8 text-[#eaf8ff]">
             Unlock the admin list to view photo records stored in the database.
           </p>
         </div>
@@ -162,12 +162,12 @@ export default function PhotosAdminPage() {
           // 未解锁时显示管理员密码表单。
           <form
             onSubmit={handleUnlock}
-            className="mt-10 max-w-2xl space-y-6 rounded-3xl border border-slate-800 bg-slate-900/70 p-6 shadow-lg shadow-black/20"
+            className="mt-10 max-w-2xl space-y-6 rounded-3xl border border-[#caf0f8]/25 bg-[#023e8a]/75 p-6 shadow-lg shadow-[#03045e]/20 backdrop-blur"
           >
             <div>
               <label
                 htmlFor="adminPassword"
-                className="block text-sm font-semibold text-slate-200"
+                className="block text-sm font-semibold text-[#f8fcff]"
               >
                 Admin password
               </label>
@@ -178,9 +178,9 @@ export default function PhotosAdminPage() {
                 value={adminPassword}
                 onChange={(event) => setAdminPassword(event.target.value)}
                 placeholder="Enter admin password"
-                className="mt-2 w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white placeholder:text-slate-500 outline-none transition focus:border-cyan-400"
+                className="mt-2 w-full rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/45 px-4 py-3 text-sm text-white placeholder:text-[#caf0f8]/60 outline-none transition focus:border-[#caf0f8]"
               />
-              <p className="mt-2 text-xs text-slate-500">
+              <p className="mt-2 text-xs text-[#caf0f8]/65">
                 The server checks this password before returning photo records.
               </p>
             </div>
@@ -194,7 +194,7 @@ export default function PhotosAdminPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full rounded-full bg-cyan-400 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-cyan-300 disabled:cursor-not-allowed disabled:opacity-60"
+              className="w-full rounded-full bg-[#caf0f8] px-5 py-3 text-sm font-semibold text-[#023e8a] transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
             >
               {isLoading ? "Loading..." : "Unlock photos admin"}
             </button>
@@ -204,14 +204,14 @@ export default function PhotosAdminPage() {
           // 解锁后显示照片后台管理列表。
           <section className="mt-10">
             <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-              <div className="rounded-2xl border border-cyan-400/30 bg-cyan-400/10 px-4 py-3 text-sm text-cyan-100">
+              <div className="rounded-2xl border border-[#caf0f8]/30 bg-[#caf0f8]/10 px-4 py-3 text-sm text-[#caf0f8]">
                 Photos admin unlocked. {photos.length} photo
                 {photos.length === 1 ? "" : "s"} found.
               </div>
 
               <Link
                 href="/photos/upload"
-                className="rounded-full bg-cyan-400 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-cyan-300"
+                className="rounded-full bg-[#caf0f8] px-5 py-3 text-sm font-semibold text-[#023e8a] transition hover:bg-white"
               >
                 Upload photo
               </Link>
@@ -224,12 +224,12 @@ export default function PhotosAdminPage() {
             )}
 
             {photos.length === 0 ? (
-              <div className="rounded-3xl border border-dashed border-slate-700 bg-slate-900/50 p-10 text-center">
-                <p className="text-lg font-semibold text-slate-200">
+              <div className="rounded-3xl border border-dashed border-[#caf0f8]/40 bg-[#03045e]/45 p-10 text-center">
+                <p className="text-lg font-semibold text-[#f8fcff]">
                   No photos found.
                 </p>
 
-                <p className="mt-2 text-sm text-slate-400">
+                <p className="mt-2 text-sm text-[#caf0f8]/80">
                   Upload a photo to start building the gallery.
                 </p>
               </div>
@@ -240,7 +240,7 @@ export default function PhotosAdminPage() {
                 {photos.map((photo) => (
                   <article
                     key={photo.id}
-                    className="overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/70 shadow-lg shadow-black/20"
+                    className="overflow-hidden rounded-3xl border border-[#caf0f8]/25 bg-[#023e8a]/75 shadow-lg shadow-[#03045e]/20 backdrop-blur"
                   >
                     <div
                       className="h-56 bg-cover bg-center"
@@ -253,7 +253,7 @@ export default function PhotosAdminPage() {
                     <div className="p-6">
                       <div className="flex items-start justify-between gap-4">
                         <div>
-                          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-cyan-300">
+                          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#caf0f8]">
                             Photo #{photo.id}
                           </p>
 
@@ -264,36 +264,36 @@ export default function PhotosAdminPage() {
 
                         <Link
                           href={`/photos/${photo.id}`}
-                          className="shrink-0 text-xs font-semibold text-cyan-300 transition hover:text-cyan-200"
+                          className="shrink-0 text-xs font-semibold text-[#caf0f8] transition hover:text-white"
                         >
                           View
                         </Link>
                       </div>
 
-                      <div className="mt-4 space-y-2 text-sm text-slate-400">
+                      <div className="mt-4 space-y-2 text-sm text-[#caf0f8]/80">
                         <p>
-                          <span className="text-slate-500">Location: </span>
+                          <span className="text-[#caf0f8]/65">Location: </span>
                           {photo.location ?? "Unknown"}
                         </p>
 
                         <p>
-                          <span className="text-slate-500">Taken: </span>
+                          <span className="text-[#caf0f8]/65">Taken: </span>
                           {formatDate(photo.takenAt)}
                         </p>
 
                         <p>
-                          <span className="text-slate-500">Updated: </span>
+                          <span className="text-[#caf0f8]/65">Updated: </span>
                           {formatDate(photo.updatedAt)}
                         </p>
                       </div>
 
                       {photo.description && (
-                        <p className="mt-5 line-clamp-3 text-sm leading-6 text-slate-400">
+                        <p className="mt-5 line-clamp-3 text-sm leading-6 text-[#caf0f8]/80">
                           {photo.description}
                         </p>
                       )}
 
-                      <p className="mt-5 break-all rounded-2xl border border-slate-800 bg-slate-950/70 px-3 py-2 text-xs text-slate-500">
+                      <p className="mt-5 break-all rounded-2xl border border-[#caf0f8]/25 bg-[#03045e]/65 px-3 py-2 text-xs text-[#caf0f8]/65">
                         {photo.imageUrl}
                       </p>
                     </div>

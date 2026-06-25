@@ -33,17 +33,17 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   }
 
   return (
-    <main className="min-h-screen bg-slate-950 px-6 py-20 text-white">
+    <main className="min-h-screen bg-[#0077b6] px-6 py-20 text-white">
       <article className="mx-auto max-w-3xl">
         <Link
           href="/blog"
-          className="text-sm font-semibold text-cyan-300 transition hover:text-cyan-200"
+          className="text-sm font-semibold text-[#caf0f8] transition hover:text-white"
         >
           ← Back to Blog
         </Link>
 
         <div className="mt-10">
-          <p className="text-xs font-semibold uppercase tracking-[0.4em] text-cyan-300">
+          <p className="text-xs font-semibold uppercase tracking-[0.4em] text-[#caf0f8]">
             Blog Post
           </p>
 
@@ -51,20 +51,20 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             {post.title}
           </h1>
 
-          <p className="mt-4 text-sm text-slate-500">
+          <p className="mt-4 text-sm text-[#caf0f8]/65">
             Published on {post.createdAt.toLocaleDateString("en-AU")}
           </p>
 
           {post.excerpt && (
-            <p className="mt-8 text-xl leading-8 text-slate-300">
+            <p className="mt-8 text-xl leading-8 text-[#eaf8ff]">
               {post.excerpt}
             </p>
           )}
 
-          <div className="mt-10 rounded-3xl border border-slate-800 bg-slate-900/70 p-8 shadow-lg shadow-black/20">
+          <div className="mt-10 rounded-3xl border border-[#caf0f8]/25 bg-[#023e8a]/75 p-8 shadow-lg shadow-[#03045e]/20 backdrop-blur">
             {/* Preserve line breaks from the plain text content stored in the database. */}
             {/* 保留数据库文章内容里的换行。 */}
-            <p className="whitespace-pre-line text-base leading-8 text-slate-200">
+            <p className="whitespace-pre-line text-base leading-8 text-[#f8fcff]">
               {post.content}
             </p>
           </div>

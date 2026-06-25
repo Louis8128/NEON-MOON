@@ -20,9 +20,9 @@ const featureCards = [
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-slate-950 text-white">
+    <main className="min-h-screen bg-[#0077b6] text-white">
       <section className="mx-auto flex min-h-[calc(100vh-65px)] max-w-5xl flex-col justify-center px-6 py-20">
-        <p className="mb-4 text-sm font-medium uppercase tracking-[0.3em] text-slate-400">
+        <p className="mb-4 text-sm font-medium uppercase tracking-[0.3em] text-[#caf0f8]">
           Personal Full-Stack Website
         </p>
 
@@ -30,7 +30,7 @@ export default function Home() {
           Welcome to My Life Site - Neon Moon
         </h1>
 
-        <p className="max-w-2xl text-lg leading-8 text-slate-300">
+        <p className="max-w-2xl text-lg leading-8 text-[#eaf8ff]">
           This website will become my personal digital space for blogs, media
           collections, photos, music, books, movies, anime, and games.
         </p>
@@ -40,10 +40,10 @@ export default function Home() {
             <Link
               key={card.href}
               href={card.href}
-              className="rounded-2xl border border-slate-800 bg-slate-900 p-5 transition hover:-translate-y-1 hover:border-slate-600 hover:bg-slate-800"
+              className="rounded-2xl border border-[#caf0f8]/25 bg-[#023e8a]/75 p-5 transition hover:-translate-y-1 hover:border-[#caf0f8]/60 hover:bg-[#caf0f8]/15"
             >
               <h2 className="text-xl font-semibold">{card.title}</h2>
-              <p className="mt-2 text-sm text-slate-400">
+              <p className="mt-2 text-sm text-[#caf0f8]/80">
                 {card.description}
               </p>
             </Link>

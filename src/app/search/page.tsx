@@ -69,7 +69,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   const totalResults = mediaItems.length + blogPosts.length + photos.length;
 
   return (
-    <main className="min-h-screen bg-slate-950 px-6 py-20 text-white">
+    <main className="min-h-screen bg-[#0077b6] px-6 py-20 text-white">
       <div className="mx-auto max-w-6xl">
         <PageHeader
           eyebrow="Search"
@@ -85,11 +85,11 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
             name="q"
             defaultValue={query}
             placeholder="Search for music, posts, photos..."
-            className="min-w-0 flex-1 rounded-full border border-slate-700 bg-slate-900 px-5 py-3 text-sm text-white placeholder:text-slate-500 outline-none transition focus:border-cyan-400"
+            className="min-w-0 flex-1 rounded-full border border-[#caf0f8]/30 bg-[#023e8a]/45 px-5 py-3 text-sm text-white placeholder:text-[#caf0f8]/60 outline-none transition focus:border-[#caf0f8]"
           />
           <button
             type="submit"
-            className="rounded-full bg-cyan-400 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-cyan-300"
+            className="rounded-full bg-[#caf0f8] px-5 py-3 text-sm font-semibold text-[#023e8a] transition hover:bg-white"
           >
             Search
           </button>
@@ -98,22 +98,22 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
         {/* State 1: no query has been entered yet. */}
         {/* 还没有输入搜索词。 */}
         {!query ? (
-          <section className="rounded-3xl border border-dashed border-slate-700 bg-slate-900/50 p-10 text-center">
-            <p className="text-lg font-semibold text-slate-200">
+          <section className="rounded-3xl border border-dashed border-[#caf0f8]/40 bg-[#03045e]/45 p-10 text-center">
+            <p className="text-lg font-semibold text-[#f8fcff]">
               Enter a keyword to search.
             </p>
-            <p className="mt-2 text-sm text-slate-400">
+            <p className="mt-2 text-sm text-[#caf0f8]/80">
               Try words like moon, Tokyo, music, website, or Interstellar.
             </p>
           </section>
         ) : totalResults === 0 ? (
           // State 2: query exists, but no database records matched it.
           // 有搜索词，但没有结果。
-          <section className="rounded-3xl border border-dashed border-slate-700 bg-slate-900/50 p-10 text-center">
-            <p className="text-lg font-semibold text-slate-200">
+          <section className="rounded-3xl border border-dashed border-[#caf0f8]/40 bg-[#03045e]/45 p-10 text-center">
+            <p className="text-lg font-semibold text-[#f8fcff]">
               No results found for “{query}”.
             </p>
-            <p className="mt-2 text-sm text-slate-400">
+            <p className="mt-2 text-sm text-[#caf0f8]/80">
               Try another keyword or add more records to the database.
             </p>
           </section>
@@ -121,9 +121,9 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
           // State 3: matching records exist, grouped by content type.
           // 有搜索结果，按 Media / Blog / Photos 分组展示。
           <div className="space-y-12">
-            <p className="text-sm text-slate-400">
+            <p className="text-sm text-[#caf0f8]/80">
               Found {totalResults} result{totalResults === 1 ? "" : "s"} for{" "}
-              <span className="font-semibold text-cyan-300">“{query}”</span>.
+              <span className="font-semibold text-[#caf0f8]">“{query}”</span>.
             </p>
 
             {mediaItems.length > 0 && (
@@ -137,21 +137,21 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
                     <Link
                       key={item.id}
                       href={`/media?category=${item.category}`}
-                      className="rounded-3xl border border-slate-800 bg-slate-900/70 p-5 transition hover:-translate-y-1 hover:border-cyan-400/60"
+                      className="rounded-3xl border border-[#caf0f8]/25 bg-[#023e8a]/75 p-5 transition hover:-translate-y-1 hover:border-[#caf0f8]/60"
                     >
-                      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-300">
+                      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#caf0f8]">
                         {item.category}
                       </p>
                       <h3 className="mt-3 text-xl font-bold text-white">
                         {item.title}
                       </h3>
                       {item.creator && (
-                        <p className="mt-2 text-sm text-slate-400">
+                        <p className="mt-2 text-sm text-[#caf0f8]/80">
                           {item.creator}
                         </p>
                       )}
                       {item.note && (
-                        <p className="mt-3 line-clamp-3 text-sm leading-6 text-slate-300">
+                        <p className="mt-3 line-clamp-3 text-sm leading-6 text-[#eaf8ff]">
                           {item.note}
                         </p>
                       )}
@@ -172,16 +172,16 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
                     <Link
                       key={post.id}
                       href={`/blog/${post.slug}`}
-                      className="block rounded-3xl border border-slate-800 bg-slate-900/70 p-5 transition hover:-translate-y-1 hover:border-cyan-400/60"
+                      className="block rounded-3xl border border-[#caf0f8]/25 bg-[#023e8a]/75 p-5 transition hover:-translate-y-1 hover:border-[#caf0f8]/60"
                     >
-                      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-300">
+                      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#caf0f8]">
                         Blog Post
                       </p>
                       <h3 className="mt-3 text-xl font-bold text-white">
                         {post.title}
                       </h3>
                       {post.excerpt && (
-                        <p className="mt-3 text-sm leading-6 text-slate-300">
+                        <p className="mt-3 text-sm leading-6 text-[#eaf8ff]">
                           {post.excerpt}
                         </p>
                       )}
@@ -202,21 +202,21 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
                     <Link
                       key={photo.id}
                       href="/photos"
-                      className="rounded-3xl border border-slate-800 bg-slate-900/70 p-5 transition hover:-translate-y-1 hover:border-cyan-400/60"
+                      className="rounded-3xl border border-[#caf0f8]/25 bg-[#023e8a]/75 p-5 transition hover:-translate-y-1 hover:border-[#caf0f8]/60"
                     >
-                      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-300">
+                      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#caf0f8]">
                         Photo
                       </p>
                       <h3 className="mt-3 text-xl font-bold text-white">
                         {photo.title}
                       </h3>
                       {photo.location && (
-                        <p className="mt-2 text-sm text-slate-400">
+                        <p className="mt-2 text-sm text-[#caf0f8]/80">
                           {photo.location}
                         </p>
                       )}
                       {photo.description && (
-                        <p className="mt-3 text-sm leading-6 text-slate-300">
+                        <p className="mt-3 text-sm leading-6 text-[#eaf8ff]">
                           {photo.description}
                         </p>
                       )}

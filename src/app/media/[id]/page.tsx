@@ -59,11 +59,11 @@ export default async function MediaDetailPage({
   const mediaItem = await getMediaItem(id);
 
   return (
-    <main className="min-h-screen bg-slate-950 px-6 py-20 text-white">
+    <main className="min-h-screen bg-[#0077b6] px-6 py-20 text-white">
       <article className="mx-auto max-w-5xl">
         <Link
           href="/media"
-          className="text-sm font-semibold text-cyan-300 transition hover:text-cyan-200"
+          className="text-sm font-semibold text-[#caf0f8] transition hover:text-white"
         >
           ← Back to Media
         </Link>
@@ -71,7 +71,7 @@ export default async function MediaDetailPage({
         <div className="mt-10 grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
           {/* Cover image area. */}
           {/* 中文关键词：媒体封面展示区域。 */}
-          <div className="overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/70 shadow-xl shadow-black/20">
+          <div className="overflow-hidden rounded-3xl border border-[#caf0f8]/25 bg-[#023e8a]/75 shadow-xl shadow-[#03045e]/20 backdrop-blur">
             {mediaItem.coverUrl ? (
               <div
                 className="min-h-[420px] bg-cover bg-center"
@@ -81,9 +81,9 @@ export default async function MediaDetailPage({
                 aria-label={`${mediaItem.title} cover image`}
               />
             ) : (
-              <div className="flex min-h-[420px] items-center justify-center bg-gradient-to-br from-slate-900 via-slate-950 to-cyan-950/40 px-8 text-center">
+              <div className="flex min-h-[420px] items-center justify-center bg-[#03045e]/65 px-8 text-center">
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.35em] text-cyan-300">
+                  <p className="text-xs font-semibold uppercase tracking-[0.35em] text-[#caf0f8]">
                     No Cover
                   </p>
                   <p className="mt-4 text-2xl font-bold text-white">
@@ -97,12 +97,12 @@ export default async function MediaDetailPage({
           {/* Main media information. */}
           {/* 中文关键词：媒体详情主要信息。 */}
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.4em] text-cyan-300">
+            <p className="text-xs font-semibold uppercase tracking-[0.4em] text-[#caf0f8]">
               Media Detail
             </p>
 
             <div className="mt-5 flex flex-wrap items-center gap-3">
-              <span className="rounded-full border border-cyan-400/40 bg-cyan-400/10 px-3 py-1 text-xs font-semibold text-cyan-300">
+              <span className="rounded-full border border-[#caf0f8]/40 bg-[#caf0f8]/10 px-3 py-1 text-xs font-semibold text-[#caf0f8]">
                 {formatCategory(mediaItem.category)}
               </span>
 
@@ -117,9 +117,9 @@ export default async function MediaDetailPage({
               {mediaItem.title}
             </h1>
 
-            <div className="mt-6 grid gap-4 rounded-3xl border border-slate-800 bg-slate-900/70 p-5 text-sm text-slate-300 sm:grid-cols-2">
+            <div className="mt-6 grid gap-4 rounded-3xl border border-[#caf0f8]/25 bg-[#023e8a]/75 p-5 text-sm text-[#eaf8ff] sm:grid-cols-2">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.25em] text-slate-500">
+                <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#caf0f8]/65">
                   Creator
                 </p>
                 <p className="mt-2 text-base text-white">
@@ -128,7 +128,7 @@ export default async function MediaDetailPage({
               </div>
 
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.25em] text-slate-500">
+                <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#caf0f8]/65">
                   Release Year
                 </p>
                 <p className="mt-2 text-base text-white">
@@ -137,7 +137,7 @@ export default async function MediaDetailPage({
               </div>
 
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.25em] text-slate-500">
+                <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#caf0f8]/65">
                   Created
                 </p>
                 <p className="mt-2 text-base text-white">
@@ -146,7 +146,7 @@ export default async function MediaDetailPage({
               </div>
 
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.25em] text-slate-500">
+                <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#caf0f8]/65">
                   Updated
                 </p>
                 <p className="mt-2 text-base text-white">
@@ -155,17 +155,17 @@ export default async function MediaDetailPage({
               </div>
             </div>
 
-            <section className="mt-8 rounded-3xl border border-slate-800 bg-slate-900/70 p-6">
+            <section className="mt-8 rounded-3xl border border-[#caf0f8]/25 bg-[#023e8a]/75 p-6">
               <h2 className="text-xl font-semibold text-white">
                 Personal note
               </h2>
 
               {mediaItem.note ? (
-                <p className="mt-4 whitespace-pre-wrap text-base leading-8 text-slate-300">
+                <p className="mt-4 whitespace-pre-wrap text-base leading-8 text-[#eaf8ff]">
                   {mediaItem.note}
                 </p>
               ) : (
-                <p className="mt-4 text-base leading-8 text-slate-500">
+                <p className="mt-4 text-base leading-8 text-[#caf0f8]/65">
                   No note has been added for this media item yet.
                 </p>
               )}
@@ -174,7 +174,7 @@ export default async function MediaDetailPage({
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
                 href="/media"
-                className="rounded-full border border-slate-700 px-5 py-3 text-sm font-semibold text-slate-300 transition hover:border-cyan-400/60 hover:text-white"
+                className="rounded-full border border-[#caf0f8]/50 px-5 py-3 text-sm font-semibold text-[#caf0f8] transition hover:bg-[#caf0f8] hover:text-[#023e8a]"
               >
                 View all media
               </Link>

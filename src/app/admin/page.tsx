@@ -16,21 +16,21 @@ const adminCards = [
     label: "Manage media",
   },
   {
-    title: "Photo Upload",
+    title: "Photos Admin",
     description:
-      "Upload new photography records and save image metadata to the database.",
-    href: "/photos/upload",
-    label: "Upload photos",
+      "Review photo records, upload new images, and manage gallery metadata.",
+    href: "/photos/admin",
+    label: "Manage photos",
   },
 ];
 
 export default function AdminDashboardPage() {
   return (
-    <main className="min-h-screen bg-slate-950 px-6 py-20 text-white">
+    <main className="min-h-screen bg-[#0077b6] px-6 py-20 text-white">
       <section className="mx-auto max-w-6xl">
         <Link
           href="/"
-          className="text-sm font-semibold text-cyan-300 transition hover:text-cyan-200"
+          className="text-sm font-semibold text-[#caf0f8] transition hover:text-white"
         >
           ← Back to Home
         </Link>
@@ -38,7 +38,7 @@ export default function AdminDashboardPage() {
         {/* Admin dashboard header. */}
         {/* 统一后台入口页面标题。 */}
         <div className="mt-10">
-          <p className="text-xs font-semibold uppercase tracking-[0.4em] text-cyan-300">
+          <p className="text-xs font-semibold uppercase tracking-[0.4em] text-[#caf0f8]">
             Admin Dashboard
           </p>
 
@@ -46,7 +46,7 @@ export default function AdminDashboardPage() {
             Manage NEON MOON
           </h1>
 
-          <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-300">
+          <p className="mt-5 max-w-2xl text-lg leading-8 text-[#eaf8ff]">
             A private entry point for managing blog posts, media collections,
             and photography uploads.
           </p>
@@ -58,7 +58,7 @@ export default function AdminDashboardPage() {
           <p className="font-semibold text-amber-200">
             Development-stage admin area
           </p>
-          <p className="mt-2 text-amber-100/90">
+          <p className="mt-2 text-amber-50/90">
             These admin pages still use the temporary password-based protection.
             Before public deployment, this should be upgraded to a unified login
             system with protected sessions.
@@ -72,21 +72,21 @@ export default function AdminDashboardPage() {
             <Link
               key={card.href}
               href={card.href}
-              className="group rounded-3xl border border-slate-800 bg-slate-900/70 p-6 shadow-lg shadow-black/20 transition hover:-translate-y-1 hover:border-cyan-400/50 hover:bg-slate-900"
+              className="group rounded-3xl border border-[#caf0f8]/25 bg-[#023e8a]/75 p-6 shadow-lg shadow-[#03045e]/20 backdrop-blur transition hover:-translate-y-1 hover:border-[#caf0f8]/60 hover:bg-[#03045e]/65"
             >
-              <p className="text-xs font-semibold uppercase tracking-[0.35em] text-cyan-300">
+              <p className="text-xs font-semibold uppercase tracking-[0.35em] text-[#caf0f8]">
                 Admin
               </p>
 
-              <h2 className="mt-4 text-2xl font-bold text-white transition group-hover:text-cyan-200">
+              <h2 className="mt-4 text-2xl font-bold text-white transition group-hover:text-[#caf0f8]">
                 {card.title}
               </h2>
 
-              <p className="mt-4 text-sm leading-7 text-slate-400">
+              <p className="mt-4 text-sm leading-7 text-[#eaf8ff]">
                 {card.description}
               </p>
 
-              <p className="mt-6 text-sm font-semibold text-cyan-300 transition group-hover:text-cyan-200">
+              <p className="mt-6 text-sm font-semibold text-[#caf0f8] transition group-hover:text-white">
                 {card.label} →
               </p>
             </Link>
@@ -95,11 +95,11 @@ export default function AdminDashboardPage() {
 
         {/* Direct URL reminder. */}
         {/* 提醒后台没有放在公开导航栏，需要手动输入 /admin。 */}
-        <div className="mt-10 rounded-3xl border border-slate-800 bg-slate-900/50 p-5 text-sm leading-7 text-slate-400">
+        <div className="mt-10 rounded-3xl border border-[#caf0f8]/25 bg-[#03045e]/65 p-5 text-sm leading-7 text-[#caf0f8]/80 backdrop-blur">
           <p>
             This page is intentionally not shown in the public navigation bar.
             Access it directly through{" "}
-            <span className="text-slate-200">/admin</span>.
+            <span className="text-white">/admin</span>.
           </p>
         </div>
       </section>

@@ -142,33 +142,33 @@ export default function PhotoUploadPage() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-950 px-6 py-20 text-white">
+    <main className="min-h-screen bg-[#0077b6] px-6 py-20 text-white">
       <div className="mx-auto max-w-3xl">
         <div className="flex flex-wrap gap-3">
           <Link
             href="/admin"
-            className="text-sm font-semibold text-cyan-300 transition hover:text-cyan-200"
+            className="text-sm font-semibold text-[#caf0f8] transition hover:text-white"
           >
             ← Back to Admin Dashboard
           </Link>
 
           <Link
             href="/photos/admin"
-            className="text-sm font-semibold text-slate-400 transition hover:text-white"
+            className="text-sm font-semibold text-[#caf0f8]/80 transition hover:text-white"
           >
             Back to Photos Admin
           </Link>
 
           <Link
             href="/photos"
-            className="text-sm font-semibold text-slate-400 transition hover:text-white"
+            className="text-sm font-semibold text-[#caf0f8]/80 transition hover:text-white"
           >
             View public gallery
           </Link>
         </div>
 
         <div className="mt-10">
-          <p className="text-xs font-semibold uppercase tracking-[0.4em] text-cyan-300">
+          <p className="text-xs font-semibold uppercase tracking-[0.4em] text-[#caf0f8]">
             Upload Photo
           </p>
 
@@ -176,7 +176,7 @@ export default function PhotoUploadPage() {
             Add a new photo
           </h1>
 
-          <p className="mt-4 max-w-2xl text-lg leading-8 text-slate-300">
+          <p className="mt-4 max-w-2xl text-lg leading-8 text-[#eaf8ff]">
             Unlock the upload form with the admin password, then upload a local
             image file and save its details into the database.
           </p>
@@ -185,12 +185,12 @@ export default function PhotoUploadPage() {
         {!isUnlocked ? (
           <form
             onSubmit={handleUnlock}
-            className="mt-10 space-y-6 rounded-3xl border border-slate-800 bg-slate-900/70 p-6 shadow-lg shadow-black/20"
+            className="mt-10 space-y-6 rounded-3xl border border-[#caf0f8]/25 bg-[#023e8a]/75 p-6 shadow-lg shadow-[#03045e]/20 backdrop-blur"
           >
             <div>
               <label
                 htmlFor="unlockPassword"
-                className="block text-sm font-semibold text-slate-200"
+                className="block text-sm font-semibold text-[#f8fcff]"
               >
                 Admin password
               </label>
@@ -202,10 +202,10 @@ export default function PhotoUploadPage() {
                 value={adminPassword}
                 onChange={(event) => setAdminPassword(event.target.value)}
                 placeholder="Enter upload password"
-                className="mt-2 w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white placeholder:text-slate-500 outline-none transition focus:border-cyan-400"
+                className="mt-2 w-full rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/45 px-4 py-3 text-sm text-white placeholder:text-[#caf0f8]/60 outline-none transition focus:border-[#caf0f8]"
               />
 
-              <p className="mt-2 text-xs text-slate-500">
+              <p className="mt-2 text-xs text-[#caf0f8]/65">
                 This protects the upload form from public access.
               </p>
             </div>
@@ -219,7 +219,7 @@ export default function PhotoUploadPage() {
             <button
               type="submit"
               disabled={isUnlocking}
-              className="w-full rounded-full bg-cyan-400 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-cyan-300 disabled:cursor-not-allowed disabled:opacity-60"
+              className="w-full rounded-full bg-[#caf0f8] px-5 py-3 text-sm font-semibold text-[#023e8a] transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
             >
               {isUnlocking ? "Checking..." : "Unlock upload form"}
             </button>
@@ -227,21 +227,21 @@ export default function PhotoUploadPage() {
         ) : (
           <form
             onSubmit={handleSubmit}
-            className="mt-10 space-y-6 rounded-3xl border border-slate-800 bg-slate-900/70 p-6 shadow-lg shadow-black/20"
+            className="mt-10 space-y-6 rounded-3xl border border-[#caf0f8]/25 bg-[#023e8a]/75 p-6 shadow-lg shadow-[#03045e]/20 backdrop-blur"
           >
-            <div className="rounded-2xl border border-cyan-400/30 bg-cyan-400/10 px-4 py-3 text-sm text-cyan-100">
+            <div className="rounded-2xl border border-[#caf0f8]/30 bg-[#caf0f8]/10 px-4 py-3 text-sm text-[#caf0f8]">
               Upload form unlocked.
             </div>
 
             <div>
               <label
                 htmlFor="file"
-                className="block text-sm font-semibold text-slate-200"
+                className="block text-sm font-semibold text-[#f8fcff]"
               >
                 Image file
               </label>
 
-              <div className="mt-2 flex items-center gap-4 rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3">
+              <div className="mt-2 flex items-center gap-4 rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/45 px-4 py-3">
                 <input
                   id="file"
                   name="file"
@@ -254,17 +254,17 @@ export default function PhotoUploadPage() {
 
                 <label
                   htmlFor="file"
-                  className="cursor-pointer rounded-full bg-cyan-400 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-cyan-300"
+                  className="cursor-pointer rounded-full bg-[#caf0f8] px-4 py-2 text-sm font-semibold text-[#023e8a] transition hover:bg-white"
                 >
                   Choose file
                 </label>
 
-                <span className="min-w-0 truncate text-sm text-slate-400">
+                <span className="min-w-0 truncate text-sm text-[#caf0f8]/80">
                   {selectedFileName}
                 </span>
               </div>
 
-              <p className="mt-2 text-xs text-slate-500">
+              <p className="mt-2 text-xs text-[#caf0f8]/65">
                 Supported formats: JPG, PNG, WEBP. Maximum size: 8MB.
               </p>
             </div>
@@ -272,7 +272,7 @@ export default function PhotoUploadPage() {
             <div>
               <label
                 htmlFor="title"
-                className="block text-sm font-semibold text-slate-200"
+                className="block text-sm font-semibold text-[#f8fcff]"
               >
                 Title
               </label>
@@ -283,14 +283,14 @@ export default function PhotoUploadPage() {
                 type="text"
                 required
                 placeholder="Enter a photo title"
-                className="mt-2 w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white placeholder:text-slate-500 outline-none transition focus:border-cyan-400"
+                className="mt-2 w-full rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/45 px-4 py-3 text-sm text-white placeholder:text-[#caf0f8]/60 outline-none transition focus:border-[#caf0f8]"
               />
             </div>
 
             <div>
               <label
                 htmlFor="location"
-                className="block text-sm font-semibold text-slate-200"
+                className="block text-sm font-semibold text-[#f8fcff]"
               >
                 Location
               </label>
@@ -300,14 +300,14 @@ export default function PhotoUploadPage() {
                 name="location"
                 type="text"
                 placeholder="Enter a location"
-                className="mt-2 w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white placeholder:text-slate-500 outline-none transition focus:border-cyan-400"
+                className="mt-2 w-full rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/45 px-4 py-3 text-sm text-white placeholder:text-[#caf0f8]/60 outline-none transition focus:border-[#caf0f8]"
               />
             </div>
 
             <div>
               <label
                 htmlFor="takenAt"
-                className="block text-sm font-semibold text-slate-200"
+                className="block text-sm font-semibold text-[#f8fcff]"
               >
                 Taken date
               </label>
@@ -316,14 +316,14 @@ export default function PhotoUploadPage() {
                 id="takenAt"
                 name="takenAt"
                 type="date"
-                className="mt-2 w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white outline-none transition focus:border-cyan-400"
+                className="mt-2 w-full rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/45 px-4 py-3 text-sm text-white outline-none transition focus:border-[#caf0f8]"
               />
             </div>
 
             <div>
               <label
                 htmlFor="description"
-                className="block text-sm font-semibold text-slate-200"
+                className="block text-sm font-semibold text-[#f8fcff]"
               >
                 Description
               </label>
@@ -333,7 +333,7 @@ export default function PhotoUploadPage() {
                 name="description"
                 rows={5}
                 placeholder="Write a short note about this photo..."
-                className="mt-2 w-full resize-none rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm leading-6 text-white placeholder:text-slate-500 outline-none transition focus:border-cyan-400"
+                className="mt-2 w-full resize-none rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/45 px-4 py-3 text-sm leading-6 text-white placeholder:text-[#caf0f8]/60 outline-none transition focus:border-[#caf0f8]"
               />
             </div>
 
@@ -346,7 +346,7 @@ export default function PhotoUploadPage() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full rounded-full bg-cyan-400 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-cyan-300 disabled:cursor-not-allowed disabled:opacity-60"
+              className="w-full rounded-full bg-[#caf0f8] px-5 py-3 text-sm font-semibold text-[#023e8a] transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
             >
               {isSubmitting ? "Uploading..." : "Upload photo"}
             </button>

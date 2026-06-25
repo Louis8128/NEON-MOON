@@ -204,25 +204,25 @@ export default function MediaAdminPage() {
 
   function getFilterButtonClass(targetFilter: MediaFilter) {
     return filter === targetFilter
-      ? "rounded-full bg-cyan-400 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-cyan-300"
-      : "rounded-full border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-300 transition hover:border-cyan-400/60 hover:text-white";
+      ? "rounded-full bg-[#caf0f8] px-4 py-2 text-sm font-semibold text-[#023e8a] transition hover:bg-white"
+      : "rounded-full border border-[#caf0f8]/50 px-4 py-2 text-sm font-semibold text-[#caf0f8] transition hover:bg-[#caf0f8] hover:text-[#023e8a]";
   }
 
   return (
-    <main className="min-h-screen bg-slate-950 px-6 py-20 text-white">
+    <main className="min-h-screen bg-[#0077b6] px-6 py-20 text-white">
       <div className="mx-auto max-w-5xl">
         <div className="flex flex-wrap gap-3">
           {" "}
           <Link
             href="/admin"
-            className="text-sm font-semibold text-cyan-300 transition hover:text-cyan-200"
+            className="text-sm font-semibold text-[#caf0f8] transition hover:text-white"
           >
             {" "}
             ← Back to Admin Dashboard{" "}
           </Link>{" "}
           <Link
             href="/media"
-            className="text-sm font-semibold text-slate-400 transition hover:text-white"
+            className="text-sm font-semibold text-[#caf0f8]/80 transition hover:text-white"
           >
             {" "}
             View public media{" "}
@@ -230,7 +230,7 @@ export default function MediaAdminPage() {
         </div>
 
         <div className="mt-10">
-          <p className="text-xs font-semibold uppercase tracking-[0.4em] text-cyan-300">
+          <p className="text-xs font-semibold uppercase tracking-[0.4em] text-[#caf0f8]">
             Media Admin
           </p>
 
@@ -238,7 +238,7 @@ export default function MediaAdminPage() {
             Manage media collection
           </h1>
 
-          <p className="mt-4 max-w-2xl text-lg leading-8 text-slate-300">
+          <p className="mt-4 max-w-2xl text-lg leading-8 text-[#eaf8ff]">
             Unlock the admin list to view, edit, create, and delete media items
             stored in the database.
           </p>
@@ -249,12 +249,12 @@ export default function MediaAdminPage() {
           // 未解锁时显示密码表单。
           <form
             onSubmit={handleUnlock}
-            className="mt-10 max-w-2xl space-y-6 rounded-3xl border border-slate-800 bg-slate-900/70 p-6 shadow-lg shadow-black/20"
+            className="mt-10 max-w-2xl space-y-6 rounded-3xl border border-[#caf0f8]/25 bg-[#023e8a]/75 p-6 shadow-lg shadow-[#03045e]/20 backdrop-blur"
           >
             <div>
               <label
                 htmlFor="adminPassword"
-                className="block text-sm font-semibold text-slate-200"
+                className="block text-sm font-semibold text-[#f8fcff]"
               >
                 Admin password
               </label>
@@ -265,9 +265,9 @@ export default function MediaAdminPage() {
                 value={adminPassword}
                 onChange={(event) => setAdminPassword(event.target.value)}
                 placeholder="Enter admin password"
-                className="mt-2 w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white placeholder:text-slate-500 outline-none transition focus:border-cyan-400"
+                className="mt-2 w-full rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/45 px-4 py-3 text-sm text-white placeholder:text-[#caf0f8]/60 outline-none transition focus:border-[#caf0f8]"
               />
-              <p className="mt-2 text-xs text-slate-500">
+              <p className="mt-2 text-xs text-[#caf0f8]/65">
                 The server checks this password before returning media records.
               </p>
             </div>
@@ -281,7 +281,7 @@ export default function MediaAdminPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full rounded-full bg-cyan-400 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-cyan-300 disabled:cursor-not-allowed disabled:opacity-60"
+              className="w-full rounded-full bg-[#caf0f8] px-5 py-3 text-sm font-semibold text-[#023e8a] transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
             >
               {isLoading ? "Loading..." : "Unlock media admin"}
             </button>
@@ -291,14 +291,14 @@ export default function MediaAdminPage() {
           // 解锁后显示媒体收藏管理列表。
           <section className="mt-10">
             <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-              <div className="rounded-2xl border border-cyan-400/30 bg-cyan-400/10 px-4 py-3 text-sm text-cyan-100">
+              <div className="rounded-2xl border border-[#caf0f8]/30 bg-[#caf0f8]/10 px-4 py-3 text-sm text-[#caf0f8]">
                 Media admin unlocked. {mediaItems.length} item
                 {mediaItems.length === 1 ? "" : "s"} found.
               </div>
 
               <Link
                 href="/media/admin/new"
-                className="rounded-full bg-cyan-400 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-cyan-300"
+                className="rounded-full bg-[#caf0f8] px-5 py-3 text-sm font-semibold text-[#023e8a] transition hover:bg-white"
               >
                 New media item
               </Link>
@@ -331,17 +331,17 @@ export default function MediaAdminPage() {
             {filteredMediaItems.length === 0 ? (
               // Empty state for the current filter.
               // 当前筛选结果为空时显示提示。
-              <div className="rounded-3xl border border-dashed border-slate-700 bg-slate-900/50 p-10 text-center">
-                <p className="text-lg font-semibold text-slate-200">
+              <div className="rounded-3xl border border-dashed border-[#caf0f8]/40 bg-[#03045e]/45 p-10 text-center">
+                <p className="text-lg font-semibold text-[#f8fcff]">
                   No media items in this view.
                 </p>
-                <p className="mt-2 text-sm text-slate-400">
+                <p className="mt-2 text-sm text-[#caf0f8]/80">
                   Switch filters or add new media items.
                 </p>
               </div>
             ) : (
-              <div className="overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/70">
-                <div className="grid grid-cols-12 border-b border-slate-800 px-5 py-4 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+              <div className="overflow-hidden rounded-3xl border border-[#caf0f8]/25 bg-[#023e8a]/75">
+                <div className="grid grid-cols-12 border-b border-[#caf0f8]/25 px-5 py-4 text-xs font-semibold uppercase tracking-[0.2em] text-[#caf0f8]/65">
                   <div className="col-span-4">Title</div>
                   <div className="col-span-2">Category</div>
                   <div className="col-span-2">Creator</div>
@@ -349,7 +349,7 @@ export default function MediaAdminPage() {
                   <div className="col-span-2 text-right">Actions</div>
                 </div>
 
-                <div className="divide-y divide-slate-800">
+                <div className="divide-y divide-[#caf0f8]/20">
                   {filteredMediaItems.map((item) => (
                     // One row in the admin table.
                     // 后台表格中的一条媒体收藏记录。
@@ -361,28 +361,28 @@ export default function MediaAdminPage() {
                         <p className="font-semibold text-white">{item.title}</p>
 
                         {item.releaseYear && (
-                          <p className="mt-1 text-xs text-slate-500">
+                          <p className="mt-1 text-xs text-[#caf0f8]/65">
                             Released in {item.releaseYear}
                           </p>
                         )}
 
-                        <p className="mt-1 text-xs text-slate-600">
+                        <p className="mt-1 text-xs text-[#caf0f8]/55">
                           Updated on{" "}
                           {new Date(item.updatedAt).toLocaleDateString("en-AU")}
                         </p>
                       </div>
 
                       <div className="col-span-2">
-                        <span className="rounded-full border border-cyan-400/40 px-3 py-1 text-xs font-semibold text-cyan-300">
+                        <span className="rounded-full border border-[#caf0f8]/40 px-3 py-1 text-xs font-semibold text-[#caf0f8]">
                           {formatCategory(item.category)}
                         </span>
                       </div>
 
-                      <div className="col-span-2 truncate text-slate-400">
+                      <div className="col-span-2 truncate text-[#caf0f8]/80">
                         {item.creator ?? "Unknown"}
                       </div>
 
-                      <div className="col-span-2 text-slate-300">
+                      <div className="col-span-2 text-[#eaf8ff]">
                         {item.rating === null
                           ? "Not rated"
                           : `${item.rating}/10`}
@@ -394,7 +394,7 @@ export default function MediaAdminPage() {
                         <div className="flex justify-end gap-3">
                           <Link
                             href={`/media/admin/edit/${item.id}`}
-                            className="text-xs font-semibold text-cyan-300 transition hover:text-cyan-200"
+                            className="text-xs font-semibold text-[#caf0f8] transition hover:text-white"
                           >
                             Edit
                           </Link>

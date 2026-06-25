@@ -16,7 +16,7 @@ export default async function PhotosPage() {
   });
 
   return (
-    <main className="min-h-screen bg-slate-950 px-6 py-20 text-white">
+    <main className="min-h-screen bg-[#0077b6] px-6 py-20 text-white">
       <div className="mx-auto max-w-6xl">
         <PageHeader
           eyebrow="Photos"
@@ -27,11 +27,11 @@ export default async function PhotosPage() {
         {photos.length === 0 ? (
           // Empty state shown when the Photo table has no records.
           // 数据库没有照片记录时显示空状态。
-          <section className="rounded-3xl border border-dashed border-slate-700 bg-slate-900/50 p-10 text-center">
-            <p className="text-lg font-semibold text-slate-200">
+          <section className="rounded-3xl border border-dashed border-[#caf0f8]/40 bg-[#03045e]/45 p-10 text-center">
+            <p className="text-lg font-semibold text-[#f8fcff]">
               No photos yet.
             </p>
-            <p className="mt-2 text-sm text-slate-400">
+            <p className="mt-2 text-sm text-[#caf0f8]/80">
               Add photo records to the database and they will appear here.
             </p>
           </section>
@@ -43,12 +43,12 @@ export default async function PhotosPage() {
               <Link
                 key={photo.id}
                 href={`/photos/${photo.id}`}
-                className="group block overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/70 shadow-lg shadow-black/20 transition hover:-translate-y-1 hover:border-cyan-400/60"
+                className="group block overflow-hidden rounded-3xl border border-[#caf0f8]/25 bg-[#023e8a]/75 shadow-lg shadow-[#03045e]/20 backdrop-blur transition hover:-translate-y-1 hover:border-[#caf0f8]/60"
               >
                 <article>
                   {/* Real image rendered from public/photos or public/uploads/photos through imageUrl. */}
                   {/* 真实图片展示：数据库 imageUrl 对应 public/photos 或 public/uploads/photos。 */}
-                  <div className="relative h-64 w-full overflow-hidden bg-slate-900">
+                  <div className="relative h-64 w-full overflow-hidden bg-[#023e8a]/75">
                     <Image
                       src={photo.imageUrl}
                       alt={photo.title}
@@ -65,25 +65,25 @@ export default async function PhotosPage() {
                       </h2>
 
                       {photo.takenAt && (
-                        <span className="rounded-full border border-cyan-400/40 px-3 py-1 text-xs font-semibold text-cyan-300">
+                        <span className="rounded-full border border-[#caf0f8]/40 px-3 py-1 text-xs font-semibold text-[#caf0f8]">
                           {photo.takenAt.toLocaleDateString("en-AU")}
                         </span>
                       )}
                     </div>
 
                     {photo.location && (
-                      <p className="text-sm font-medium text-slate-400">
+                      <p className="text-sm font-medium text-[#caf0f8]/80">
                         Location: {photo.location}
                       </p>
                     )}
 
                     {photo.description && (
-                      <p className="mt-4 text-sm leading-6 text-slate-300">
+                      <p className="mt-4 text-sm leading-6 text-[#eaf8ff]">
                         {photo.description}
                       </p>
                     )}
 
-                    <p className="mt-5 text-sm font-semibold text-cyan-300 transition group-hover:text-cyan-200">
+                    <p className="mt-5 text-sm font-semibold text-[#caf0f8] transition group-hover:text-[#caf0f8]">
                       View details →
                     </p>
                   </div>

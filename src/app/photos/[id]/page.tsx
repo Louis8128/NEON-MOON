@@ -39,22 +39,22 @@ export default async function PhotoDetailPage({
   }
 
   return (
-    <main className="min-h-screen bg-slate-950 px-6 py-20 text-white">
+    <main className="min-h-screen bg-[#0077b6] px-6 py-20 text-white">
       <article className="mx-auto max-w-5xl">
         <Link
           href="/photos"
-          className="text-sm font-semibold text-cyan-300 transition hover:text-cyan-200"
+          className="text-sm font-semibold text-[#caf0f8] transition hover:text-white"
         >
           ← Back to Gallery
         </Link>
 
         <div className="mt-10">
-          <p className="text-xs font-semibold uppercase tracking-[0.4em] text-cyan-300">
+          <p className="text-xs font-semibold uppercase tracking-[0.4em] text-[#caf0f8]">
             Photo Detail
           </p>
 
-          <div className="mt-6 overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/70 shadow-lg shadow-black/20">
-            <div className="relative h-[70vh] min-h-[360px] w-full bg-slate-900">
+          <div className="mt-6 overflow-hidden rounded-3xl border border-[#caf0f8]/25 bg-[#023e8a]/75 shadow-lg shadow-[#03045e]/20 backdrop-blur">
+            <div className="relative h-[70vh] min-h-[360px] w-full bg-[#023e8a]/75">
               <Image
                 src={photo.imageUrl}
                 alt={photo.title}
@@ -66,7 +66,7 @@ export default async function PhotoDetailPage({
             </div>
           </div>
 
-          <div className="mt-8 rounded-3xl border border-slate-800 bg-slate-900/70 p-6">
+          <div className="mt-8 rounded-3xl border border-[#caf0f8]/25 bg-[#023e8a]/75 p-6">
             <div className="flex flex-wrap items-start justify-between gap-4">
               <div>
                 <h1 className="text-4xl font-bold tracking-tight text-white">
@@ -74,21 +74,21 @@ export default async function PhotoDetailPage({
                 </h1>
 
                 {photo.location && (
-                  <p className="mt-3 text-sm font-medium text-slate-400">
+                  <p className="mt-3 text-sm font-medium text-[#caf0f8]/80">
                     Location: {photo.location}
                   </p>
                 )}
               </div>
 
               {photo.takenAt && (
-                <span className="rounded-full border border-cyan-400/40 px-4 py-2 text-xs font-semibold text-cyan-300">
+                <span className="rounded-full border border-[#caf0f8]/40 px-4 py-2 text-xs font-semibold text-[#caf0f8]">
                   {photo.takenAt.toLocaleDateString("en-AU")}
                 </span>
               )}
             </div>
 
             {photo.description && (
-              <p className="mt-6 max-w-3xl text-base leading-8 text-slate-300">
+              <p className="mt-6 max-w-3xl text-base leading-8 text-[#eaf8ff]">
                 {photo.description}
               </p>
             )}

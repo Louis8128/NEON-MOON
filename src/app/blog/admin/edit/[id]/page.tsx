@@ -205,20 +205,20 @@ export default function AdminEditBlogPostPage() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-950 px-6 py-20 text-white">
+    <main className="min-h-screen bg-[#0077b6] px-6 py-20 text-white">
       <div className="mx-auto max-w-3xl">
         <div className="flex flex-wrap gap-3">
           {" "}
           <Link
             href="/admin"
-            className="text-sm font-semibold text-cyan-300 transition hover:text-cyan-200"
+            className="text-sm font-semibold text-[#caf0f8] transition hover:text-white"
           >
             {" "}
             ← Back to Admin Dashboard{" "}
           </Link>{" "}
           <Link
             href="/blog/admin"
-            className="text-sm font-semibold text-slate-400 transition hover:text-white"
+            className="text-sm font-semibold text-[#caf0f8]/80 transition hover:text-white"
           >
             {" "}
             Back to Blog Admin{" "}
@@ -226,7 +226,7 @@ export default function AdminEditBlogPostPage() {
         </div>
 
         <div className="mt-10">
-          <p className="text-xs font-semibold uppercase tracking-[0.4em] text-cyan-300">
+          <p className="text-xs font-semibold uppercase tracking-[0.4em] text-[#caf0f8]">
             Blog Admin
           </p>
 
@@ -234,7 +234,7 @@ export default function AdminEditBlogPostPage() {
             Edit blog post
           </h1>
 
-          <p className="mt-4 max-w-2xl text-lg leading-8 text-slate-300">
+          <p className="mt-4 max-w-2xl text-lg leading-8 text-[#eaf8ff]">
             Update an existing blog post, change its publication status, and
             save the changes back to the database.
           </p>
@@ -247,12 +247,12 @@ export default function AdminEditBlogPostPage() {
         ) : !isUnlocked ? (
           <form
             onSubmit={handleUnlock}
-            className="mt-10 space-y-6 rounded-3xl border border-slate-800 bg-slate-900/70 p-6 shadow-lg shadow-black/20"
+            className="mt-10 space-y-6 rounded-3xl border border-[#caf0f8]/25 bg-[#023e8a]/75 p-6 shadow-lg shadow-[#03045e]/20 backdrop-blur"
           >
             <div>
               <label
                 htmlFor="adminPassword"
-                className="block text-sm font-semibold text-slate-200"
+                className="block text-sm font-semibold text-[#f8fcff]"
               >
                 Admin password
               </label>
@@ -263,9 +263,9 @@ export default function AdminEditBlogPostPage() {
                 value={adminPassword}
                 onChange={(event) => setAdminPassword(event.target.value)}
                 placeholder="Enter admin password"
-                className="mt-2 w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white placeholder:text-slate-500 outline-none transition focus:border-cyan-400"
+                className="mt-2 w-full rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/45 px-4 py-3 text-sm text-white placeholder:text-[#caf0f8]/60 outline-none transition focus:border-[#caf0f8]"
               />
-              <p className="mt-2 text-xs text-slate-500">
+              <p className="mt-2 text-xs text-[#caf0f8]/65">
                 The password is checked by the server before the post is loaded.
               </p>
             </div>
@@ -279,21 +279,21 @@ export default function AdminEditBlogPostPage() {
             <button
               type="submit"
               disabled={isUnlocking}
-              className="w-full rounded-full bg-cyan-400 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-cyan-300 disabled:cursor-not-allowed disabled:opacity-60"
+              className="w-full rounded-full bg-[#caf0f8] px-5 py-3 text-sm font-semibold text-[#023e8a] transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
             >
               {isUnlocking ? "Checking..." : "Unlock editor"}
             </button>
           </form>
         ) : isLoadingPost ? (
-          <section className="mt-10 rounded-3xl border border-slate-800 bg-slate-900/70 p-8 text-slate-300">
+          <section className="mt-10 rounded-3xl border border-[#caf0f8]/25 bg-[#023e8a]/75 p-8 text-[#eaf8ff]">
             Loading blog post...
           </section>
         ) : post ? (
           <form
             onSubmit={handleSubmit}
-            className="mt-10 space-y-6 rounded-3xl border border-slate-800 bg-slate-900/70 p-6 shadow-lg shadow-black/20"
+            className="mt-10 space-y-6 rounded-3xl border border-[#caf0f8]/25 bg-[#023e8a]/75 p-6 shadow-lg shadow-[#03045e]/20 backdrop-blur"
           >
-            <div className="rounded-2xl border border-cyan-400/30 bg-cyan-400/10 px-4 py-3 text-sm text-cyan-100">
+            <div className="rounded-2xl border border-[#caf0f8]/30 bg-[#caf0f8]/10 px-4 py-3 text-sm text-[#caf0f8]">
               Editing post #{post.id}. Last updated on{" "}
               {new Date(post.updatedAt).toLocaleDateString("en-AU")}.
             </div>
@@ -301,7 +301,7 @@ export default function AdminEditBlogPostPage() {
             <div>
               <label
                 htmlFor="title"
-                className="block text-sm font-semibold text-slate-200"
+                className="block text-sm font-semibold text-[#f8fcff]"
               >
                 Title
               </label>
@@ -312,14 +312,14 @@ export default function AdminEditBlogPostPage() {
                 value={title}
                 onChange={(event) => setTitle(event.target.value)}
                 placeholder="Enter a blog title"
-                className="mt-2 w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white placeholder:text-slate-500 outline-none transition focus:border-cyan-400"
+                className="mt-2 w-full rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/45 px-4 py-3 text-sm text-white placeholder:text-[#caf0f8]/60 outline-none transition focus:border-[#caf0f8]"
               />
             </div>
 
             <div>
               <label
                 htmlFor="slug"
-                className="block text-sm font-semibold text-slate-200"
+                className="block text-sm font-semibold text-[#f8fcff]"
               >
                 Slug
               </label>
@@ -330,9 +330,9 @@ export default function AdminEditBlogPostPage() {
                 value={slug}
                 onChange={(event) => setSlug(event.target.value)}
                 placeholder="Enter a URL slug"
-                className="mt-2 w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white placeholder:text-slate-500 outline-none transition focus:border-cyan-400"
+                className="mt-2 w-full rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/45 px-4 py-3 text-sm text-white placeholder:text-[#caf0f8]/60 outline-none transition focus:border-[#caf0f8]"
               />
-              <p className="mt-2 text-xs text-slate-500">
+              <p className="mt-2 text-xs text-[#caf0f8]/65">
                 Used in the URL. Changing it will also change the public blog
                 post URL.
               </p>
@@ -341,7 +341,7 @@ export default function AdminEditBlogPostPage() {
             <div>
               <label
                 htmlFor="excerpt"
-                className="block text-sm font-semibold text-slate-200"
+                className="block text-sm font-semibold text-[#f8fcff]"
               >
                 Excerpt
               </label>
@@ -351,14 +351,14 @@ export default function AdminEditBlogPostPage() {
                 value={excerpt}
                 onChange={(event) => setExcerpt(event.target.value)}
                 placeholder="Write a short summary..."
-                className="mt-2 w-full resize-none rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm leading-6 text-white placeholder:text-slate-500 outline-none transition focus:border-cyan-400"
+                className="mt-2 w-full resize-none rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/45 px-4 py-3 text-sm leading-6 text-white placeholder:text-[#caf0f8]/60 outline-none transition focus:border-[#caf0f8]"
               />
             </div>
 
             <div>
               <label
                 htmlFor="coverImageUrl"
-                className="block text-sm font-semibold text-slate-200"
+                className="block text-sm font-semibold text-[#f8fcff]"
               >
                 Cover image URL
               </label>
@@ -368,14 +368,14 @@ export default function AdminEditBlogPostPage() {
                 value={coverImageUrl}
                 onChange={(event) => setCoverImageUrl(event.target.value)}
                 placeholder="Optional cover image path"
-                className="mt-2 w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white placeholder:text-slate-500 outline-none transition focus:border-cyan-400"
+                className="mt-2 w-full rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/45 px-4 py-3 text-sm text-white placeholder:text-[#caf0f8]/60 outline-none transition focus:border-[#caf0f8]"
               />
             </div>
 
             <div>
               <label
                 htmlFor="content"
-                className="block text-sm font-semibold text-slate-200"
+                className="block text-sm font-semibold text-[#f8fcff]"
               >
                 Content
               </label>
@@ -386,11 +386,11 @@ export default function AdminEditBlogPostPage() {
                 value={content}
                 onChange={(event) => setContent(event.target.value)}
                 placeholder="Write the full blog content here..."
-                className="mt-2 w-full resize-none rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm leading-6 text-white placeholder:text-slate-500 outline-none transition focus:border-cyan-400"
+                className="mt-2 w-full resize-none rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/45 px-4 py-3 text-sm leading-6 text-white placeholder:text-[#caf0f8]/60 outline-none transition focus:border-[#caf0f8]"
               />
             </div>
 
-            <label className="flex items-center gap-3 rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-slate-300">
+            <label className="flex items-center gap-3 rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/45 px-4 py-3 text-sm text-[#eaf8ff]">
               <input
                 type="checkbox"
                 checked={published}
@@ -409,7 +409,7 @@ export default function AdminEditBlogPostPage() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full rounded-full bg-cyan-400 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-cyan-300 disabled:cursor-not-allowed disabled:opacity-60"
+              className="w-full rounded-full bg-[#caf0f8] px-5 py-3 text-sm font-semibold text-[#023e8a] transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
             >
               {isSubmitting ? "Saving..." : "Save changes"}
             </button>

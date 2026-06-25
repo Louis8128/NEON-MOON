@@ -199,25 +199,25 @@ export default function BlogAdminPage() {
   // 根据当前筛选状态切换按钮样式。
   function getFilterButtonClass(targetFilter: PostFilter) {
     return filter === targetFilter
-      ? "rounded-full bg-cyan-400 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-cyan-300"
-      : "rounded-full border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-300 transition hover:border-cyan-400/60 hover:text-white";
+      ? "rounded-full bg-[#caf0f8] px-4 py-2 text-sm font-semibold text-[#023e8a] transition hover:bg-white"
+      : "rounded-full border border-[#caf0f8]/50 px-4 py-2 text-sm font-semibold text-[#caf0f8] transition hover:bg-[#caf0f8] hover:text-[#023e8a]";
   }
 
   return (
-    <main className="min-h-screen bg-slate-950 px-6 py-20 text-white">
+    <main className="min-h-screen bg-[#0077b6] px-6 py-20 text-white">
       <div className="mx-auto max-w-5xl">
         <div className="flex flex-wrap gap-3">
           {" "}
           <Link
             href="/admin"
-            className="text-sm font-semibold text-cyan-300 transition hover:text-cyan-200"
+            className="text-sm font-semibold text-[#caf0f8] transition hover:text-white"
           >
             {" "}
             ← Back to Admin Dashboard{" "}
           </Link>{" "}
           <Link
             href="/blog"
-            className="text-sm font-semibold text-slate-400 transition hover:text-white"
+            className="text-sm font-semibold text-[#caf0f8]/80 transition hover:text-white"
           >
             {" "}
             View public blog{" "}
@@ -225,7 +225,7 @@ export default function BlogAdminPage() {
         </div>
 
         <div className="mt-10">
-          <p className="text-xs font-semibold uppercase tracking-[0.4em] text-cyan-300">
+          <p className="text-xs font-semibold uppercase tracking-[0.4em] text-[#caf0f8]">
             Blog Admin
           </p>
 
@@ -233,7 +233,7 @@ export default function BlogAdminPage() {
             Manage blog posts
           </h1>
 
-          <p className="mt-4 max-w-2xl text-lg leading-8 text-slate-300">
+          <p className="mt-4 max-w-2xl text-lg leading-8 text-[#eaf8ff]">
             Unlock the admin list to view published posts and drafts stored in
             the database.
           </p>
@@ -244,12 +244,12 @@ export default function BlogAdminPage() {
           // 未解锁时显示密码表单。
           <form
             onSubmit={handleUnlock}
-            className="mt-10 max-w-2xl space-y-6 rounded-3xl border border-slate-800 bg-slate-900/70 p-6 shadow-lg shadow-black/20"
+            className="mt-10 max-w-2xl space-y-6 rounded-3xl border border-[#caf0f8]/25 bg-[#023e8a]/75 p-6 shadow-lg shadow-[#03045e]/20 backdrop-blur"
           >
             <div>
               <label
                 htmlFor="adminPassword"
-                className="block text-sm font-semibold text-slate-200"
+                className="block text-sm font-semibold text-[#f8fcff]"
               >
                 Admin password
               </label>
@@ -260,9 +260,9 @@ export default function BlogAdminPage() {
                 value={adminPassword}
                 onChange={(event) => setAdminPassword(event.target.value)}
                 placeholder="Enter admin password"
-                className="mt-2 w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white placeholder:text-slate-500 outline-none transition focus:border-cyan-400"
+                className="mt-2 w-full rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/45 px-4 py-3 text-sm text-white placeholder:text-[#caf0f8]/60 outline-none transition focus:border-[#caf0f8]"
               />
-              <p className="mt-2 text-xs text-slate-500">
+              <p className="mt-2 text-xs text-[#caf0f8]/65">
                 The server checks this password before returning draft posts.
               </p>
             </div>
@@ -276,7 +276,7 @@ export default function BlogAdminPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full rounded-full bg-cyan-400 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-cyan-300 disabled:cursor-not-allowed disabled:opacity-60"
+              className="w-full rounded-full bg-[#caf0f8] px-5 py-3 text-sm font-semibold text-[#023e8a] transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
             >
               {isLoading ? "Loading..." : "Unlock admin list"}
             </button>
@@ -286,14 +286,14 @@ export default function BlogAdminPage() {
           // 解锁后显示后台文章管理列表。
           <section className="mt-10">
             <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-              <div className="rounded-2xl border border-cyan-400/30 bg-cyan-400/10 px-4 py-3 text-sm text-cyan-100">
+              <div className="rounded-2xl border border-[#caf0f8]/30 bg-[#caf0f8]/10 px-4 py-3 text-sm text-[#caf0f8]">
                 Admin list unlocked. {posts.length} post
                 {posts.length === 1 ? "" : "s"} found.
               </div>
 
               <Link
                 href="/blog/admin/new"
-                className="rounded-full bg-cyan-400 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-cyan-300"
+                className="rounded-full bg-[#caf0f8] px-5 py-3 text-sm font-semibold text-[#023e8a] transition hover:bg-white"
               >
                 New post
               </Link>
@@ -336,24 +336,24 @@ export default function BlogAdminPage() {
             {filteredPosts.length === 0 ? (
               // Empty state for the current filter.
               // 当前筛选结果为空时显示提示。
-              <div className="rounded-3xl border border-dashed border-slate-700 bg-slate-900/50 p-10 text-center">
-                <p className="text-lg font-semibold text-slate-200">
+              <div className="rounded-3xl border border-dashed border-[#caf0f8]/40 bg-[#03045e]/45 p-10 text-center">
+                <p className="text-lg font-semibold text-[#f8fcff]">
                   No posts in this view.
                 </p>
-                <p className="mt-2 text-sm text-slate-400">
+                <p className="mt-2 text-sm text-[#caf0f8]/80">
                   Switch filters or create a new blog post.
                 </p>
               </div>
             ) : (
-              <div className="overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/70">
-                <div className="grid grid-cols-12 border-b border-slate-800 px-5 py-4 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+              <div className="overflow-hidden rounded-3xl border border-[#caf0f8]/25 bg-[#023e8a]/75">
+                <div className="grid grid-cols-12 border-b border-[#caf0f8]/25 px-5 py-4 text-xs font-semibold uppercase tracking-[0.2em] text-[#caf0f8]/65">
                   <div className="col-span-5">Title</div>
                   <div className="col-span-3">Slug</div>
                   <div className="col-span-2">Status</div>
                   <div className="col-span-2 text-right">Updated</div>
                 </div>
 
-                <div className="divide-y divide-slate-800">
+                <div className="divide-y divide-[#caf0f8]/20">
                   {filteredPosts.map((post) => (
                     // One row in the admin table.
                     // 后台表格中的一篇文章记录。
@@ -363,13 +363,13 @@ export default function BlogAdminPage() {
                     >
                       <div className="col-span-5">
                         <p className="font-semibold text-white">{post.title}</p>
-                        <p className="mt-1 text-xs text-slate-500">
+                        <p className="mt-1 text-xs text-[#caf0f8]/65">
                           Created on{" "}
                           {new Date(post.createdAt).toLocaleDateString("en-AU")}
                         </p>
                       </div>
 
-                      <div className="col-span-3 truncate text-slate-400">
+                      <div className="col-span-3 truncate text-[#caf0f8]/80">
                         /blog/{post.slug}
                       </div>
 
@@ -377,7 +377,7 @@ export default function BlogAdminPage() {
                         <span
                           className={
                             post.published
-                              ? "rounded-full border border-cyan-400/40 px-3 py-1 text-xs font-semibold text-cyan-300"
+                              ? "rounded-full border border-[#caf0f8]/40 px-3 py-1 text-xs font-semibold text-[#caf0f8]"
                               : "rounded-full border border-amber-400/40 px-3 py-1 text-xs font-semibold text-amber-300"
                           }
                         >
@@ -386,7 +386,7 @@ export default function BlogAdminPage() {
                       </div>
 
                       <div className="col-span-2 text-right">
-                        <p className="text-xs text-slate-500">
+                        <p className="text-xs text-[#caf0f8]/65">
                           {new Date(post.updatedAt).toLocaleDateString("en-AU")}
                         </p>
 
@@ -395,7 +395,7 @@ export default function BlogAdminPage() {
                         <div className="mt-2 flex justify-end gap-3">
                           <Link
                             href={`/blog/admin/edit/${post.id}`}
-                            className="text-xs font-semibold text-cyan-300 transition hover:text-cyan-200"
+                            className="text-xs font-semibold text-[#caf0f8] transition hover:text-white"
                           >
                             Edit
                           </Link>
@@ -403,7 +403,7 @@ export default function BlogAdminPage() {
                           {post.published && (
                             <Link
                               href={`/blog/${post.slug}`}
-                              className="text-xs font-semibold text-slate-300 transition hover:text-white"
+                              className="text-xs font-semibold text-[#eaf8ff] transition hover:text-white"
                             >
                               View
                             </Link>
