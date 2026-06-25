@@ -178,13 +178,6 @@ export default async function MediaDetailPage({
               >
                 View all media
               </Link>
-
-              <Link
-                href={`/media/admin/edit/${mediaItem.id}`}
-                className="rounded-full bg-cyan-400 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-cyan-300"
-              >
-                Edit in admin
-              </Link>
             </div>
           </div>
         </div>
