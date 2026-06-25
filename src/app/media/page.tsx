@@ -35,13 +35,13 @@ export default async function MediaPage({ searchParams }: MediaPageProps) {
   const { category } = await searchParams;
 
   // Read the selected category from the URL query string.
-  // 中文关键词：从 URL 查询参数读取当前分类筛选。
+  // 从 URL 查询参数读取当前分类筛选。
   const activeFilter: MediaFilter = isValidMediaCategory(category)
     ? category
     : "ALL";
 
   // Load public media items from the database.
-  // 中文关键词：从数据库读取公开媒体收藏列表。
+  // 从数据库读取公开媒体收藏列表。
   const mediaItems = await prisma.mediaItem.findMany({
     where:
       activeFilter === "ALL"
@@ -69,7 +69,7 @@ export default async function MediaPage({ searchParams }: MediaPageProps) {
     <main className="min-h-screen bg-slate-950 px-6 py-20 text-white">
       <section className="mx-auto max-w-6xl">
         {/* Public page header. */}
-        {/* 中文关键词：公开媒体页面标题区域，不显示后台管理入口。 */}
+        {/* 公开媒体页面标题区域，不显示后台管理入口。 */}
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.4em] text-cyan-300">
             Media Collection
@@ -86,7 +86,7 @@ export default async function MediaPage({ searchParams }: MediaPageProps) {
         </div>
 
         {/* Category filters. */}
-        {/* 中文关键词：公开媒体页面的分类筛选。 */}
+        {/* 公开媒体页面的分类筛选。 */}
         <div className="mt-10 flex flex-wrap gap-3">
           {(["ALL", ...mediaCategories] as MediaFilter[]).map((filter) => (
             <Link
@@ -110,13 +110,13 @@ export default async function MediaPage({ searchParams }: MediaPageProps) {
             </p>
 
             <p className="mt-2 text-sm text-slate-400">
-              New media notes will appear here once they are published to the
+              New media notes will appear here once they are added to the
               collection.
             </p>
           </div>
         ) : (
           // Each card links to /media/[id].
-          // 中文关键词：每张卡片都可以点击进入媒体详情页。
+          // 每张卡片都可以点击进入媒体详情页。
           <div className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
             {mediaItems.map((item) => (
               <Link
