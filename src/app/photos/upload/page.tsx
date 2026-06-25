@@ -1,6 +1,7 @@
 "use client";
 
-import { ChangeEvent, FormEvent, useState } from "react";
+import type { ChangeEvent, FormEvent } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -21,6 +22,64 @@ export default function PhotoUploadPage() {
     setSelectedFileName(file ? file.name : "No file selected");
   }
 
+  // Verify the admin password through the existing photo auth API.
+  // 通过现有照片上传验证 API 检查管理员密码。
+  const verifyPassword = useCallback(async function verifyPassword(
+    password: string,
+  ) {
+    const response = await fetch("/api/photos/auth", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        password,
+      }),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.error ?? "Invalid upload password.");
+    }
+
+    return true;
+  }, []);
+
+  // Try to reuse the saved admin password during the same browser session.
+  // 自动复用 sessionStorage 中的管理员密码，避免重复输入。
+  useEffect(() => {
+    const savedPassword = sessionStorage.getItem("neonMoonAdminPassword");
+
+    if (!savedPassword) {
+      return;
+    }
+
+    async function unlockWithSavedPassword(password: string) {
+      setUnlockError("");
+      setIsUnlocking(true);
+
+      try {
+        await verifyPassword(password);
+        setAdminPassword(password);
+        setIsUnlocked(true);
+      } catch (error) {
+        sessionStorage.removeItem("neonMoonAdminPassword");
+        setUnlockError(
+          error instanceof Error
+            ? error.message
+            : "Saved admin session expired. Please enter the password again.",
+        );
+      } finally {
+        setIsUnlocking(false);
+      }
+    }
+
+    void unlockWithSavedPassword(savedPassword);
+  }, [verifyPassword]);
+
+  // Handle manual password unlock.
+  // 手动输入管理员密码解锁上传表单。
   async function handleUnlock(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
@@ -28,26 +87,14 @@ export default function PhotoUploadPage() {
     setIsUnlocking(true);
 
     try {
-      const response = await fetch("/api/photos/auth", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          password: adminPassword,
-        }),
-      });
+      await verifyPassword(adminPassword);
 
-      const result = await response.json();
-
-      if (!response.ok) {
-        setUnlockError(result.error ?? "Invalid upload password.");
-        return;
-      }
-
+      sessionStorage.setItem("neonMoonAdminPassword", adminPassword);
       setIsUnlocked(true);
-    } catch {
-      setUnlockError("Something went wrong while checking the password.");
+    } catch (error) {
+      setUnlockError(
+        error instanceof Error ? error.message : "Invalid upload password.",
+      );
     } finally {
       setIsUnlocking(false);
     }
@@ -64,6 +111,7 @@ export default function PhotoUploadPage() {
 
     // Send the already-verified password again.
     // The upload API still checks it on the server for real protection.
+    // 前端解锁只是提升体验，真正保护仍在后端 API。
     formData.set("adminPassword", adminPassword);
 
     try {
@@ -82,7 +130,9 @@ export default function PhotoUploadPage() {
       form.reset();
       setSelectedFileName("No file selected");
 
-      router.push("/photos");
+      // Return to the Photos Admin list after upload.
+      // 上传成功后回到照片后台列表，方便继续管理。
+      router.push("/photos/admin");
       router.refresh();
     } catch {
       setError("Something went wrong while uploading the photo.");
@@ -95,21 +145,26 @@ export default function PhotoUploadPage() {
     <main className="min-h-screen bg-slate-950 px-6 py-20 text-white">
       <div className="mx-auto max-w-3xl">
         <div className="flex flex-wrap gap-3">
-          {" "}
           <Link
             href="/admin"
             className="text-sm font-semibold text-cyan-300 transition hover:text-cyan-200"
           >
-            {" "}
-            ← Back to Admin Dashboard{" "}
-          </Link>{" "}
+            ← Back to Admin Dashboard
+          </Link>
+
+          <Link
+            href="/photos/admin"
+            className="text-sm font-semibold text-slate-400 transition hover:text-white"
+          >
+            Back to Photos Admin
+          </Link>
+
           <Link
             href="/photos"
             className="text-sm font-semibold text-slate-400 transition hover:text-white"
           >
-            {" "}
-            View public gallery{" "}
-          </Link>{" "}
+            View public gallery
+          </Link>
         </div>
 
         <div className="mt-10">
@@ -139,6 +194,7 @@ export default function PhotoUploadPage() {
               >
                 Admin password
               </label>
+
               <input
                 id="unlockPassword"
                 type="password"
@@ -148,6 +204,7 @@ export default function PhotoUploadPage() {
                 placeholder="Enter upload password"
                 className="mt-2 w-full rounded-2xl border border-slate-700 bg-slate-950 px-4 py-3 text-sm text-white placeholder:text-slate-500 outline-none transition focus:border-cyan-400"
               />
+
               <p className="mt-2 text-xs text-slate-500">
                 This protects the upload form from public access.
               </p>
@@ -219,6 +276,7 @@ export default function PhotoUploadPage() {
               >
                 Title
               </label>
+
               <input
                 id="title"
                 name="title"
@@ -236,6 +294,7 @@ export default function PhotoUploadPage() {
               >
                 Location
               </label>
+
               <input
                 id="location"
                 name="location"
@@ -252,6 +311,7 @@ export default function PhotoUploadPage() {
               >
                 Taken date
               </label>
+
               <input
                 id="takenAt"
                 name="takenAt"
@@ -267,6 +327,7 @@ export default function PhotoUploadPage() {
               >
                 Description
               </label>
+
               <textarea
                 id="description"
                 name="description"
