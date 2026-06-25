@@ -37,8 +37,8 @@ export default function RootLayout({
                   Home
                 </Link>
 
-                {/* Blog dropdown navigation. */}
-                {/* Blog 下拉菜单，包含文章列表和后台管理。 */}
+                {/* Blog dropdown navigation for public visitors. */}
+                {/* Blog 公开下拉菜单：只展示公开文章入口，不暴露后台 Admin。 */}
                 <div className="group relative w-28">
                   <button
                     type="button"
@@ -63,19 +63,12 @@ export default function RootLayout({
                       >
                         Posts
                       </Link>
-
-                      <Link
-                        href="/blog/admin"
-                        className="block rounded-xl px-3 py-2 text-center text-sm text-slate-300 transition hover:bg-slate-800 hover:text-white"
-                      >
-                        Admin
-                      </Link>
                     </div>
                   </div>
                 </div>
 
-                {/* Media dropdown navigation. */}
-                {/* Media 下拉菜单，包含公开收藏、后台管理和新增媒体。 */}
+                {/* Media dropdown navigation for public visitors. */}
+                {/* Media 公开下拉菜单：只展示公开收藏入口，不暴露 Admin / New item。 */}
                 <div className="group relative w-32">
                   <button
                     type="button"
@@ -99,26 +92,12 @@ export default function RootLayout({
                       >
                         Collection
                       </Link>
-
-                      <Link
-                        href="/media/admin"
-                        className="block rounded-xl px-3 py-2 text-center text-sm text-slate-300 transition hover:bg-slate-800 hover:text-white"
-                      >
-                        Admin
-                      </Link>
-
-                      <Link
-                        href="/media/admin/new"
-                        className="block rounded-xl px-3 py-2 text-center text-sm text-slate-300 transition hover:bg-slate-800 hover:text-white"
-                      >
-                        New item
-                      </Link>
                     </div>
                   </div>
                 </div>
 
-                {/* Photos dropdown navigation. */}
-                {/* Photos 下拉菜单，Gallery 和 Upload 共用一个入口。 */}
+                {/* Photos dropdown navigation for public visitors. */}
+                {/* Photos 公开下拉菜单：只展示 Gallery，不暴露 Upload 后台入口。 */}
                 <div className="group relative w-28">
                   <button
                     type="button"
@@ -142,13 +121,6 @@ export default function RootLayout({
                         className="block rounded-xl px-3 py-2 text-center text-sm text-slate-300 transition hover:bg-slate-800 hover:text-white"
                       >
                         Gallery
-                      </Link>
-
-                      <Link
-                        href="/photos/upload"
-                        className="block rounded-xl px-3 py-2 text-center text-sm text-slate-300 transition hover:bg-slate-800 hover:text-white"
-                      >
-                        Upload
                       </Link>
                     </div>
                   </div>
