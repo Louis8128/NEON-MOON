@@ -94,12 +94,23 @@ export default function PhotoUploadPage() {
   return (
     <main className="min-h-screen bg-slate-950 px-6 py-20 text-white">
       <div className="mx-auto max-w-3xl">
-        <Link
-          href="/photos"
-          className="text-sm font-semibold text-cyan-300 transition hover:text-cyan-200"
-        >
-          ← Back to Photos
-        </Link>
+        <div className="flex flex-wrap gap-3">
+          {" "}
+          <Link
+            href="/admin"
+            className="text-sm font-semibold text-cyan-300 transition hover:text-cyan-200"
+          >
+            {" "}
+            ← Back to Admin Dashboard{" "}
+          </Link>{" "}
+          <Link
+            href="/photos"
+            className="text-sm font-semibold text-slate-400 transition hover:text-white"
+          >
+            {" "}
+            View public gallery{" "}
+          </Link>{" "}
+        </div>
 
         <div className="mt-10">
           <p className="text-xs font-semibold uppercase tracking-[0.4em] text-cyan-300">
