@@ -40,6 +40,14 @@ export default function PhotosAdminPage() {
   // 页面错误提示。
   const [error, setError] = useState("");
 
+  // Success message shown after admin actions.
+  // 后台操作成功提示。
+  const [successMessage, setSuccessMessage] = useState("");
+
+  // Photo id currently being deleted.
+  // 当前正在删除的照片 id。
+  const [deletingPhotoId, setDeletingPhotoId] = useState<number | null>(null);
+
   // Loading state for password unlock and photo loading.
   // 加载状态，防止重复提交。
   const [isLoading, setIsLoading] = useState(false);
@@ -109,6 +117,7 @@ export default function PhotosAdminPage() {
     event.preventDefault();
 
     setError("");
+    setSuccessMessage("");
     setIsLoading(true);
 
     try {
@@ -121,6 +130,52 @@ export default function PhotosAdminPage() {
       );
     } finally {
       setIsLoading(false);
+    }
+  }
+
+  async function handleDeletePhoto(photo: PhotoSummary) {
+    const shouldDelete = window.confirm(
+      `Delete "${photo.title}"? This cannot be undone.`,
+    );
+
+    if (!shouldDelete) {
+      return;
+    }
+
+    setError("");
+    setSuccessMessage("");
+    setDeletingPhotoId(photo.id);
+
+    try {
+      const response = await fetch("/api/photos/admin/delete", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          adminPassword,
+          id: photo.id,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error ?? "Failed to delete photo.");
+      }
+
+      setPhotos((currentPhotos) =>
+        currentPhotos.filter((currentPhoto) => currentPhoto.id !== photo.id),
+      );
+      setSuccessMessage("Photo deleted successfully.");
+    } catch (error) {
+      setError(
+        error instanceof Error
+          ? error.message
+          : "Something went wrong while deleting the photo.",
+      );
+    } finally {
+      setDeletingPhotoId(null);
     }
   }
 
@@ -223,6 +278,12 @@ export default function PhotosAdminPage() {
               </div>
             )}
 
+            {successMessage && (
+              <div className="mb-6 rounded-2xl border border-[#caf0f8]/30 bg-[#caf0f8]/10 px-4 py-3 text-sm text-[#caf0f8]">
+                {successMessage}
+              </div>
+            )}
+
             {photos.length === 0 ? (
               <div className="rounded-3xl border border-dashed border-[#caf0f8]/40 bg-[#03045e]/45 p-10 text-center">
                 <p className="text-lg font-semibold text-[#f8fcff]">
@@ -251,24 +312,13 @@ export default function PhotosAdminPage() {
                     />
 
                     <div className="p-6">
-                      <div className="flex items-start justify-between gap-4">
-                        <div>
-                          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#caf0f8]">
-                            Photo #{photo.id}
-                          </p>
+                      <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#caf0f8]">
+                        Photo #{photo.id}
+                      </p>
 
-                          <h2 className="mt-3 text-2xl font-bold text-white">
-                            {photo.title}
-                          </h2>
-                        </div>
-
-                        <Link
-                          href={`/photos/${photo.id}`}
-                          className="shrink-0 text-xs font-semibold text-[#caf0f8] transition hover:text-white"
-                        >
-                          View
-                        </Link>
-                      </div>
+                      <h2 className="mt-3 text-2xl font-bold text-white">
+                        {photo.title}
+                      </h2>
 
                       <div className="mt-4 space-y-2 text-sm text-[#caf0f8]/80">
                         <p>
@@ -296,6 +346,31 @@ export default function PhotosAdminPage() {
                       <p className="mt-5 break-all rounded-2xl border border-[#caf0f8]/25 bg-[#03045e]/65 px-3 py-2 text-xs text-[#caf0f8]/65">
                         {photo.imageUrl}
                       </p>
+
+                      <div className="mt-5 flex flex-wrap gap-3">
+                        <Link
+                          href={`/photos/${photo.id}`}
+                          className="rounded-full border border-[#caf0f8]/40 px-4 py-2 text-xs font-semibold text-[#caf0f8] transition hover:bg-[#caf0f8] hover:text-[#023e8a]"
+                        >
+                          View
+                        </Link>
+
+                        <Link
+                          href={`/photos/admin/edit/${photo.id}`}
+                          className="rounded-full bg-[#caf0f8] px-4 py-2 text-xs font-semibold text-[#023e8a] transition hover:bg-white"
+                        >
+                          Edit
+                        </Link>
+
+                        <button
+                          type="button"
+                          disabled={deletingPhotoId === photo.id}
+                          onClick={() => void handleDeletePhoto(photo)}
+                          className="rounded-full border border-red-300/50 px-4 py-2 text-xs font-semibold text-red-100 transition hover:bg-red-500/20 disabled:cursor-not-allowed disabled:opacity-60"
+                        >
+                          {deletingPhotoId === photo.id ? "Deleting..." : "Delete"}
+                        </button>
+                      </div>
                     </div>
                   </article>
                 ))}
