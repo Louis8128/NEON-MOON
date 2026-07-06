@@ -183,11 +183,17 @@ export default function MediaAdminPage() {
     <main className="min-h-screen bg-[#0077b6] px-6 py-20 text-white">
       <div className="mx-auto max-w-5xl">
         <AdminHeader
-          section="Media Admin"
+          section={{
+            en: "Media Admin",
+            zh: "媒体管理",
+          }}
           links={[
             {
               href: "/media",
-              label: "View public media",
+              label: {
+                en: "View public media",
+                zh: "查看公开媒体收藏",
+              },
               muted: true,
             },
           ]}

@@ -188,16 +188,25 @@ export default function PhotoAdminEditPage() {
     <main className="min-h-screen bg-[#0077b6] px-6 py-20 text-white">
       <div className="mx-auto max-w-3xl">
         <AdminHeader
-          section="Photos Admin"
+          section={{
+            en: "Photos Admin",
+            zh: "照片管理",
+          }}
           links={[
             {
               href: "/photos/admin",
-              label: "Back to Photos Admin",
+              label: {
+                en: "Back to Photos Admin",
+                zh: "返回照片管理",
+              },
               muted: true,
             },
             {
               href: `/photos/${photoId}`,
-              label: "View public photo",
+              label: {
+                en: "View public photo",
+                zh: "查看公开照片",
+              },
               muted: true,
             },
           ]}

@@ -91,11 +91,17 @@ export default function NewMediaItemPage() {
     <main className="min-h-screen bg-[#0077b6] px-6 py-20 text-white">
       <div className="mx-auto max-w-3xl">
         <AdminHeader
-          section="Media Admin"
+          section={{
+            en: "Media Admin",
+            zh: "媒体管理",
+          }}
           links={[
             {
               href: "/media/admin",
-              label: "Back to Media Admin",
+              label: {
+                en: "Back to Media Admin",
+                zh: "返回媒体管理",
+              },
               muted: true,
             },
           ]}

@@ -155,11 +155,17 @@ export default function PhotosAdminPage() {
     <main className="min-h-screen bg-[#0077b6] px-6 py-20 text-white">
       <div className="mx-auto max-w-6xl">
         <AdminHeader
-          section="Photos Admin"
+          section={{
+            en: "Photos Admin",
+            zh: "照片管理",
+          }}
           links={[
             {
               href: "/photos",
-              label: "View public gallery",
+              label: {
+                en: "View public gallery",
+                zh: "查看公开相册",
+              },
               muted: true,
             },
           ]}
