@@ -1,4 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
+import {
+  isAuthorizedAdminRequest,
+  readAdminJsonRequestBody,
+} from "@/lib/adminAuth";
 import { prisma } from "@/lib/prisma";
 
 export const runtime = "nodejs";
@@ -12,10 +16,6 @@ type PhotoUpdateRequestBody = {
   description?: string | null;
   takenAt?: string | null;
 };
-
-function getExpectedAdminPassword() {
-  return process.env.ADMIN_PASSWORD ?? process.env.ADMIN_UPLOAD_PASSWORD;
-}
 
 function normalizeOptionalText(value: unknown) {
   if (typeof value !== "string") {
@@ -53,25 +53,26 @@ function parseOptionalDate(value: unknown) {
 
 export async function POST(request: NextRequest) {
   try {
-    const body = (await request.json()) as PhotoUpdateRequestBody;
-    const expectedPassword = getExpectedAdminPassword();
+    const body =
+      (await readAdminJsonRequestBody(request)) as
+        | PhotoUpdateRequestBody
+        | null;
 
-    if (!expectedPassword) {
-      return NextResponse.json(
-        {
-          error:
-            "Admin password is not configured on the server. Please set ADMIN_PASSWORD or ADMIN_UPLOAD_PASSWORD.",
-        },
-        { status: 500 },
-      );
-    }
-
-    if (!body.adminPassword || body.adminPassword !== expectedPassword) {
+    if (!(await isAuthorizedAdminRequest(request, body?.adminPassword))) {
       return NextResponse.json(
         {
           error: "Invalid admin password.",
         },
         { status: 401 },
+      );
+    }
+
+    if (!body) {
+      return NextResponse.json(
+        {
+          error: "Invalid request body.",
+        },
+        { status: 400 },
       );
     }
 

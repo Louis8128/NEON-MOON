@@ -1,36 +1,33 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import {
+  isAuthorizedAdminRequest,
+  readAdminJsonRequestBody,
+} from "@/lib/adminAuth";
 import { prisma } from "@/lib/prisma";
 
 export const runtime = "nodejs";
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
+    const body = await readAdminJsonRequestBody(request);
 
-    const adminPassword = body.adminPassword;
-    const postId = Number(body.id);
+    const adminPassword = body?.adminPassword;
 
-    // Reuse the temporary admin password system.
-    // 优先读取 ADMIN_PASSWORD，如果没有就复用照片上传密码。
-    const expectedPassword =
-      process.env.ADMIN_PASSWORD ?? process.env.ADMIN_UPLOAD_PASSWORD;
-
-    if (!expectedPassword) {
-      return NextResponse.json(
-        { error: "Admin password is not configured on the server." },
-        { status: 500 },
-      );
-    }
-
-    if (
-      typeof adminPassword !== "string" ||
-      adminPassword !== expectedPassword
-    ) {
+    if (!(await isAuthorizedAdminRequest(request, adminPassword))) {
       return NextResponse.json(
         { error: "Invalid admin password." },
         { status: 401 },
       );
     }
+
+    if (!body) {
+      return NextResponse.json(
+        { error: "Invalid request body." },
+        { status: 400 },
+      );
+    }
+
+    const postId = Number(body.id);
 
     if (!Number.isInteger(postId) || postId <= 0) {
       return NextResponse.json(

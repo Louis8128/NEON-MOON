@@ -1,7 +1,8 @@
 import { randomUUID } from "crypto";
 import { mkdir, writeFile } from "fs/promises";
 import { join } from "path";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { isAuthorizedAdminRequest } from "@/lib/adminAuth";
 import { prisma } from "@/lib/prisma";
 
 export const runtime = "nodejs";
@@ -24,7 +25,7 @@ function getImageExtension(mimeType: string) {
   return null;
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
 
@@ -35,19 +36,7 @@ export async function POST(request: Request) {
     const description = formData.get("description");
     const takenAt = formData.get("takenAt");
 
-    const expectedPassword = process.env.ADMIN_UPLOAD_PASSWORD;
-
-    if (!expectedPassword) {
-      return NextResponse.json(
-        { error: "Upload password is not configured on the server." },
-        { status: 500 },
-      );
-    }
-
-    if (
-      typeof adminPassword !== "string" ||
-      adminPassword !== expectedPassword
-    ) {
+    if (!(await isAuthorizedAdminRequest(request, adminPassword))) {
       return NextResponse.json(
         { error: "Invalid upload password." },
         { status: 401 },

@@ -1,3 +1,5 @@
+import type { NextRequest } from "next/server";
+
 export const ADMIN_SESSION_COOKIE_NAME = "neon_moon_admin_session";
 
 const SESSION_VERSION = 1;
@@ -133,6 +135,37 @@ export async function verifyAdminSessionCookie(cookieValue: string | undefined) 
   const now = Math.floor(Date.now() / 1000);
 
   return payload.expiresAt > now;
+}
+
+export async function isValidAdminSessionRequest(request: NextRequest) {
+  const adminSession = request.cookies.get(ADMIN_SESSION_COOKIE_NAME)?.value;
+
+  return verifyAdminSessionCookie(adminSession);
+}
+
+export async function isAuthorizedAdminRequest(
+  request: NextRequest,
+  legacyPassword?: unknown,
+) {
+  if (await isValidAdminSessionRequest(request)) {
+    return true;
+  }
+
+  return isValidAdminPassword(legacyPassword);
+}
+
+export async function readAdminJsonRequestBody(request: NextRequest) {
+  try {
+    const body = (await request.json()) as unknown;
+
+    if (!body || typeof body !== "object" || Array.isArray(body)) {
+      return null;
+    }
+
+    return body as Record<string, unknown>;
+  } catch {
+    return null;
+  }
 }
 
 function decodeAdminSessionPayload(

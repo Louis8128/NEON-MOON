@@ -1,4 +1,8 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import {
+  isAuthorizedAdminRequest,
+  readAdminJsonRequestBody,
+} from "@/lib/adminAuth";
 import { prisma } from "@/lib/prisma";
 
 export const runtime = "nodejs";
@@ -7,36 +11,32 @@ function isValidSlug(slug: string) {
   return /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug);
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
+    const body = await readAdminJsonRequestBody(request);
 
-    const adminPassword = body.adminPassword;
+    const adminPassword = body?.adminPassword;
+
+    if (!(await isAuthorizedAdminRequest(request, adminPassword))) {
+      return NextResponse.json(
+        { error: "Invalid admin password." },
+        { status: 401 },
+      );
+    }
+
+    if (!body) {
+      return NextResponse.json(
+        { error: "Invalid request body." },
+        { status: 400 },
+      );
+    }
+
     const title = body.title;
     const slug = body.slug;
     const excerpt = body.excerpt;
     const content = body.content;
     const coverImageUrl = body.coverImageUrl;
     const published = body.published;
-
-    const expectedPassword = process.env.ADMIN_PASSWORD;
-
-    if (!expectedPassword) {
-      return NextResponse.json(
-        { error: "Admin password is not configured on the server." },
-        { status: 500 },
-      );
-    }
-
-    if (
-      typeof adminPassword !== "string" ||
-      adminPassword !== expectedPassword
-    ) {
-      return NextResponse.json(
-        { error: "Invalid admin password." },
-        { status: 401 },
-      );
-    }
 
     if (typeof title !== "string" || title.trim().length === 0) {
       return NextResponse.json(

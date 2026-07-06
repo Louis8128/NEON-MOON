@@ -1,25 +1,22 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import {
+  isAuthorizedAdminRequest,
+  isValidAdminSessionRequest,
+  readAdminJsonRequestBody,
+} from "@/lib/adminAuth";
 
 export const runtime = "nodejs";
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  if (await isValidAdminSessionRequest(request)) {
+    return NextResponse.json({ ok: true });
+  }
+
   try {
-    const body = await request.json();
-    const password = body.password;
+    const body = await readAdminJsonRequestBody(request);
+    const password = body?.password ?? body?.adminPassword;
 
-    // Reuse the same temporary admin password system.
-    // 优先读取 ADMIN_PASSWORD，如果没有就复用照片上传密码。
-    const expectedPassword =
-      process.env.ADMIN_PASSWORD ?? process.env.ADMIN_UPLOAD_PASSWORD;
-
-    if (!expectedPassword) {
-      return NextResponse.json(
-        { error: "Admin password is not configured on the server." },
-        { status: 500 },
-      );
-    }
-
-    if (typeof password !== "string" || password !== expectedPassword) {
+    if (!(await isAuthorizedAdminRequest(request, password))) {
       return NextResponse.json(
         { error: "Invalid admin password." },
         { status: 401 },
