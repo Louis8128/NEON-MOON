@@ -4,6 +4,10 @@ import type { ChangeEvent, FormEvent } from "react";
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
+import {
+  readJsonResponse,
+  redirectIfUnauthorized,
+} from "@/lib/adminClientAuth";
 
 type PhotoItem = {
   id: number;
@@ -40,7 +44,6 @@ export default function PhotoAdminEditPage() {
   const params = useParams<{ id: string }>();
   const photoId = params.id;
 
-  const [adminPassword, setAdminPassword] = useState("");
   const [formValues, setFormValues] =
     useState<PhotoFormState>(emptyFormState);
   const [error, setError] = useState("");
@@ -48,10 +51,10 @@ export default function PhotoAdminEditPage() {
   const [isReady, setIsReady] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
-  // Load one protected photo record with the saved admin session password.
-  // 使用 sessionStorage 中的管理员密码读取单张照片记录。
+  // Load one protected photo record with the HttpOnly admin cookie.
+  // 使用 HttpOnly admin cookie 读取单张照片记录。
   const loadPhoto = useCallback(
-    async function loadPhoto(password: string) {
+    async function loadPhoto() {
       if (!photoId) {
         setError("A valid photo id is required.");
         setIsLoading(false);
@@ -65,16 +68,23 @@ export default function PhotoAdminEditPage() {
       try {
         const response = await fetch("/api/photos/admin/item", {
           method: "POST",
+          credentials: "same-origin",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            adminPassword: password,
             id: photoId,
           }),
         });
 
-        const result = await response.json();
+        if (redirectIfUnauthorized(response)) {
+          return;
+        }
+
+        const result = await readJsonResponse<{
+          photo?: PhotoItem;
+          error?: string;
+        }>(response);
 
         if (!response.ok) {
           throw new Error(result.error ?? "Failed to load photo details.");
@@ -107,23 +117,9 @@ export default function PhotoAdminEditPage() {
     [photoId],
   );
 
-  // Reuse the Photos Admin password only from the current browser session.
-  // 只复用当前浏览器 session 中已有的后台密码，不在页面直接暴露数据。
   useEffect(() => {
     async function initializeEditPage() {
-      const savedPassword = sessionStorage.getItem("neonMoonAdminPassword");
-
-      if (!savedPassword) {
-        setError(
-          "No saved admin session found. Please return to Photos Admin and unlock it first.",
-        );
-        setIsLoading(false);
-        setIsReady(false);
-        return;
-      }
-
-      setAdminPassword(savedPassword);
-      await loadPhoto(savedPassword);
+      await loadPhoto();
     }
 
     void initializeEditPage();
@@ -150,11 +146,11 @@ export default function PhotoAdminEditPage() {
     try {
       const response = await fetch("/api/photos/admin/update", {
         method: "POST",
+        credentials: "same-origin",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          adminPassword,
           id: photoId,
           title: formValues.title,
           imageUrl: formValues.imageUrl,
@@ -164,7 +160,11 @@ export default function PhotoAdminEditPage() {
         }),
       });
 
-      const result = await response.json();
+      if (redirectIfUnauthorized(response)) {
+        return;
+      }
+
+      const result = await readJsonResponse<{ error?: string }>(response);
 
       if (!response.ok) {
         throw new Error(result.error ?? "Failed to update photo.");

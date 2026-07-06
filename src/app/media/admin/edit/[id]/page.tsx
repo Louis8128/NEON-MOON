@@ -4,6 +4,10 @@ import type { FormEvent } from "react";
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
+import {
+  readJsonResponse,
+  redirectIfUnauthorized,
+} from "@/lib/adminClientAuth";
 
 type MediaCategory = "MUSIC" | "BOOK" | "MOVIE" | "ANIME" | "GAME";
 
@@ -40,17 +44,9 @@ export default function EditMediaItemPage() {
   // 从动态路由里读取媒体条目 id。
   const mediaItemId = params.id;
 
-  // Admin password used by protected admin APIs.
-  // 管理员密码，用于读取和更新媒体记录。
-  const [adminPassword, setAdminPassword] = useState("");
-
-  // Whether the editor has been unlocked and the media item has been loaded.
-  // 是否已经解锁并成功读取原始媒体数据。
-  const [isUnlocked, setIsUnlocked] = useState(false);
-
-  // Loading state for password unlock and item loading.
+  // Loading state for item loading.
   // 加载原始媒体数据时的状态。
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Submit state for saving changes.
   // 保存修改时的提交状态。
@@ -76,22 +72,28 @@ export default function EditMediaItemPage() {
   const [updatedAt, setUpdatedAt] = useState("");
 
   // Load the media item from the protected admin item API.
-  // This function also verifies the admin password.
-  // 读取单个媒体记录，同时验证管理员密码。
+  // 读取单个媒体记录，认证由 HttpOnly cookie 处理。
   const loadMediaItem = useCallback(
-    async function loadMediaItem(password: string) {
+    async function loadMediaItem() {
       const response = await fetch("/api/media/admin/item", {
         method: "POST",
+        credentials: "same-origin",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           id: mediaItemId,
-          adminPassword: password,
         }),
       });
 
-      const result = await response.json();
+      if (redirectIfUnauthorized(response)) {
+        return;
+      }
+
+      const result = await readJsonResponse<{
+        mediaItem?: MediaItemFormData;
+        error?: string;
+      }>(response);
 
       if (!response.ok) {
         throw new Error(result.error ?? "Failed to load media item.");
@@ -114,64 +116,30 @@ export default function EditMediaItemPage() {
       setNote(mediaItem.note ?? "");
       setCreatedAt(mediaItem.createdAt);
       setUpdatedAt(mediaItem.updatedAt);
-
-      setAdminPassword(password);
-      sessionStorage.setItem("neonMoonAdminPassword", password);
-      setIsUnlocked(true);
     },
     [mediaItemId],
   );
 
-  // Try to reuse the saved admin password during the same browser session.
-  // 自动读取 sessionStorage，避免重复输入管理员密码。
   useEffect(() => {
-    const savedPassword = sessionStorage.getItem("neonMoonAdminPassword");
-
-    if (!savedPassword) {
-      return;
-    }
-
-    async function unlockWithSavedPassword(password: string) {
+    async function initializeMediaItem() {
       setError("");
       setIsLoading(true);
 
       try {
-        await loadMediaItem(password);
+        await loadMediaItem();
       } catch (error) {
-        sessionStorage.removeItem("neonMoonAdminPassword");
         setError(
           error instanceof Error
             ? error.message
-            : "Saved admin session expired. Please enter the password again.",
+            : "Something went wrong while loading the media item.",
         );
       } finally {
         setIsLoading(false);
       }
     }
 
-    void unlockWithSavedPassword(savedPassword);
+    void initializeMediaItem();
   }, [loadMediaItem]);
-
-  // Handle manual password unlock.
-  // 处理手动输入管理员密码解锁。
-  async function handleUnlock(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
-    setError("");
-    setIsLoading(true);
-
-    try {
-      await loadMediaItem(adminPassword);
-    } catch (error) {
-      setError(
-        error instanceof Error
-          ? error.message
-          : "Something went wrong while loading the media item.",
-      );
-    } finally {
-      setIsLoading(false);
-    }
-  }
 
   // Save edited media item data back to the database.
   // 把编辑后的媒体信息保存回数据库。
@@ -184,12 +152,12 @@ export default function EditMediaItemPage() {
     try {
       const response = await fetch("/api/media/admin/update", {
         method: "POST",
+        credentials: "same-origin",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           id: mediaItemId,
-          adminPassword,
           title,
           category,
           creator,
@@ -200,7 +168,11 @@ export default function EditMediaItemPage() {
         }),
       });
 
-      const result = await response.json();
+      if (redirectIfUnauthorized(response)) {
+        return;
+      }
+
+      const result = await readJsonResponse<{ error?: string }>(response);
 
       if (!response.ok) {
         setError(result.error ?? "Failed to update media item.");
@@ -252,51 +224,17 @@ export default function EditMediaItemPage() {
           </p>
         </div>
 
-        {!isUnlocked ? (
-          // Password form shown before the editor is unlocked.
-          // 未解锁时显示管理员密码表单。
-          <form
-            onSubmit={handleUnlock}
-            className="mt-10 space-y-6 rounded-3xl border border-[#caf0f8]/25 bg-[#023e8a]/75 p-6 shadow-lg shadow-[#03045e]/20 backdrop-blur"
-          >
-            <div>
-              <label
-                htmlFor="adminPassword"
-                className="block text-sm font-semibold text-[#f8fcff]"
-              >
-                Admin password
-              </label>
-              <input
-                id="adminPassword"
-                type="password"
-                required
-                value={adminPassword}
-                onChange={(event) => setAdminPassword(event.target.value)}
-                placeholder="Enter admin password"
-                className="mt-2 w-full rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/45 px-4 py-3 text-sm text-white placeholder:text-[#caf0f8]/60 outline-none transition focus:border-[#caf0f8]"
-              />
-              <p className="mt-2 text-xs text-[#caf0f8]/65">
-                The server checks this password before loading the media item.
-              </p>
-            </div>
-
-            {error && (
-              <div className="rounded-2xl border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-200">
-                {error}
-              </div>
-            )}
-
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="w-full rounded-full bg-[#caf0f8] px-5 py-3 text-sm font-semibold text-[#023e8a] transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {isLoading ? "Loading..." : "Unlock editor"}
-            </button>
-          </form>
+        {isLoading ? (
+          <section className="mt-10 rounded-3xl border border-[#caf0f8]/25 bg-[#023e8a]/75 p-8 text-[#eaf8ff]">
+            Loading media item...
+          </section>
+        ) : error && !title ? (
+          <section className="mt-10 rounded-3xl border border-red-500/40 bg-red-500/10 p-8 text-red-200">
+            {error}
+          </section>
         ) : (
           // Main edit form after the media item has been loaded.
-          // 解锁并读取数据后的编辑表单。
+          // 读取数据后的编辑表单。
           <form
             onSubmit={handleSubmit}
             className="mt-10 space-y-6 rounded-3xl border border-[#caf0f8]/25 bg-[#023e8a]/75 p-6 shadow-lg shadow-[#03045e]/20 backdrop-blur"

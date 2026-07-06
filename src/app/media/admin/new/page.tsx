@@ -1,9 +1,13 @@
 "use client";
 
 import type { FormEvent } from "react";
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import {
+  readJsonResponse,
+  redirectIfUnauthorized,
+} from "@/lib/adminClientAuth";
 
 type MediaCategory = "MUSIC" | "BOOK" | "MOVIE" | "ANIME" | "GAME";
 
@@ -22,22 +26,6 @@ function formatCategory(category: MediaCategory) {
 export default function NewMediaItemPage() {
   const router = useRouter();
 
-  // Admin password used by the protected create API.
-  // 管理员密码，用于调用新增媒体 API。
-  const [adminPassword, setAdminPassword] = useState("");
-
-  // Whether the media editor is unlocked.
-  // 是否已经解锁新增媒体表单。
-  const [isUnlocked, setIsUnlocked] = useState(false);
-
-  // Unlock error shown before the form is available.
-  // 解锁阶段的错误提示。
-  const [unlockError, setUnlockError] = useState("");
-
-  // Loading state while checking the admin password.
-  // 检查密码时的加载状态。
-  const [isUnlocking, setIsUnlocking] = useState(false);
-
   // Form fields for the new media item.
   // 新增媒体收藏表单字段。
   const [title, setTitle] = useState("");
@@ -53,85 +41,6 @@ export default function NewMediaItemPage() {
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Reuse the existing admin password verification API.
-  // The create API will still check the password again before writing to MySQL.
-  // 复用管理员密码验证，真正写入时 API 仍会再次验证。
-  const verifyPassword = useCallback(async function verifyPassword(
-    password: string,
-  ) {
-    const response = await fetch("/api/blog/auth", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        password,
-      }),
-    });
-
-    const result = await response.json();
-
-    if (!response.ok) {
-      throw new Error(result.error ?? "Invalid admin password.");
-    }
-
-    return true;
-  }, []);
-
-  // Try to reuse the saved admin password during this browser session.
-  // 读取 sessionStorage，避免重复输入管理员密码。
-  useEffect(() => {
-    const savedPassword = sessionStorage.getItem("neonMoonAdminPassword");
-
-    if (!savedPassword) {
-      return;
-    }
-
-    async function unlockWithSavedPassword(password: string) {
-      setUnlockError("");
-      setIsUnlocking(true);
-
-      try {
-        await verifyPassword(password);
-        setAdminPassword(password);
-        setIsUnlocked(true);
-      } catch (error) {
-        sessionStorage.removeItem("neonMoonAdminPassword");
-        setUnlockError(
-          error instanceof Error
-            ? error.message
-            : "Saved admin session expired. Please enter the password again.",
-        );
-      } finally {
-        setIsUnlocking(false);
-      }
-    }
-
-    void unlockWithSavedPassword(savedPassword);
-  }, [verifyPassword]);
-
-  // Handle manual password unlock.
-  // 处理手动输入管理员密码解锁表单。
-  async function handleUnlock(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
-    setUnlockError("");
-    setIsUnlocking(true);
-
-    try {
-      await verifyPassword(adminPassword);
-
-      sessionStorage.setItem("neonMoonAdminPassword", adminPassword);
-      setIsUnlocked(true);
-    } catch (error) {
-      setUnlockError(
-        error instanceof Error ? error.message : "Invalid admin password.",
-      );
-    } finally {
-      setIsUnlocking(false);
-    }
-  }
-
   // Submit the new media item to the protected create API.
   // 提交新增媒体收藏到数据库。
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -143,11 +52,11 @@ export default function NewMediaItemPage() {
     try {
       const response = await fetch("/api/media/admin/create", {
         method: "POST",
+        credentials: "same-origin",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          adminPassword,
           title,
           category,
           creator,
@@ -158,7 +67,11 @@ export default function NewMediaItemPage() {
         }),
       });
 
-      const result = await response.json();
+      if (redirectIfUnauthorized(response)) {
+        return;
+      }
+
+      const result = await readJsonResponse<{ error?: string }>(response);
 
       if (!response.ok) {
         setError(result.error ?? "Failed to create media item.");
@@ -210,59 +123,10 @@ export default function NewMediaItemPage() {
           </p>
         </div>
 
-        {!isUnlocked ? (
-          // Password form shown before the media editor is unlocked.
-          // 未解锁时显示管理员密码表单。
-          <form
-            onSubmit={handleUnlock}
-            className="mt-10 space-y-6 rounded-3xl border border-[#caf0f8]/25 bg-[#023e8a]/75 p-6 shadow-lg shadow-[#03045e]/20 backdrop-blur"
-          >
-            <div>
-              <label
-                htmlFor="adminPassword"
-                className="block text-sm font-semibold text-[#f8fcff]"
-              >
-                Admin password
-              </label>
-              <input
-                id="adminPassword"
-                type="password"
-                required
-                value={adminPassword}
-                onChange={(event) => setAdminPassword(event.target.value)}
-                placeholder="Enter admin password"
-                className="mt-2 w-full rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/45 px-4 py-3 text-sm text-white placeholder:text-[#caf0f8]/60 outline-none transition focus:border-[#caf0f8]"
-              />
-              <p className="mt-2 text-xs text-[#caf0f8]/65">
-                The password is checked before the media editor is shown.
-              </p>
-            </div>
-
-            {unlockError && (
-              <div className="rounded-2xl border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-200">
-                {unlockError}
-              </div>
-            )}
-
-            <button
-              type="submit"
-              disabled={isUnlocking}
-              className="w-full rounded-full bg-[#caf0f8] px-5 py-3 text-sm font-semibold text-[#023e8a] transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {isUnlocking ? "Checking..." : "Unlock media editor"}
-            </button>
-          </form>
-        ) : (
-          // Main media creation form.
-          // 解锁后的新增媒体收藏表单。
           <form
             onSubmit={handleSubmit}
             className="mt-10 space-y-6 rounded-3xl border border-[#caf0f8]/25 bg-[#023e8a]/75 p-6 shadow-lg shadow-[#03045e]/20 backdrop-blur"
           >
-            <div className="rounded-2xl border border-[#caf0f8]/30 bg-[#caf0f8]/10 px-4 py-3 text-sm text-[#caf0f8]">
-              Media editor unlocked.
-            </div>
-
             <div>
               <label
                 htmlFor="title"
@@ -406,7 +270,6 @@ export default function NewMediaItemPage() {
               {isSubmitting ? "Creating..." : "Create media item"}
             </button>
           </form>
-        )}
       </div>
     </main>
   );

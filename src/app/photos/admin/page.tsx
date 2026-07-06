@@ -1,8 +1,11 @@
 "use client";
 
-import type { FormEvent } from "react";
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
+import {
+  readJsonResponse,
+  redirectIfUnauthorized,
+} from "@/lib/adminClientAuth";
 
 type PhotoSummary = {
   id: number;
@@ -28,10 +31,6 @@ function formatDate(dateValue: string | null) {
 }
 
 export default function PhotosAdminPage() {
-  // Admin password entered by the user.
-  // 管理员密码，用于访问后台 Photos API。
-  const [adminPassword, setAdminPassword] = useState("");
-
   // Photo records loaded from the database.
   // 从数据库读取到的照片记录列表。
   const [photos, setPhotos] = useState<PhotoSummary[]>([]);
@@ -48,90 +47,58 @@ export default function PhotosAdminPage() {
   // 当前正在删除的照片 id。
   const [deletingPhotoId, setDeletingPhotoId] = useState<number | null>(null);
 
-  // Loading state for password unlock and photo loading.
+  // Loading state for photo loading.
   // 加载状态，防止重复提交。
-  const [isLoading, setIsLoading] = useState(false);
-
-  // Whether the admin list is unlocked.
-  // 是否已经通过密码验证。
-  const [isUnlocked, setIsUnlocked] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Load all photo records from the protected admin API.
   // 加载后台照片管理列表。
-  const loadPhotos = useCallback(async function loadPhotos(password: string) {
+  const loadPhotos = useCallback(async function loadPhotos() {
     const response = await fetch("/api/photos/admin/list", {
       method: "POST",
+      credentials: "same-origin",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        adminPassword: password,
-      }),
+      body: JSON.stringify({}),
     });
 
-    const result = await response.json();
+    if (redirectIfUnauthorized(response)) {
+      return;
+    }
+
+    const result = await readJsonResponse<{
+      photos?: PhotoSummary[];
+      error?: string;
+    }>(response);
 
     if (!response.ok) {
       throw new Error(result.error ?? "Failed to load photos.");
     }
 
     setPhotos(result.photos ?? []);
-    setAdminPassword(password);
-    sessionStorage.setItem("neonMoonAdminPassword", password);
-    setIsUnlocked(true);
   }, []);
 
-  // Try to reuse the saved admin password during the same browser session.
-  // 复用 sessionStorage 中的管理员密码，避免重复输入。
   useEffect(() => {
-    const savedPassword = sessionStorage.getItem("neonMoonAdminPassword");
-
-    if (!savedPassword) {
-      return;
-    }
-
-    async function unlockWithSavedPassword(password: string) {
+    async function initializePhotos() {
       setError("");
       setIsLoading(true);
 
       try {
-        await loadPhotos(password);
+        await loadPhotos();
       } catch (error) {
-        sessionStorage.removeItem("neonMoonAdminPassword");
         setError(
           error instanceof Error
             ? error.message
-            : "Saved admin session expired. Please enter the password again.",
+            : "Something went wrong while loading photos.",
         );
       } finally {
         setIsLoading(false);
       }
     }
 
-    void unlockWithSavedPassword(savedPassword);
+    void initializePhotos();
   }, [loadPhotos]);
-
-  // Handle the first password unlock form.
-  // 处理管理员密码解锁表单。
-  async function handleUnlock(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
-    setError("");
-    setSuccessMessage("");
-    setIsLoading(true);
-
-    try {
-      await loadPhotos(adminPassword);
-    } catch (error) {
-      setError(
-        error instanceof Error
-          ? error.message
-          : "Something went wrong while loading photos.",
-      );
-    } finally {
-      setIsLoading(false);
-    }
-  }
 
   async function handleDeletePhoto(photo: PhotoSummary) {
     const shouldDelete = window.confirm(
@@ -149,16 +116,20 @@ export default function PhotosAdminPage() {
     try {
       const response = await fetch("/api/photos/admin/delete", {
         method: "POST",
+        credentials: "same-origin",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          adminPassword,
           id: photo.id,
         }),
       });
 
-      const result = await response.json();
+      if (redirectIfUnauthorized(response)) {
+        return;
+      }
+
+      const result = await readJsonResponse<{ error?: string }>(response);
 
       if (!response.ok) {
         throw new Error(result.error ?? "Failed to delete photo.");
@@ -208,60 +179,17 @@ export default function PhotosAdminPage() {
           </h1>
 
           <p className="mt-4 max-w-2xl text-lg leading-8 text-[#eaf8ff]">
-            Unlock the admin list to view photo records stored in the database.
+            View and manage photo records stored in the database.
           </p>
         </div>
 
-        {!isUnlocked ? (
-          // Password form shown before the photo admin list is unlocked.
-          // 未解锁时显示管理员密码表单。
-          <form
-            onSubmit={handleUnlock}
-            className="mt-10 max-w-2xl space-y-6 rounded-3xl border border-[#caf0f8]/25 bg-[#023e8a]/75 p-6 shadow-lg shadow-[#03045e]/20 backdrop-blur"
-          >
-            <div>
-              <label
-                htmlFor="adminPassword"
-                className="block text-sm font-semibold text-[#f8fcff]"
-              >
-                Admin password
-              </label>
-              <input
-                id="adminPassword"
-                type="password"
-                required
-                value={adminPassword}
-                onChange={(event) => setAdminPassword(event.target.value)}
-                placeholder="Enter admin password"
-                className="mt-2 w-full rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/45 px-4 py-3 text-sm text-white placeholder:text-[#caf0f8]/60 outline-none transition focus:border-[#caf0f8]"
-              />
-              <p className="mt-2 text-xs text-[#caf0f8]/65">
-                The server checks this password before returning photo records.
-              </p>
-            </div>
-
-            {error && (
-              <div className="rounded-2xl border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-200">
-                {error}
-              </div>
-            )}
-
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="w-full rounded-full bg-[#caf0f8] px-5 py-3 text-sm font-semibold text-[#023e8a] transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {isLoading ? "Loading..." : "Unlock photos admin"}
-            </button>
-          </form>
-        ) : (
-          // Main photo admin list after password verification.
-          // 解锁后显示照片后台管理列表。
+        {
           <section className="mt-10">
             <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
               <div className="rounded-2xl border border-[#caf0f8]/30 bg-[#caf0f8]/10 px-4 py-3 text-sm text-[#caf0f8]">
-                Photos admin unlocked. {photos.length} photo
-                {photos.length === 1 ? "" : "s"} found.
+                {isLoading
+                  ? "Loading photos..."
+                  : `${photos.length} photo${photos.length === 1 ? "" : "s"} found.`}
               </div>
 
               <Link
@@ -284,7 +212,11 @@ export default function PhotosAdminPage() {
               </div>
             )}
 
-            {photos.length === 0 ? (
+            {isLoading ? (
+              <div className="rounded-3xl border border-[#caf0f8]/25 bg-[#023e8a]/75 p-8 text-[#eaf8ff]">
+                Loading photos...
+              </div>
+            ) : photos.length === 0 ? (
               <div className="rounded-3xl border border-dashed border-[#caf0f8]/40 bg-[#03045e]/45 p-10 text-center">
                 <p className="text-lg font-semibold text-[#f8fcff]">
                   No photos found.
@@ -377,7 +309,7 @@ export default function PhotosAdminPage() {
               </div>
             )}
           </section>
-        )}
+        }
       </div>
     </main>
   );

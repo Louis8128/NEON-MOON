@@ -1,8 +1,13 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import type { FormEvent } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import {
+  readJsonResponse,
+  redirectIfUnauthorized,
+} from "@/lib/adminClientAuth";
 
 function generateSlugFromTitle(title: string) {
   return title
@@ -16,11 +21,6 @@ function generateSlugFromTitle(title: string) {
 
 export default function AdminNewBlogPostPage() {
   const router = useRouter();
-
-  const [adminPassword, setAdminPassword] = useState("");
-  const [isUnlocked, setIsUnlocked] = useState(false);
-  const [unlockError, setUnlockError] = useState("");
-  const [isUnlocking, setIsUnlocking] = useState(false);
 
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
@@ -40,70 +40,6 @@ export default function AdminNewBlogPostPage() {
     }
   }
 
-  async function verifyPassword(password: string) {
-    const response = await fetch("/api/blog/auth", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        password,
-      }),
-    });
-
-    const result = await response.json();
-
-    if (!response.ok) {
-      throw new Error(result.error ?? "Invalid admin password.");
-    }
-
-    return true;
-  }
-
-  useEffect(() => {
-    const savedPassword = sessionStorage.getItem("neonMoonAdminPassword");
-    if (!savedPassword) {
-      return;
-    }
-    async function unlockWithSavedPassword(password: string) {
-      setIsUnlocking(true);
-      setUnlockError("");
-      try {
-        await verifyPassword(password);
-        setAdminPassword(password);
-        setIsUnlocked(true);
-      } catch {
-        sessionStorage.removeItem("neonMoonAdminPassword");
-        setUnlockError(
-          "Saved admin session expired. Please enter the password again.",
-        );
-      } finally {
-        setIsUnlocking(false);
-      }
-    }
-    void unlockWithSavedPassword(savedPassword);
-  }, []);
-
-  async function handleUnlock(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
-    setUnlockError("");
-    setIsUnlocking(true);
-
-    try {
-      await verifyPassword(adminPassword);
-
-      sessionStorage.setItem("neonMoonAdminPassword", adminPassword);
-      setIsUnlocked(true);
-    } catch (error) {
-      setUnlockError(
-        error instanceof Error ? error.message : "Invalid admin password.",
-      );
-    } finally {
-      setIsUnlocking(false);
-    }
-  }
-
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
@@ -113,11 +49,11 @@ export default function AdminNewBlogPostPage() {
     try {
       const response = await fetch("/api/blog/create", {
         method: "POST",
+        credentials: "same-origin",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          adminPassword,
           title,
           slug,
           excerpt,
@@ -127,7 +63,17 @@ export default function AdminNewBlogPostPage() {
         }),
       });
 
-      const result = await response.json();
+      if (redirectIfUnauthorized(response)) {
+        return;
+      }
+
+      const result = await readJsonResponse<{
+        post?: {
+          slug: string;
+          published: boolean;
+        };
+        error?: string;
+      }>(response);
 
       if (!response.ok) {
         setError(result.error ?? "Failed to create blog post.");
@@ -181,56 +127,10 @@ export default function AdminNewBlogPostPage() {
             database.
           </p>
         </div>
-        {!isUnlocked ? (
-          <form
-            onSubmit={handleUnlock}
-            className="mt-10 space-y-6 rounded-3xl border border-[#caf0f8]/25 bg-[#023e8a]/75 p-6 shadow-lg shadow-[#03045e]/20 backdrop-blur"
-          >
-            <div>
-              <label
-                htmlFor="adminPassword"
-                className="block text-sm font-semibold text-[#f8fcff]"
-              >
-                Admin password
-              </label>
-              <input
-                id="adminPassword"
-                type="password"
-                required
-                value={adminPassword}
-                onChange={(event) => setAdminPassword(event.target.value)}
-                placeholder="Enter admin password"
-                className="mt-2 w-full rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/45 px-4 py-3 text-sm text-white placeholder:text-[#caf0f8]/60 outline-none transition focus:border-[#caf0f8]"
-              />
-              <p className="mt-2 text-xs text-[#caf0f8]/65">
-                The password is checked by the server before the editor is
-                shown.
-              </p>
-            </div>
-
-            {unlockError && (
-              <div className="rounded-2xl border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-200">
-                {unlockError}
-              </div>
-            )}
-
-            <button
-              type="submit"
-              disabled={isUnlocking}
-              className="w-full rounded-full bg-[#caf0f8] px-5 py-3 text-sm font-semibold text-[#023e8a] transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {isUnlocking ? "Checking..." : "Unlock editor"}
-            </button>
-          </form>
-        ) : (
           <form
             onSubmit={handleSubmit}
             className="mt-10 space-y-6 rounded-3xl border border-[#caf0f8]/25 bg-[#023e8a]/75 p-6 shadow-lg shadow-[#03045e]/20 backdrop-blur"
           >
-            <div className="rounded-2xl border border-[#caf0f8]/30 bg-[#caf0f8]/10 px-4 py-3 text-sm text-[#caf0f8]">
-              Blog editor unlocked.
-            </div>
-
             <div>
               <label
                 htmlFor="title"
@@ -347,7 +247,6 @@ export default function AdminNewBlogPostPage() {
               {isSubmitting ? "Creating..." : "Create blog post"}
             </button>
           </form>
-        )}
       </div>
     </main>
   );

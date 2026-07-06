@@ -1,8 +1,11 @@
 "use client";
 
-import type { FormEvent } from "react";
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
+import {
+  readJsonResponse,
+  redirectIfUnauthorized,
+} from "@/lib/adminClientAuth";
 
 // Shape of one blog post row returned by the admin list API.
 // 后台文章列表里每一篇文章的数据结构。
@@ -20,10 +23,6 @@ type BlogPostSummary = {
 type PostFilter = "ALL" | "PUBLISHED" | "DRAFT";
 
 export default function BlogAdminPage() {
-  // Admin password entered by the user.
-  // 管理员密码，用于请求后台 API。
-  const [adminPassword, setAdminPassword] = useState("");
-
   // Blog posts loaded from the database through /api/blog/admin/list.
   // 从数据库读取到的文章列表。
   const [posts, setPosts] = useState<BlogPostSummary[]>([]);
@@ -36,13 +35,9 @@ export default function BlogAdminPage() {
   // 页面错误提示。
   const [error, setError] = useState("");
 
-  // Loading state for unlocking or loading the admin list.
+  // Loading state for loading the admin list.
   // 加载状态，防止重复提交。
-  const [isLoading, setIsLoading] = useState(false);
-
-  // Whether the admin list is unlocked.
-  // 是否已经通过密码验证。
-  const [isUnlocked, setIsUnlocked] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Tracks which post is currently changing publish status.
   // 记录正在切换发布状态的文章 id。
@@ -51,88 +46,56 @@ export default function BlogAdminPage() {
   >(null);
 
   // Load all blog posts from the protected admin API.
-  // This function also saves the password into sessionStorage for this browser tab.
-  // 加载后台文章列表，并保存当前会话密码。
-  const loadPosts = useCallback(async function loadPosts(password: string) {
+  // 加载后台文章列表，认证由 HttpOnly cookie 处理。
+  const loadPosts = useCallback(async function loadPosts() {
     const response = await fetch("/api/blog/admin/list", {
       method: "POST",
+      credentials: "same-origin",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        adminPassword: password,
-      }),
+      body: JSON.stringify({}),
     });
 
-    const result = await response.json();
+    if (redirectIfUnauthorized(response)) {
+      return;
+    }
+
+    const result = await readJsonResponse<{
+      posts?: BlogPostSummary[];
+      error?: string;
+    }>(response);
 
     if (!response.ok) {
       throw new Error(result.error ?? "Failed to load blog posts.");
     }
 
     setPosts(result.posts ?? []);
-    setAdminPassword(password);
-    sessionStorage.setItem("neonMoonAdminPassword", password);
-    setIsUnlocked(true);
   }, []);
 
-  // Try to reuse the saved admin password when the user returns to this page.
-  // This avoids asking for the password again during the same browser session.
-  // 自动读取 sessionStorage，减少重复输入密码。
   useEffect(() => {
-    const savedPassword = sessionStorage.getItem("neonMoonAdminPassword");
-
-    if (!savedPassword) {
-      return;
-    }
-
-    async function unlockWithSavedPassword(password: string) {
+    async function initializePosts() {
       setError("");
       setIsLoading(true);
 
       try {
-        await loadPosts(password);
+        await loadPosts();
       } catch (error) {
-        // If the saved password is no longer valid, remove it and ask again.
-        // 保存的密码失效后清除本地会话。
-        sessionStorage.removeItem("neonMoonAdminPassword");
         setError(
           error instanceof Error
             ? error.message
-            : "Saved admin session expired. Please enter the password again.",
+            : "Something went wrong while loading blog posts.",
         );
       } finally {
         setIsLoading(false);
       }
     }
 
-    void unlockWithSavedPassword(savedPassword);
+    void initializePosts();
   }, [loadPosts]);
 
-  // Handle the first password unlock form.
-  // 处理管理员密码解锁表单。
-  async function handleUnlock(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
-    setError("");
-    setIsLoading(true);
-
-    try {
-      await loadPosts(adminPassword);
-    } catch (error) {
-      setError(
-        error instanceof Error
-          ? error.message
-          : "Something went wrong while loading blog posts.",
-      );
-    } finally {
-      setIsLoading(false);
-    }
-  }
-
   // Toggle one post between Published and Draft.
-  // The server still checks the admin password before changing the database.
-  // 快速切换文章发布状态，API 仍然会验证密码。
+  // 快速切换文章发布状态，API 通过 HttpOnly cookie 验证。
   async function handleTogglePublish(postId: number) {
     setError("");
     setChangingStatusPostId(postId);
@@ -140,19 +103,35 @@ export default function BlogAdminPage() {
     try {
       const response = await fetch("/api/blog/admin/toggle-publish", {
         method: "POST",
+        credentials: "same-origin",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           id: postId,
-          adminPassword,
         }),
       });
 
-      const result = await response.json();
+      if (redirectIfUnauthorized(response)) {
+        return;
+      }
+
+      const result = await readJsonResponse<{
+        post?: {
+          id: number;
+          published: boolean;
+          updatedAt: string;
+        };
+        error?: string;
+      }>(response);
 
       if (!response.ok) {
         setError(result.error ?? "Failed to update publish status.");
+        return;
+      }
+
+      if (!result.post) {
+        setError("Publish status response is missing.");
         return;
       }
 
@@ -160,7 +139,7 @@ export default function BlogAdminPage() {
       // 数据库更新成功后，同步更新前端列表。
       setPosts((currentPosts) =>
         currentPosts.map((post) =>
-          post.id === result.post.id
+          post.id === result.post?.id
             ? {
                 ...post,
                 published: result.post.published,
@@ -234,61 +213,17 @@ export default function BlogAdminPage() {
           </h1>
 
           <p className="mt-4 max-w-2xl text-lg leading-8 text-[#eaf8ff]">
-            Unlock the admin list to view published posts and drafts stored in
-            the database.
+            View published posts and drafts stored in the database.
           </p>
         </div>
 
-        {!isUnlocked ? (
-          // Password form shown before the admin list is unlocked.
-          // 未解锁时显示密码表单。
-          <form
-            onSubmit={handleUnlock}
-            className="mt-10 max-w-2xl space-y-6 rounded-3xl border border-[#caf0f8]/25 bg-[#023e8a]/75 p-6 shadow-lg shadow-[#03045e]/20 backdrop-blur"
-          >
-            <div>
-              <label
-                htmlFor="adminPassword"
-                className="block text-sm font-semibold text-[#f8fcff]"
-              >
-                Admin password
-              </label>
-              <input
-                id="adminPassword"
-                type="password"
-                required
-                value={adminPassword}
-                onChange={(event) => setAdminPassword(event.target.value)}
-                placeholder="Enter admin password"
-                className="mt-2 w-full rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/45 px-4 py-3 text-sm text-white placeholder:text-[#caf0f8]/60 outline-none transition focus:border-[#caf0f8]"
-              />
-              <p className="mt-2 text-xs text-[#caf0f8]/65">
-                The server checks this password before returning draft posts.
-              </p>
-            </div>
-
-            {error && (
-              <div className="rounded-2xl border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-200">
-                {error}
-              </div>
-            )}
-
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="w-full rounded-full bg-[#caf0f8] px-5 py-3 text-sm font-semibold text-[#023e8a] transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {isLoading ? "Loading..." : "Unlock admin list"}
-            </button>
-          </form>
-        ) : (
-          // Main admin list after password verification.
-          // 解锁后显示后台文章管理列表。
+        {
           <section className="mt-10">
             <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
               <div className="rounded-2xl border border-[#caf0f8]/30 bg-[#caf0f8]/10 px-4 py-3 text-sm text-[#caf0f8]">
-                Admin list unlocked. {posts.length} post
-                {posts.length === 1 ? "" : "s"} found.
+                {isLoading
+                  ? "Loading blog posts..."
+                  : `${posts.length} post${posts.length === 1 ? "" : "s"} found.`}
               </div>
 
               <Link
@@ -333,7 +268,11 @@ export default function BlogAdminPage() {
               </button>
             </div>
 
-            {filteredPosts.length === 0 ? (
+            {isLoading ? (
+              <div className="rounded-3xl border border-[#caf0f8]/25 bg-[#023e8a]/75 p-8 text-[#eaf8ff]">
+                Loading blog posts...
+              </div>
+            ) : filteredPosts.length === 0 ? (
               // Empty state for the current filter.
               // 当前筛选结果为空时显示提示。
               <div className="rounded-3xl border border-dashed border-[#caf0f8]/40 bg-[#03045e]/45 p-10 text-center">
@@ -433,7 +372,7 @@ export default function BlogAdminPage() {
               </div>
             )}
           </section>
-        )}
+        }
       </div>
     </main>
   );
