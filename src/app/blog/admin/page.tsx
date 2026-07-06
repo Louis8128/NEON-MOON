@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import AdminHeader from "@/components/AdminHeader";
+import { useI18n } from "@/components/I18nProvider";
 import {
   readJsonResponse,
   redirectIfUnauthorized,
@@ -23,7 +24,25 @@ type BlogPostSummary = {
 // 后台筛选模式：全部、已发布、草稿。
 type PostFilter = "ALL" | "PUBLISHED" | "DRAFT";
 
+function formatCountLabel(
+  locale: string,
+  count: number,
+  singular: string,
+  plural: string,
+  foundSuffix: string,
+) {
+  if (locale === "zh") {
+    return `${count} ${plural}${foundSuffix}`;
+  }
+
+  return `${count} ${count === 1 ? singular : plural} ${foundSuffix}`;
+}
+
 export default function BlogAdminPage() {
+  const { locale, t } = useI18n();
+  const copy = t.blogAdmin;
+  const dateLocale = locale === "zh" ? "zh-CN" : "en-AU";
+
   // Blog posts loaded from the database through /api/blog/admin/list.
   // 从数据库读取到的文章列表。
   const [posts, setPosts] = useState<BlogPostSummary[]>([]);
@@ -48,31 +67,34 @@ export default function BlogAdminPage() {
 
   // Load all blog posts from the protected admin API.
   // 加载后台文章列表，认证由 HttpOnly cookie 处理。
-  const loadPosts = useCallback(async function loadPosts() {
-    const response = await fetch("/api/blog/admin/list", {
-      method: "POST",
-      credentials: "same-origin",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({}),
-    });
+  const loadPosts = useCallback(
+    async function loadPosts() {
+      const response = await fetch("/api/blog/admin/list", {
+        method: "POST",
+        credentials: "same-origin",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({}),
+      });
 
-    if (redirectIfUnauthorized(response)) {
-      return;
-    }
+      if (redirectIfUnauthorized(response)) {
+        return;
+      }
 
-    const result = await readJsonResponse<{
-      posts?: BlogPostSummary[];
-      error?: string;
-    }>(response);
+      const result = await readJsonResponse<{
+        posts?: BlogPostSummary[];
+        error?: string;
+      }>(response);
 
-    if (!response.ok) {
-      throw new Error(result.error ?? "Failed to load blog posts.");
-    }
+      if (!response.ok) {
+        throw new Error(result.error ?? copy.failedToLoadPosts);
+      }
 
-    setPosts(result.posts ?? []);
-  }, []);
+      setPosts(result.posts ?? []);
+    },
+    [copy.failedToLoadPosts],
+  );
 
   useEffect(() => {
     async function initializePosts() {
@@ -85,7 +107,7 @@ export default function BlogAdminPage() {
         setError(
           error instanceof Error
             ? error.message
-            : "Something went wrong while loading blog posts.",
+            : copy.failedToLoadPostsUnexpected,
         );
       } finally {
         setIsLoading(false);
@@ -93,7 +115,7 @@ export default function BlogAdminPage() {
     }
 
     void initializePosts();
-  }, [loadPosts]);
+  }, [copy.failedToLoadPostsUnexpected, loadPosts]);
 
   // Toggle one post between Published and Draft.
   // 快速切换文章发布状态，API 通过 HttpOnly cookie 验证。
@@ -127,12 +149,12 @@ export default function BlogAdminPage() {
       }>(response);
 
       if (!response.ok) {
-        setError(result.error ?? "Failed to update publish status.");
+        setError(result.error ?? copy.failedToUpdatePublishStatus);
         return;
       }
 
       if (!result.post) {
-        setError("Publish status response is missing.");
+        setError(copy.publishStatusMissing);
         return;
       }
 
@@ -150,7 +172,7 @@ export default function BlogAdminPage() {
         ),
       );
     } catch {
-      setError("Something went wrong while updating publish status.");
+      setError(copy.failedToUpdatePublishStatusUnexpected);
     } finally {
       setChangingStatusPostId(null);
     }
@@ -205,15 +227,15 @@ export default function BlogAdminPage() {
 
         <div className="mt-10">
           <p className="text-xs font-semibold uppercase tracking-[0.4em] text-[#caf0f8]">
-            Blog Admin
+            {copy.adminName}
           </p>
 
           <h1 className="mt-4 text-4xl font-bold tracking-tight text-white md:text-5xl">
-            Manage blog posts
+            {copy.manageTitle}
           </h1>
 
           <p className="mt-4 max-w-2xl text-lg leading-8 text-[#eaf8ff]">
-            View published posts and drafts stored in the database.
+            {copy.manageDescription}
           </p>
         </div>
 
@@ -222,15 +244,21 @@ export default function BlogAdminPage() {
             <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
               <div className="rounded-2xl border border-[#caf0f8]/30 bg-[#caf0f8]/10 px-4 py-3 text-sm text-[#caf0f8]">
                 {isLoading
-                  ? "Loading blog posts..."
-                  : `${posts.length} post${posts.length === 1 ? "" : "s"} found.`}
+                  ? copy.loadingPosts
+                  : formatCountLabel(
+                      locale,
+                      posts.length,
+                      copy.postSingular,
+                      copy.postPlural,
+                      copy.foundSuffix,
+                    )}
               </div>
 
               <Link
                 href="/blog/admin/new"
                 className="rounded-full bg-[#caf0f8] px-5 py-3 text-sm font-semibold text-[#023e8a] transition hover:bg-white"
               >
-                New post
+                {copy.newPost}
               </Link>
             </div>
 
@@ -248,7 +276,7 @@ export default function BlogAdminPage() {
                 onClick={() => setFilter("ALL")}
                 className={getFilterButtonClass("ALL")}
               >
-                All ({posts.length})
+                {copy.all} ({posts.length})
               </button>
 
               <button
@@ -256,7 +284,7 @@ export default function BlogAdminPage() {
                 onClick={() => setFilter("PUBLISHED")}
                 className={getFilterButtonClass("PUBLISHED")}
               >
-                Published ({publishedCount})
+                {copy.published} ({publishedCount})
               </button>
 
               <button
@@ -264,32 +292,32 @@ export default function BlogAdminPage() {
                 onClick={() => setFilter("DRAFT")}
                 className={getFilterButtonClass("DRAFT")}
               >
-                Draft ({draftCount})
+                {copy.draft} ({draftCount})
               </button>
             </div>
 
             {isLoading ? (
               <div className="rounded-3xl border border-[#caf0f8]/25 bg-[#023e8a]/75 p-8 text-[#eaf8ff]">
-                Loading blog posts...
+                {copy.loadingPosts}
               </div>
             ) : filteredPosts.length === 0 ? (
               // Empty state for the current filter.
               // 当前筛选结果为空时显示提示。
               <div className="rounded-3xl border border-dashed border-[#caf0f8]/40 bg-[#03045e]/45 p-10 text-center">
                 <p className="text-lg font-semibold text-[#f8fcff]">
-                  No posts in this view.
+                  {copy.noPostsInView}
                 </p>
                 <p className="mt-2 text-sm text-[#caf0f8]/80">
-                  Switch filters or create a new blog post.
+                  {copy.noPostsHint}
                 </p>
               </div>
             ) : (
               <div className="overflow-hidden rounded-3xl border border-[#caf0f8]/25 bg-[#023e8a]/75">
                 <div className="grid grid-cols-12 border-b border-[#caf0f8]/25 px-5 py-4 text-xs font-semibold uppercase tracking-[0.2em] text-[#caf0f8]/65">
-                  <div className="col-span-5">Title</div>
-                  <div className="col-span-3">Slug</div>
-                  <div className="col-span-2">Status</div>
-                  <div className="col-span-2 text-right">Updated</div>
+                  <div className="col-span-5">{copy.title}</div>
+                  <div className="col-span-3">{copy.slug}</div>
+                  <div className="col-span-2">{copy.status}</div>
+                  <div className="col-span-2 text-right">{copy.updated}</div>
                 </div>
 
                 <div className="divide-y divide-[#caf0f8]/20">
@@ -303,8 +331,10 @@ export default function BlogAdminPage() {
                       <div className="col-span-5">
                         <p className="font-semibold text-white">{post.title}</p>
                         <p className="mt-1 text-xs text-[#caf0f8]/65">
-                          Created on{" "}
-                          {new Date(post.createdAt).toLocaleDateString("en-AU")}
+                          {copy.createdOn}{" "}
+                          {new Date(post.createdAt).toLocaleDateString(
+                            dateLocale,
+                          )}
                         </p>
                       </div>
 
@@ -320,13 +350,15 @@ export default function BlogAdminPage() {
                               : "rounded-full border border-amber-400/40 px-3 py-1 text-xs font-semibold text-amber-300"
                           }
                         >
-                          {post.published ? "Published" : "Draft"}
+                          {post.published ? copy.published : copy.draft}
                         </span>
                       </div>
 
                       <div className="col-span-2 text-right">
                         <p className="text-xs text-[#caf0f8]/65">
-                          {new Date(post.updatedAt).toLocaleDateString("en-AU")}
+                          {new Date(post.updatedAt).toLocaleDateString(
+                            dateLocale,
+                          )}
                         </p>
 
                         {/* Row actions: edit, view, and publish status toggle. */}
@@ -336,7 +368,7 @@ export default function BlogAdminPage() {
                             href={`/blog/admin/edit/${post.id}`}
                             className="text-xs font-semibold text-[#caf0f8] transition hover:text-white"
                           >
-                            Edit
+                            {copy.edit}
                           </Link>
 
                           {post.published && (
@@ -344,7 +376,7 @@ export default function BlogAdminPage() {
                               href={`/blog/${post.slug}`}
                               className="text-xs font-semibold text-[#eaf8ff] transition hover:text-white"
                             >
-                              View
+                              {copy.view}
                             </Link>
                           )}
 
@@ -359,10 +391,10 @@ export default function BlogAdminPage() {
                             }
                           >
                             {changingStatusPostId === post.id
-                              ? "Updating..."
+                              ? copy.updating
                               : post.published
-                                ? "Unpublish"
-                                : "Publish"}
+                                ? copy.unpublish
+                                : copy.publish}
                           </button>
                         </div>
                       </div>

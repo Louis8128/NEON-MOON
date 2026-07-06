@@ -4,6 +4,7 @@ import type { FormEvent } from "react";
 import { useCallback, useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import AdminHeader from "@/components/AdminHeader";
+import { useI18n } from "@/components/I18nProvider";
 import {
   readJsonResponse,
   redirectIfUnauthorized,
@@ -32,13 +33,19 @@ const mediaCategories: MediaCategory[] = [
   "GAME",
 ];
 
-function formatCategory(category: MediaCategory) {
-  return category.charAt(0) + category.slice(1).toLowerCase();
+function getCategoryLabel(
+  category: MediaCategory,
+  labels: ReturnType<typeof useI18n>["t"]["mediaAdmin"]["categories"],
+) {
+  return labels[category.toLowerCase() as Lowercase<MediaCategory>];
 }
 
 export default function EditMediaItemPage() {
   const router = useRouter();
   const params = useParams<{ id: string }>();
+  const { locale, t } = useI18n();
+  const copy = t.mediaAdmin;
+  const dateLocale = locale === "zh" ? "zh-CN" : "en-AU";
 
   // Media item id from the dynamic route: /media/admin/edit/[id]
   // 从动态路由里读取媒体条目 id。
@@ -96,13 +103,13 @@ export default function EditMediaItemPage() {
       }>(response);
 
       if (!response.ok) {
-        throw new Error(result.error ?? "Failed to load media item.");
+        throw new Error(result.error ?? copy.failedToLoadMediaItem);
       }
 
       const mediaItem = result.mediaItem as MediaItemFormData | undefined;
 
       if (!mediaItem) {
-        throw new Error("Media item response is missing.");
+        throw new Error(copy.mediaItemMissing);
       }
 
       setTitle(mediaItem.title);
@@ -117,7 +124,7 @@ export default function EditMediaItemPage() {
       setCreatedAt(mediaItem.createdAt);
       setUpdatedAt(mediaItem.updatedAt);
     },
-    [mediaItemId],
+    [copy.failedToLoadMediaItem, copy.mediaItemMissing, mediaItemId],
   );
 
   useEffect(() => {
@@ -131,7 +138,7 @@ export default function EditMediaItemPage() {
         setError(
           error instanceof Error
             ? error.message
-            : "Something went wrong while loading the media item.",
+            : copy.failedToLoadMediaItemUnexpected,
         );
       } finally {
         setIsLoading(false);
@@ -139,7 +146,7 @@ export default function EditMediaItemPage() {
     }
 
     void initializeMediaItem();
-  }, [loadMediaItem]);
+  }, [copy.failedToLoadMediaItemUnexpected, loadMediaItem]);
 
   // Save edited media item data back to the database.
   // 把编辑后的媒体信息保存回数据库。
@@ -175,14 +182,14 @@ export default function EditMediaItemPage() {
       const result = await readJsonResponse<{ error?: string }>(response);
 
       if (!response.ok) {
-        setError(result.error ?? "Failed to update media item.");
+        setError(result.error ?? copy.failedToUpdateMediaItem);
         return;
       }
 
       router.push("/media/admin");
       router.refresh();
     } catch {
-      setError("Something went wrong while updating the media item.");
+      setError(copy.failedToUpdateMediaItemUnexpected);
     } finally {
       setIsSubmitting(false);
     }
@@ -210,22 +217,21 @@ export default function EditMediaItemPage() {
 
         <div className="mt-10">
           <p className="text-xs font-semibold uppercase tracking-[0.4em] text-[#caf0f8]">
-            Media Admin
+            {copy.adminName}
           </p>
 
           <h1 className="mt-4 text-4xl font-bold tracking-tight text-white md:text-5xl">
-            Edit media item
+            {copy.editTitle}
           </h1>
 
           <p className="mt-4 max-w-2xl text-lg leading-8 text-[#eaf8ff]">
-            Update the title, category, creator, release year, rating, cover
-            URL, and personal note for this media item.
+            {copy.editDescription}
           </p>
         </div>
 
         {isLoading ? (
           <section className="mt-10 rounded-3xl border border-[#caf0f8]/25 bg-[#023e8a]/75 p-8 text-[#eaf8ff]">
-            Loading media item...
+            {copy.loadingMediaItem}
           </section>
         ) : error && !title ? (
           <section className="mt-10 rounded-3xl border border-red-500/40 bg-red-500/10 p-8 text-red-200">
@@ -239,16 +245,17 @@ export default function EditMediaItemPage() {
             className="mt-10 space-y-6 rounded-3xl border border-[#caf0f8]/25 bg-[#023e8a]/75 p-6 shadow-lg shadow-[#03045e]/20 backdrop-blur"
           >
             <div className="rounded-2xl border border-[#caf0f8]/30 bg-[#caf0f8]/10 px-4 py-3 text-sm text-[#caf0f8]">
-              Editing media item #{mediaItemId}
+              {copy.editingItemPrefix} #{mediaItemId}
               {updatedAt && (
                 <span className="block pt-1 text-xs text-[#caf0f8]/80">
-                  Last updated on{" "}
-                  {new Date(updatedAt).toLocaleDateString("en-AU")}
+                  {copy.updatedOn}{" "}
+                  {new Date(updatedAt).toLocaleDateString(dateLocale)}
                 </span>
               )}
               {createdAt && (
                 <span className="block pt-1 text-xs text-[#caf0f8]/70">
-                  Created on {new Date(createdAt).toLocaleDateString("en-AU")}
+                  {copy.createdOn}{" "}
+                  {new Date(createdAt).toLocaleDateString(dateLocale)}
                 </span>
               )}
             </div>
@@ -258,7 +265,7 @@ export default function EditMediaItemPage() {
                 htmlFor="title"
                 className="block text-sm font-semibold text-[#f8fcff]"
               >
-                Title
+                {copy.title}
               </label>
               <input
                 id="title"
@@ -266,7 +273,7 @@ export default function EditMediaItemPage() {
                 required
                 value={title}
                 onChange={(event) => setTitle(event.target.value)}
-                placeholder="Enter a title"
+                placeholder={copy.titlePlaceholder}
                 className="mt-2 w-full rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/45 px-4 py-3 text-sm text-white placeholder:text-[#caf0f8]/60 outline-none transition focus:border-[#caf0f8]"
               />
             </div>
@@ -276,7 +283,7 @@ export default function EditMediaItemPage() {
                 htmlFor="category"
                 className="block text-sm font-semibold text-[#f8fcff]"
               >
-                Category
+                {copy.category}
               </label>
               <select
                 id="category"
@@ -288,7 +295,7 @@ export default function EditMediaItemPage() {
               >
                 {mediaCategories.map((mediaCategory) => (
                   <option key={mediaCategory} value={mediaCategory}>
-                    {formatCategory(mediaCategory)}
+                    {getCategoryLabel(mediaCategory, copy.categories)}
                   </option>
                 ))}
               </select>
@@ -299,14 +306,14 @@ export default function EditMediaItemPage() {
                 htmlFor="creator"
                 className="block text-sm font-semibold text-[#f8fcff]"
               >
-                Creator
+                {copy.creator}
               </label>
               <input
                 id="creator"
                 type="text"
                 value={creator}
                 onChange={(event) => setCreator(event.target.value)}
-                placeholder="Director, artist, author, studio..."
+                placeholder={copy.creatorPlaceholder}
                 className="mt-2 w-full rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/45 px-4 py-3 text-sm text-white placeholder:text-[#caf0f8]/60 outline-none transition focus:border-[#caf0f8]"
               />
             </div>
@@ -316,14 +323,14 @@ export default function EditMediaItemPage() {
                 htmlFor="releaseYear"
                 className="block text-sm font-semibold text-[#f8fcff]"
               >
-                Release year
+                {copy.releaseYear}
               </label>
               <input
                 id="releaseYear"
                 type="number"
                 value={releaseYear}
                 onChange={(event) => setReleaseYear(event.target.value)}
-                placeholder="Optional release year"
+                placeholder={copy.releaseYearPlaceholder}
                 className="mt-2 w-full rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/45 px-4 py-3 text-sm text-white placeholder:text-[#caf0f8]/60 outline-none transition focus:border-[#caf0f8]"
               />
             </div>
@@ -333,7 +340,7 @@ export default function EditMediaItemPage() {
                 htmlFor="rating"
                 className="block text-sm font-semibold text-[#f8fcff]"
               >
-                Rating
+                {copy.rating}
               </label>
               <input
                 id="rating"
@@ -343,7 +350,7 @@ export default function EditMediaItemPage() {
                 step="0.1"
                 value={rating}
                 onChange={(event) => setRating(event.target.value)}
-                placeholder="Optional rating from 0 to 10"
+                placeholder={copy.ratingPlaceholder}
                 className="mt-2 w-full rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/45 px-4 py-3 text-sm text-white placeholder:text-[#caf0f8]/60 outline-none transition focus:border-[#caf0f8]"
               />
             </div>
@@ -353,14 +360,14 @@ export default function EditMediaItemPage() {
                 htmlFor="coverUrl"
                 className="block text-sm font-semibold text-[#f8fcff]"
               >
-                Cover URL
+                {copy.coverUrl}
               </label>
               <input
                 id="coverUrl"
                 type="text"
                 value={coverUrl}
                 onChange={(event) => setCoverUrl(event.target.value)}
-                placeholder="Optional cover image path or URL"
+                placeholder={copy.coverUrlPlaceholder}
                 className="mt-2 w-full rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/45 px-4 py-3 text-sm text-white placeholder:text-[#caf0f8]/60 outline-none transition focus:border-[#caf0f8]"
               />
             </div>
@@ -370,14 +377,14 @@ export default function EditMediaItemPage() {
                 htmlFor="note"
                 className="block text-sm font-semibold text-[#f8fcff]"
               >
-                Note
+                {copy.note}
               </label>
               <textarea
                 id="note"
                 rows={6}
                 value={note}
                 onChange={(event) => setNote(event.target.value)}
-                placeholder="Write a short note about this media item..."
+                placeholder={copy.notePlaceholder}
                 className="mt-2 w-full resize-none rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/45 px-4 py-3 text-sm leading-6 text-white placeholder:text-[#caf0f8]/60 outline-none transition focus:border-[#caf0f8]"
               />
             </div>
@@ -393,7 +400,7 @@ export default function EditMediaItemPage() {
               disabled={isSubmitting}
               className="w-full rounded-full bg-[#caf0f8] px-5 py-3 text-sm font-semibold text-[#023e8a] transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {isSubmitting ? "Saving..." : "Save changes"}
+              {isSubmitting ? copy.saving : copy.saveChanges}
             </button>
           </form>
         )}

@@ -18,6 +18,195 @@ type MediaCategoryTranslations = {
   game: string;
 };
 
+type BlogAdminTranslations = {
+  adminName: string;
+  viewPublicBlog: string;
+  backToBlogAdmin: string;
+  manageTitle: string;
+  manageDescription: string;
+  createTitle: string;
+  createDescription: string;
+  editTitle: string;
+  editDescription: string;
+  newPost: string;
+  loadingPosts: string;
+  postSingular: string;
+  postPlural: string;
+  foundSuffix: string;
+  all: string;
+  published: string;
+  draft: string;
+  noPostsInView: string;
+  noPostsHint: string;
+  title: string;
+  slug: string;
+  status: string;
+  updated: string;
+  createdOn: string;
+  edit: string;
+  view: string;
+  updating: string;
+  unpublish: string;
+  publish: string;
+  invalidPostId: string;
+  loadingPost: string;
+  postCouldNotLoad: string;
+  editingPostPrefix: string;
+  lastUpdatedOn: string;
+  titlePlaceholder: string;
+  slugPlaceholder: string;
+  excerpt: string;
+  excerptPlaceholder: string;
+  coverImageUrl: string;
+  coverImageUrlPlaceholder: string;
+  content: string;
+  contentPlaceholder: string;
+  slugCreateHelp: string;
+  slugEditHelp: string;
+  publishImmediately: string;
+  publishThisPost: string;
+  creating: string;
+  createPost: string;
+  saving: string;
+  saveChanges: string;
+  failedToLoadPosts: string;
+  failedToLoadPostsUnexpected: string;
+  failedToUpdatePublishStatus: string;
+  publishStatusMissing: string;
+  failedToUpdatePublishStatusUnexpected: string;
+  failedToCreatePost: string;
+  failedToCreatePostUnexpected: string;
+  failedToLoadPost: string;
+  failedToLoadPostUnexpected: string;
+  failedToUpdatePost: string;
+  failedToUpdatePostUnexpected: string;
+};
+
+type MediaAdminTranslations = {
+  adminName: string;
+  viewPublicMedia: string;
+  backToMediaAdmin: string;
+  manageTitle: string;
+  manageDescription: string;
+  createTitle: string;
+  createDescription: string;
+  editTitle: string;
+  editDescription: string;
+  newMediaItem: string;
+  loadingMediaItems: string;
+  itemSingular: string;
+  itemPlural: string;
+  foundSuffix: string;
+  noMediaItemsInView: string;
+  noMediaItemsHint: string;
+  title: string;
+  category: string;
+  creator: string;
+  rating: string;
+  actions: string;
+  releasedIn: string;
+  updatedOn: string;
+  createdOn: string;
+  unknown: string;
+  notRated: string;
+  edit: string;
+  deleting: string;
+  delete: string;
+  deleteConfirmPrefix: string;
+  deleteConfirmSuffix: string;
+  releaseYear: string;
+  coverUrl: string;
+  note: string;
+  titlePlaceholder: string;
+  creatorPlaceholder: string;
+  releaseYearPlaceholder: string;
+  ratingPlaceholder: string;
+  coverUrlPlaceholder: string;
+  notePlaceholder: string;
+  editingItemPrefix: string;
+  loadingMediaItem: string;
+  creating: string;
+  createMediaItem: string;
+  saving: string;
+  saveChanges: string;
+  categories: MediaCategoryTranslations;
+  failedToLoadMediaItems: string;
+  failedToLoadMediaItemsUnexpected: string;
+  failedToDeleteMediaItem: string;
+  failedToDeleteMediaItemUnexpected: string;
+  failedToCreateMediaItem: string;
+  failedToCreateMediaItemUnexpected: string;
+  failedToLoadMediaItem: string;
+  mediaItemMissing: string;
+  failedToLoadMediaItemUnexpected: string;
+  failedToUpdateMediaItem: string;
+  failedToUpdateMediaItemUnexpected: string;
+};
+
+type PhotosAdminTranslations = {
+  adminName: string;
+  viewPublicGallery: string;
+  backToPhotosAdmin: string;
+  viewPublicPhoto: string;
+  manageTitle: string;
+  manageDescription: string;
+  uploadEyebrow: string;
+  uploadTitle: string;
+  uploadDescription: string;
+  editEyebrow: string;
+  editTitle: string;
+  editDescription: string;
+  uploadPhoto: string;
+  loadingPhotos: string;
+  photoSingular: string;
+  photoPlural: string;
+  foundSuffix: string;
+  noPhotosFound: string;
+  noPhotosHint: string;
+  photoNumberPrefix: string;
+  imagePreviewSuffix: string;
+  location: string;
+  taken: string;
+  updated: string;
+  unknown: string;
+  view: string;
+  edit: string;
+  deleting: string;
+  delete: string;
+  deleteConfirmPrefix: string;
+  deleteConfirmSuffix: string;
+  deletedSuccessfully: string;
+  imageFile: string;
+  chooseFile: string;
+  noFileSelected: string;
+  supportedFormats: string;
+  title: string;
+  titlePlaceholder: string;
+  imageUrl: string;
+  locationPlaceholder: string;
+  takenDate: string;
+  descriptionLabel: string;
+  descriptionPlaceholder: string;
+  uploading: string;
+  loadingPhotoDetails: string;
+  returnToPhotosAdmin: string;
+  editingPhotoPrefix: string;
+  saving: string;
+  saveChanges: string;
+  validPhotoIdRequired: string;
+  failedToLoadPhotos: string;
+  failedToLoadPhotosUnexpected: string;
+  failedToDeletePhoto: string;
+  failedToDeletePhotoUnexpected: string;
+  failedToUploadPhoto: string;
+  failedToUploadPhotoUnexpected: string;
+  failedToLoadPhotoDetails: string;
+  photoDetailsMissing: string;
+  failedToLoadPhotoUnexpected: string;
+  failedToUpdatePhoto: string;
+  failedToSavePhotoUnexpected: string;
+};
+
 type TranslationDictionary = {
   nav: {
     home: string;
@@ -58,11 +247,14 @@ type TranslationDictionary = {
     directNoticePrefix: string;
     directNoticeSuffix: string;
     cards: {
-      blog: FeatureCardTranslation & { label: string };
-      media: FeatureCardTranslation & { label: string };
-      photos: FeatureCardTranslation & { label: string };
+      blog: FeatureCardTranslation & { label: string; quickLabel: string };
+      media: FeatureCardTranslation & { label: string; quickLabel: string };
+      photos: FeatureCardTranslation & { label: string; quickLabel: string };
     };
   };
+  blogAdmin: BlogAdminTranslations;
+  mediaAdmin: MediaAdminTranslations;
+  photosAdmin: PhotosAdminTranslations;
   blog: {
     eyebrow: string;
     title: string;
@@ -191,7 +383,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
     },
     adminDashboard: {
       eyebrow: "Admin Dashboard",
-      title: "Manage NEON MOON",
+      title: "Control your NEON MOON content",
       description:
         "A private entry point for managing blog posts, media collections, and photography uploads.",
       cardKicker: "Admin",
@@ -200,24 +392,247 @@ export const translations: Record<Locale, TranslationDictionary> = {
       directNoticeSuffix: ".",
       cards: {
         blog: {
-          title: "Blog Admin",
+          title: "Blog Posts",
           description:
             "Create, edit, publish, unpublish, and manage personal blog posts.",
-          label: "Manage blog",
+          label: "Open Blog Admin",
+          quickLabel: "Create new post",
         },
         media: {
-          title: "Media Admin",
+          title: "Media Collection",
           description:
             "Create, edit, delete, and manage movies, music, books, anime, and games.",
-          label: "Manage media",
+          label: "Open Media Admin",
+          quickLabel: "Add media item",
         },
         photos: {
-          title: "Photos Admin",
+          title: "Photos",
           description:
             "Review photo records, upload new images, and manage gallery metadata.",
-          label: "Manage photos",
+          label: "Open Photos Admin",
+          quickLabel: "Upload photo",
         },
       },
+    },
+    blogAdmin: {
+      adminName: "Blog Admin",
+      viewPublicBlog: "View public blog",
+      backToBlogAdmin: "Back to Blog Admin",
+      manageTitle: "Manage blog posts",
+      manageDescription:
+        "View published posts and drafts stored in the database.",
+      createTitle: "Create a new post",
+      createDescription:
+        "Create a new blog post from the admin area and save it into the database.",
+      editTitle: "Edit blog post",
+      editDescription:
+        "Update an existing blog post, change its publication status, and save the changes back to the database.",
+      newPost: "New post",
+      loadingPosts: "Loading blog posts...",
+      postSingular: "post",
+      postPlural: "posts",
+      foundSuffix: "found.",
+      all: "All",
+      published: "Published",
+      draft: "Draft",
+      noPostsInView: "No posts in this view.",
+      noPostsHint: "Switch filters or create a new blog post.",
+      title: "Title",
+      slug: "Slug",
+      status: "Status",
+      updated: "Updated",
+      createdOn: "Created on",
+      edit: "Edit",
+      view: "View",
+      updating: "Updating...",
+      unpublish: "Unpublish",
+      publish: "Publish",
+      invalidPostId: "Invalid blog post id.",
+      loadingPost: "Loading blog post...",
+      postCouldNotLoad: "Blog post could not be loaded.",
+      editingPostPrefix: "Editing post",
+      lastUpdatedOn: "Last updated on",
+      titlePlaceholder: "Enter a blog title",
+      slugPlaceholder: "Enter a URL slug",
+      excerpt: "Excerpt",
+      excerptPlaceholder: "Write a short summary...",
+      coverImageUrl: "Cover image URL",
+      coverImageUrlPlaceholder: "Optional cover image path",
+      content: "Content",
+      contentPlaceholder: "Write the full blog content here...",
+      slugCreateHelp:
+        "Used in the URL. Use lowercase letters, numbers, and hyphens only.",
+      slugEditHelp:
+        "Used in the URL. Changing it will also change the public blog post URL.",
+      publishImmediately: "Publish this post immediately",
+      publishThisPost: "Publish this post",
+      creating: "Creating...",
+      createPost: "Create blog post",
+      saving: "Saving...",
+      saveChanges: "Update post",
+      failedToLoadPosts: "Failed to load blog posts.",
+      failedToLoadPostsUnexpected:
+        "Something went wrong while loading blog posts.",
+      failedToUpdatePublishStatus: "Failed to update publish status.",
+      publishStatusMissing: "Publish status response is missing.",
+      failedToUpdatePublishStatusUnexpected:
+        "Something went wrong while updating publish status.",
+      failedToCreatePost: "Failed to create blog post.",
+      failedToCreatePostUnexpected:
+        "Something went wrong while creating the blog post.",
+      failedToLoadPost: "Failed to load blog post.",
+      failedToLoadPostUnexpected:
+        "Something went wrong while loading the blog post.",
+      failedToUpdatePost: "Failed to update blog post.",
+      failedToUpdatePostUnexpected:
+        "Something went wrong while updating the blog post.",
+    },
+    mediaAdmin: {
+      adminName: "Media Admin",
+      viewPublicMedia: "View public media",
+      backToMediaAdmin: "Back to Media Admin",
+      manageTitle: "Manage media collection",
+      manageDescription:
+        "View, edit, create, and delete media items stored in the database.",
+      createTitle: "Add a new media item",
+      createDescription:
+        "Add a movie, music record, book, anime, or game to your personal media collection.",
+      editTitle: "Edit media item",
+      editDescription:
+        "Update the title, category, creator, release year, rating, cover URL, and personal note for this media item.",
+      newMediaItem: "New media item",
+      loadingMediaItems: "Loading media items...",
+      itemSingular: "item",
+      itemPlural: "items",
+      foundSuffix: "found.",
+      noMediaItemsInView: "No media items in this view.",
+      noMediaItemsHint: "Switch filters or add new media items.",
+      title: "Title",
+      category: "Category",
+      creator: "Creator",
+      rating: "Rating",
+      actions: "Actions",
+      releasedIn: "Released in",
+      updatedOn: "Updated on",
+      createdOn: "Created on",
+      unknown: "Unknown",
+      notRated: "Not rated",
+      edit: "Edit",
+      deleting: "Deleting...",
+      delete: "Delete",
+      deleteConfirmPrefix: "Delete \"",
+      deleteConfirmSuffix: "\"? This action cannot be undone.",
+      releaseYear: "Release year",
+      coverUrl: "Cover URL",
+      note: "Note",
+      titlePlaceholder: "Enter a title",
+      creatorPlaceholder: "Director, artist, author, studio...",
+      releaseYearPlaceholder: "Optional release year",
+      ratingPlaceholder: "Optional rating from 0 to 10",
+      coverUrlPlaceholder: "Optional cover image path or URL",
+      notePlaceholder: "Write a short note about this media item...",
+      editingItemPrefix: "Editing media item",
+      loadingMediaItem: "Loading media item...",
+      creating: "Creating...",
+      createMediaItem: "Create media item",
+      saving: "Saving...",
+      saveChanges: "Update media item",
+      categories: {
+        all: "All",
+        music: "Music",
+        book: "Book",
+        movie: "Movie",
+        anime: "Anime",
+        game: "Game",
+      },
+      failedToLoadMediaItems: "Failed to load media items.",
+      failedToLoadMediaItemsUnexpected:
+        "Something went wrong while loading media items.",
+      failedToDeleteMediaItem: "Failed to delete media item.",
+      failedToDeleteMediaItemUnexpected:
+        "Something went wrong while deleting the media item.",
+      failedToCreateMediaItem: "Failed to create media item.",
+      failedToCreateMediaItemUnexpected:
+        "Something went wrong while creating the media item.",
+      failedToLoadMediaItem: "Failed to load media item.",
+      mediaItemMissing: "Media item response is missing.",
+      failedToLoadMediaItemUnexpected:
+        "Something went wrong while loading the media item.",
+      failedToUpdateMediaItem: "Failed to update media item.",
+      failedToUpdateMediaItemUnexpected:
+        "Something went wrong while updating the media item.",
+    },
+    photosAdmin: {
+      adminName: "Photos Admin",
+      viewPublicGallery: "View public gallery",
+      backToPhotosAdmin: "Back to Photos Admin",
+      viewPublicPhoto: "View public photo",
+      manageTitle: "Manage photos",
+      manageDescription:
+        "View and manage photo records stored in the database.",
+      uploadEyebrow: "Upload Photo",
+      uploadTitle: "Add a new photo",
+      uploadDescription:
+        "Upload a local image file and save its details into the database.",
+      editEyebrow: "Edit Photo",
+      editTitle: "Update photo details",
+      editDescription:
+        "Edit the database record for this photo without changing the public gallery navigation.",
+      uploadPhoto: "Upload photo",
+      loadingPhotos: "Loading photos...",
+      photoSingular: "photo",
+      photoPlural: "photos",
+      foundSuffix: "found.",
+      noPhotosFound: "No photos found.",
+      noPhotosHint: "Upload a photo to start building the gallery.",
+      photoNumberPrefix: "Photo #",
+      imagePreviewSuffix: " image preview",
+      location: "Location",
+      taken: "Taken",
+      updated: "Updated",
+      unknown: "Unknown",
+      view: "View",
+      edit: "Edit",
+      deleting: "Deleting...",
+      delete: "Delete",
+      deleteConfirmPrefix: "Delete \"",
+      deleteConfirmSuffix: "\"? This cannot be undone.",
+      deletedSuccessfully: "Photo deleted successfully.",
+      imageFile: "Image file",
+      chooseFile: "Choose file",
+      noFileSelected: "No file selected",
+      supportedFormats:
+        "Supported formats: JPG, PNG, WEBP. Maximum size: 8MB.",
+      title: "Title",
+      titlePlaceholder: "Enter a photo title",
+      imageUrl: "Image URL",
+      locationPlaceholder: "Enter a location",
+      takenDate: "Taken date",
+      descriptionLabel: "Description",
+      descriptionPlaceholder: "Write a short note about this photo...",
+      uploading: "Uploading...",
+      loadingPhotoDetails: "Loading photo details...",
+      returnToPhotosAdmin: "Return to Photos Admin",
+      editingPhotoPrefix: "Editing photo",
+      saving: "Saving...",
+      saveChanges: "Update photo",
+      validPhotoIdRequired: "A valid photo id is required.",
+      failedToLoadPhotos: "Failed to load photos.",
+      failedToLoadPhotosUnexpected:
+        "Something went wrong while loading photos.",
+      failedToDeletePhoto: "Failed to delete photo.",
+      failedToDeletePhotoUnexpected:
+        "Something went wrong while deleting the photo.",
+      failedToUploadPhoto: "Failed to upload photo.",
+      failedToUploadPhotoUnexpected:
+        "Something went wrong while uploading the photo.",
+      failedToLoadPhotoDetails: "Failed to load photo details.",
+      photoDetailsMissing: "Photo details were not returned.",
+      failedToLoadPhotoUnexpected:
+        "Something went wrong while loading the photo.",
+      failedToUpdatePhoto: "Failed to update photo.",
+      failedToSavePhotoUnexpected:
+        "Something went wrong while saving the photo.",
     },
     blog: {
       eyebrow: "Blog",
@@ -359,28 +774,224 @@ export const translations: Record<Locale, TranslationDictionary> = {
     },
     adminDashboard: {
       eyebrow: "后台首页",
-      title: "管理 NEON MOON",
+      title: "管理你的 NEON MOON 内容",
       description: "用于管理博客文章、媒体收藏和照片上传的私密入口。",
       cardKicker: "后台",
       directNoticePrefix: "此页面不会显示在公开导航栏中，请直接通过 ",
       directNoticeSuffix: " 访问。",
       cards: {
         blog: {
-          title: "博客管理",
+          title: "博客文章",
           description: "创建、编辑、发布、取消发布和管理个人博客文章。",
-          label: "管理博客",
+          label: "打开博客管理",
+          quickLabel: "新建文章",
         },
         media: {
-          title: "媒体管理",
+          title: "媒体收藏",
           description: "创建、编辑、删除和管理电影、音乐、书籍、动画与游戏。",
-          label: "管理媒体",
+          label: "打开媒体管理",
+          quickLabel: "添加媒体项目",
         },
         photos: {
-          title: "照片管理",
+          title: "照片",
           description: "查看照片记录、上传新图片并管理图库元数据。",
-          label: "管理照片",
+          label: "打开照片管理",
+          quickLabel: "上传照片",
         },
       },
+    },
+    blogAdmin: {
+      adminName: "博客管理",
+      viewPublicBlog: "查看公开博客",
+      backToBlogAdmin: "返回博客管理",
+      manageTitle: "管理博客文章",
+      manageDescription: "查看数据库中保存的已发布文章和草稿。",
+      createTitle: "创建新文章",
+      createDescription: "从后台创建新的博客文章，并保存到数据库。",
+      editTitle: "编辑博客文章",
+      editDescription: "更新已有文章、修改发布状态，并把改动保存回数据库。",
+      newPost: "新建文章",
+      loadingPosts: "正在加载博客文章...",
+      postSingular: "篇文章",
+      postPlural: "篇文章",
+      foundSuffix: "已找到。",
+      all: "全部",
+      published: "已发布",
+      draft: "草稿",
+      noPostsInView: "当前视图没有文章。",
+      noPostsHint: "切换筛选条件，或创建一篇新的博客文章。",
+      title: "标题",
+      slug: "链接别名",
+      status: "状态",
+      updated: "更新时间",
+      createdOn: "创建于",
+      edit: "编辑",
+      view: "查看",
+      updating: "正在更新...",
+      unpublish: "取消发布",
+      publish: "发布",
+      invalidPostId: "博客文章 id 无效。",
+      loadingPost: "正在加载博客文章...",
+      postCouldNotLoad: "无法加载这篇博客文章。",
+      editingPostPrefix: "正在编辑文章",
+      lastUpdatedOn: "最后更新于",
+      titlePlaceholder: "输入博客标题",
+      slugPlaceholder: "输入 URL slug",
+      excerpt: "摘要",
+      excerptPlaceholder: "写一段简短摘要...",
+      coverImageUrl: "封面图片链接",
+      coverImageUrlPlaceholder: "可选的封面图片路径",
+      content: "正文",
+      contentPlaceholder: "在这里写完整博客正文...",
+      slugCreateHelp: "用于 URL。请只使用小写字母、数字和连字符。",
+      slugEditHelp: "用于 URL。修改后，公开博客文章 URL 也会改变。",
+      publishImmediately: "立即发布这篇文章",
+      publishThisPost: "发布这篇文章",
+      creating: "正在创建...",
+      createPost: "创建博客文章",
+      saving: "正在保存...",
+      saveChanges: "更新文章",
+      failedToLoadPosts: "博客文章加载失败。",
+      failedToLoadPostsUnexpected: "加载博客文章时发生错误。",
+      failedToUpdatePublishStatus: "发布状态更新失败。",
+      publishStatusMissing: "发布状态响应缺少文章数据。",
+      failedToUpdatePublishStatusUnexpected: "更新发布状态时发生错误。",
+      failedToCreatePost: "博客文章创建失败。",
+      failedToCreatePostUnexpected: "创建博客文章时发生错误。",
+      failedToLoadPost: "博客文章加载失败。",
+      failedToLoadPostUnexpected: "加载博客文章时发生错误。",
+      failedToUpdatePost: "博客文章更新失败。",
+      failedToUpdatePostUnexpected: "更新博客文章时发生错误。",
+    },
+    mediaAdmin: {
+      adminName: "媒体管理",
+      viewPublicMedia: "查看公开媒体收藏",
+      backToMediaAdmin: "返回媒体管理",
+      manageTitle: "管理媒体收藏",
+      manageDescription: "查看、编辑、新建和删除数据库中保存的媒体收藏。",
+      createTitle: "添加新的媒体项目",
+      createDescription: "把电影、音乐、书籍、动画或游戏添加到你的个人媒体收藏。",
+      editTitle: "编辑媒体条目",
+      editDescription: "更新这条媒体的标题、分类、创作者、发行年份、评分、封面 URL 和个人备注。",
+      newMediaItem: "新建媒体项目",
+      loadingMediaItems: "正在加载媒体条目...",
+      itemSingular: "条记录",
+      itemPlural: "条记录",
+      foundSuffix: "已找到。",
+      noMediaItemsInView: "当前视图没有媒体条目。",
+      noMediaItemsHint: "切换筛选条件，或添加新的媒体条目。",
+      title: "标题",
+      category: "分类",
+      creator: "创作者",
+      rating: "评分",
+      actions: "操作",
+      releasedIn: "发行于",
+      updatedOn: "更新于",
+      createdOn: "创建于",
+      unknown: "未知",
+      notRated: "未评分",
+      edit: "编辑",
+      deleting: "正在删除...",
+      delete: "删除",
+      deleteConfirmPrefix: "删除“",
+      deleteConfirmSuffix: "”？此操作无法撤销。",
+      releaseYear: "发行年份",
+      coverUrl: "封面 URL",
+      note: "备注",
+      titlePlaceholder: "输入标题",
+      creatorPlaceholder: "导演、艺术家、作者、工作室...",
+      releaseYearPlaceholder: "可选的发行年份",
+      ratingPlaceholder: "可选评分，0 到 10",
+      coverUrlPlaceholder: "可选的封面图片路径或 URL",
+      notePlaceholder: "写一段关于这条媒体的简短备注...",
+      editingItemPrefix: "正在编辑媒体条目",
+      loadingMediaItem: "正在加载媒体条目...",
+      creating: "正在创建...",
+      createMediaItem: "创建媒体项目",
+      saving: "正在保存...",
+      saveChanges: "更新媒体项目",
+      categories: {
+        all: "全部",
+        music: "音乐",
+        book: "书籍",
+        movie: "电影",
+        anime: "动画",
+        game: "游戏",
+      },
+      failedToLoadMediaItems: "媒体条目加载失败。",
+      failedToLoadMediaItemsUnexpected: "加载媒体条目时发生错误。",
+      failedToDeleteMediaItem: "媒体条目删除失败。",
+      failedToDeleteMediaItemUnexpected: "删除媒体条目时发生错误。",
+      failedToCreateMediaItem: "媒体条目创建失败。",
+      failedToCreateMediaItemUnexpected: "创建媒体条目时发生错误。",
+      failedToLoadMediaItem: "媒体条目加载失败。",
+      mediaItemMissing: "媒体条目响应缺少数据。",
+      failedToLoadMediaItemUnexpected: "加载媒体条目时发生错误。",
+      failedToUpdateMediaItem: "媒体条目更新失败。",
+      failedToUpdateMediaItemUnexpected: "更新媒体条目时发生错误。",
+    },
+    photosAdmin: {
+      adminName: "照片管理",
+      viewPublicGallery: "查看公开相册",
+      backToPhotosAdmin: "返回照片管理",
+      viewPublicPhoto: "查看公开照片",
+      manageTitle: "管理照片",
+      manageDescription: "查看和管理数据库中保存的照片记录。",
+      uploadEyebrow: "上传照片",
+      uploadTitle: "添加新照片",
+      uploadDescription: "上传本地图片文件，并把照片信息保存到数据库。",
+      editEyebrow: "编辑照片",
+      editTitle: "更新照片详情",
+      editDescription: "编辑这张照片的数据库记录，不改变公开相册导航。",
+      uploadPhoto: "上传照片",
+      loadingPhotos: "正在加载照片...",
+      photoSingular: "张照片",
+      photoPlural: "张照片",
+      foundSuffix: "已找到。",
+      noPhotosFound: "没有找到照片。",
+      noPhotosHint: "上传一张照片，开始建立相册。",
+      photoNumberPrefix: "照片 #",
+      imagePreviewSuffix: " 图片预览",
+      location: "地点",
+      taken: "拍摄",
+      updated: "更新",
+      unknown: "未知",
+      view: "查看",
+      edit: "编辑",
+      deleting: "正在删除...",
+      delete: "删除",
+      deleteConfirmPrefix: "删除“",
+      deleteConfirmSuffix: "”？此操作无法撤销。",
+      deletedSuccessfully: "照片已删除。",
+      imageFile: "图片文件",
+      chooseFile: "选择文件",
+      noFileSelected: "未选择文件",
+      supportedFormats: "支持格式：JPG、PNG、WEBP。最大 8MB。",
+      title: "标题",
+      titlePlaceholder: "输入照片标题",
+      imageUrl: "图片 URL",
+      locationPlaceholder: "输入地点",
+      takenDate: "拍摄日期",
+      descriptionLabel: "描述",
+      descriptionPlaceholder: "写一段关于这张照片的简短备注...",
+      uploading: "正在上传...",
+      loadingPhotoDetails: "正在加载照片详情...",
+      returnToPhotosAdmin: "返回照片管理",
+      editingPhotoPrefix: "正在编辑照片",
+      saving: "正在保存...",
+      saveChanges: "更新照片",
+      validPhotoIdRequired: "需要有效的照片 id。",
+      failedToLoadPhotos: "照片加载失败。",
+      failedToLoadPhotosUnexpected: "加载照片时发生错误。",
+      failedToDeletePhoto: "照片删除失败。",
+      failedToDeletePhotoUnexpected: "删除照片时发生错误。",
+      failedToUploadPhoto: "照片上传失败。",
+      failedToUploadPhotoUnexpected: "上传照片时发生错误。",
+      failedToLoadPhotoDetails: "照片详情加载失败。",
+      photoDetailsMissing: "照片详情响应缺少数据。",
+      failedToLoadPhotoUnexpected: "加载照片时发生错误。",
+      failedToUpdatePhoto: "照片更新失败。",
+      failedToSavePhotoUnexpected: "保存照片时发生错误。",
     },
     blog: {
       eyebrow: "博客",

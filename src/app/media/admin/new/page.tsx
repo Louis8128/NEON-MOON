@@ -4,6 +4,7 @@ import type { FormEvent } from "react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import AdminHeader from "@/components/AdminHeader";
+import { useI18n } from "@/components/I18nProvider";
 import {
   readJsonResponse,
   redirectIfUnauthorized,
@@ -19,12 +20,17 @@ const mediaCategories: MediaCategory[] = [
   "GAME",
 ];
 
-function formatCategory(category: MediaCategory) {
-  return category.charAt(0) + category.slice(1).toLowerCase();
+function getCategoryLabel(
+  category: MediaCategory,
+  labels: ReturnType<typeof useI18n>["t"]["mediaAdmin"]["categories"],
+) {
+  return labels[category.toLowerCase() as Lowercase<MediaCategory>];
 }
 
 export default function NewMediaItemPage() {
   const router = useRouter();
+  const { t } = useI18n();
+  const copy = t.mediaAdmin;
 
   // Form fields for the new media item.
   // 新增媒体收藏表单字段。
@@ -74,14 +80,14 @@ export default function NewMediaItemPage() {
       const result = await readJsonResponse<{ error?: string }>(response);
 
       if (!response.ok) {
-        setError(result.error ?? "Failed to create media item.");
+        setError(result.error ?? copy.failedToCreateMediaItem);
         return;
       }
 
       router.push("/media/admin");
       router.refresh();
     } catch {
-      setError("Something went wrong while creating the media item.");
+      setError(copy.failedToCreateMediaItemUnexpected);
     } finally {
       setIsSubmitting(false);
     }
@@ -109,16 +115,15 @@ export default function NewMediaItemPage() {
 
         <div className="mt-10">
           <p className="text-xs font-semibold uppercase tracking-[0.4em] text-[#caf0f8]">
-            Media Admin
+            {copy.adminName}
           </p>
 
           <h1 className="mt-4 text-4xl font-bold tracking-tight text-white md:text-5xl">
-            Add a new media item
+            {copy.createTitle}
           </h1>
 
           <p className="mt-4 max-w-2xl text-lg leading-8 text-[#eaf8ff]">
-            Add a movie, music record, book, anime, or game to your personal
-            media collection.
+            {copy.createDescription}
           </p>
         </div>
 
@@ -131,7 +136,7 @@ export default function NewMediaItemPage() {
                 htmlFor="title"
                 className="block text-sm font-semibold text-[#f8fcff]"
               >
-                Title
+                {copy.title}
               </label>
               <input
                 id="title"
@@ -139,7 +144,7 @@ export default function NewMediaItemPage() {
                 required
                 value={title}
                 onChange={(event) => setTitle(event.target.value)}
-                placeholder="Enter a title"
+                placeholder={copy.titlePlaceholder}
                 className="mt-2 w-full rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/45 px-4 py-3 text-sm text-white placeholder:text-[#caf0f8]/60 outline-none transition focus:border-[#caf0f8]"
               />
             </div>
@@ -149,7 +154,7 @@ export default function NewMediaItemPage() {
                 htmlFor="category"
                 className="block text-sm font-semibold text-[#f8fcff]"
               >
-                Category
+                {copy.category}
               </label>
               <select
                 id="category"
@@ -161,7 +166,7 @@ export default function NewMediaItemPage() {
               >
                 {mediaCategories.map((mediaCategory) => (
                   <option key={mediaCategory} value={mediaCategory}>
-                    {formatCategory(mediaCategory)}
+                    {getCategoryLabel(mediaCategory, copy.categories)}
                   </option>
                 ))}
               </select>
@@ -172,14 +177,14 @@ export default function NewMediaItemPage() {
                 htmlFor="creator"
                 className="block text-sm font-semibold text-[#f8fcff]"
               >
-                Creator
+                {copy.creator}
               </label>
               <input
                 id="creator"
                 type="text"
                 value={creator}
                 onChange={(event) => setCreator(event.target.value)}
-                placeholder="Director, artist, author, studio..."
+                placeholder={copy.creatorPlaceholder}
                 className="mt-2 w-full rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/45 px-4 py-3 text-sm text-white placeholder:text-[#caf0f8]/60 outline-none transition focus:border-[#caf0f8]"
               />
             </div>
@@ -189,14 +194,14 @@ export default function NewMediaItemPage() {
                 htmlFor="releaseYear"
                 className="block text-sm font-semibold text-[#f8fcff]"
               >
-                Release year
+                {copy.releaseYear}
               </label>
               <input
                 id="releaseYear"
                 type="number"
                 value={releaseYear}
                 onChange={(event) => setReleaseYear(event.target.value)}
-                placeholder="Optional release year"
+                placeholder={copy.releaseYearPlaceholder}
                 className="mt-2 w-full rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/45 px-4 py-3 text-sm text-white placeholder:text-[#caf0f8]/60 outline-none transition focus:border-[#caf0f8]"
               />
             </div>
@@ -206,7 +211,7 @@ export default function NewMediaItemPage() {
                 htmlFor="rating"
                 className="block text-sm font-semibold text-[#f8fcff]"
               >
-                Rating
+                {copy.rating}
               </label>
               <input
                 id="rating"
@@ -216,7 +221,7 @@ export default function NewMediaItemPage() {
                 step="0.1"
                 value={rating}
                 onChange={(event) => setRating(event.target.value)}
-                placeholder="Optional rating from 0 to 10"
+                placeholder={copy.ratingPlaceholder}
                 className="mt-2 w-full rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/45 px-4 py-3 text-sm text-white placeholder:text-[#caf0f8]/60 outline-none transition focus:border-[#caf0f8]"
               />
             </div>
@@ -226,14 +231,14 @@ export default function NewMediaItemPage() {
                 htmlFor="coverUrl"
                 className="block text-sm font-semibold text-[#f8fcff]"
               >
-                Cover URL
+                {copy.coverUrl}
               </label>
               <input
                 id="coverUrl"
                 type="text"
                 value={coverUrl}
                 onChange={(event) => setCoverUrl(event.target.value)}
-                placeholder="Optional cover image path or URL"
+                placeholder={copy.coverUrlPlaceholder}
                 className="mt-2 w-full rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/45 px-4 py-3 text-sm text-white placeholder:text-[#caf0f8]/60 outline-none transition focus:border-[#caf0f8]"
               />
             </div>
@@ -243,14 +248,14 @@ export default function NewMediaItemPage() {
                 htmlFor="note"
                 className="block text-sm font-semibold text-[#f8fcff]"
               >
-                Note
+                {copy.note}
               </label>
               <textarea
                 id="note"
                 rows={6}
                 value={note}
                 onChange={(event) => setNote(event.target.value)}
-                placeholder="Write a short note about this media item..."
+                placeholder={copy.notePlaceholder}
                 className="mt-2 w-full resize-none rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/45 px-4 py-3 text-sm leading-6 text-white placeholder:text-[#caf0f8]/60 outline-none transition focus:border-[#caf0f8]"
               />
             </div>
@@ -266,7 +271,7 @@ export default function NewMediaItemPage() {
               disabled={isSubmitting}
               className="w-full rounded-full bg-[#caf0f8] px-5 py-3 text-sm font-semibold text-[#023e8a] transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {isSubmitting ? "Creating..." : "Create media item"}
+              {isSubmitting ? copy.creating : copy.createMediaItem}
             </button>
           </form>
       </div>

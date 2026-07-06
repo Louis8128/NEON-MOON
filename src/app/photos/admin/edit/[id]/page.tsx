@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import AdminHeader from "@/components/AdminHeader";
+import { useI18n } from "@/components/I18nProvider";
 import {
   readJsonResponse,
   redirectIfUnauthorized,
@@ -44,6 +45,8 @@ export default function PhotoAdminEditPage() {
   const router = useRouter();
   const params = useParams<{ id: string }>();
   const photoId = params.id;
+  const { t } = useI18n();
+  const copy = t.photosAdmin;
 
   const [formValues, setFormValues] =
     useState<PhotoFormState>(emptyFormState);
@@ -57,7 +60,7 @@ export default function PhotoAdminEditPage() {
   const loadPhoto = useCallback(
     async function loadPhoto() {
       if (!photoId) {
-        setError("A valid photo id is required.");
+        setError(copy.validPhotoIdRequired);
         setIsLoading(false);
         return;
       }
@@ -88,13 +91,13 @@ export default function PhotoAdminEditPage() {
         }>(response);
 
         if (!response.ok) {
-          throw new Error(result.error ?? "Failed to load photo details.");
+          throw new Error(result.error ?? copy.failedToLoadPhotoDetails);
         }
 
         const photo = result.photo as PhotoItem | undefined;
 
         if (!photo) {
-          throw new Error("Photo details were not returned.");
+          throw new Error(copy.photoDetailsMissing);
         }
 
         setFormValues({
@@ -109,13 +112,19 @@ export default function PhotoAdminEditPage() {
         setError(
           error instanceof Error
             ? error.message
-            : "Something went wrong while loading the photo.",
+            : copy.failedToLoadPhotoUnexpected,
         );
       } finally {
         setIsLoading(false);
       }
     },
-    [photoId],
+    [
+      copy.failedToLoadPhotoDetails,
+      copy.failedToLoadPhotoUnexpected,
+      copy.photoDetailsMissing,
+      copy.validPhotoIdRequired,
+      photoId,
+    ],
   );
 
   useEffect(() => {
@@ -168,7 +177,7 @@ export default function PhotoAdminEditPage() {
       const result = await readJsonResponse<{ error?: string }>(response);
 
       if (!response.ok) {
-        throw new Error(result.error ?? "Failed to update photo.");
+        throw new Error(result.error ?? copy.failedToUpdatePhoto);
       }
 
       router.push("/photos/admin");
@@ -177,7 +186,7 @@ export default function PhotoAdminEditPage() {
       setError(
         error instanceof Error
           ? error.message
-          : "Something went wrong while saving the photo.",
+          : copy.failedToSavePhotoUnexpected,
       );
     } finally {
       setIsSaving(false);
@@ -214,22 +223,21 @@ export default function PhotoAdminEditPage() {
 
         <div className="mt-10">
           <p className="text-xs font-semibold uppercase tracking-[0.4em] text-[#caf0f8]">
-            Edit Photo
+            {copy.editEyebrow}
           </p>
 
           <h1 className="mt-4 text-4xl font-bold tracking-tight text-white md:text-5xl">
-            Update photo details
+            {copy.editTitle}
           </h1>
 
           <p className="mt-4 max-w-2xl text-lg leading-8 text-[#eaf8ff]">
-            Edit the database record for this photo without changing the public
-            gallery navigation.
+            {copy.editDescription}
           </p>
         </div>
 
         {isLoading ? (
           <div className="mt-10 rounded-3xl border border-[#caf0f8]/25 bg-[#023e8a]/75 p-6 text-sm text-[#caf0f8] shadow-lg shadow-[#03045e]/20 backdrop-blur">
-            Loading photo details...
+            {copy.loadingPhotoDetails}
           </div>
         ) : !isReady ? (
           <div className="mt-10 rounded-3xl border border-red-500/40 bg-red-500/10 p-6 text-sm text-red-200">
@@ -239,7 +247,7 @@ export default function PhotoAdminEditPage() {
               href="/photos/admin"
               className="mt-4 inline-flex rounded-full bg-[#caf0f8] px-5 py-3 text-sm font-semibold text-[#023e8a] transition hover:bg-white"
             >
-              Return to Photos Admin
+              {copy.returnToPhotosAdmin}
             </Link>
           </div>
         ) : (
@@ -248,7 +256,7 @@ export default function PhotoAdminEditPage() {
             className="mt-10 space-y-6 rounded-3xl border border-[#caf0f8]/25 bg-[#023e8a]/75 p-6 shadow-lg shadow-[#03045e]/20 backdrop-blur"
           >
             <div className="rounded-2xl border border-[#caf0f8]/30 bg-[#caf0f8]/10 px-4 py-3 text-sm text-[#caf0f8]">
-              Editing photo #{photoId}.
+              {copy.editingPhotoPrefix} #{photoId}.
             </div>
 
             <div>
@@ -256,7 +264,7 @@ export default function PhotoAdminEditPage() {
                 htmlFor="title"
                 className="block text-sm font-semibold text-[#f8fcff]"
               >
-                Title
+                {copy.title}
               </label>
 
               <input
@@ -275,7 +283,7 @@ export default function PhotoAdminEditPage() {
                 htmlFor="imageUrl"
                 className="block text-sm font-semibold text-[#f8fcff]"
               >
-                Image URL
+                {copy.imageUrl}
               </label>
 
               <input
@@ -294,7 +302,7 @@ export default function PhotoAdminEditPage() {
                 htmlFor="location"
                 className="block text-sm font-semibold text-[#f8fcff]"
               >
-                Location
+                {copy.location}
               </label>
 
               <input
@@ -303,7 +311,7 @@ export default function PhotoAdminEditPage() {
                 type="text"
                 value={formValues.location}
                 onChange={handleFieldChange}
-                placeholder="Enter a location"
+                placeholder={copy.locationPlaceholder}
                 className="mt-2 w-full rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/45 px-4 py-3 text-sm text-white placeholder:text-[#caf0f8]/60 outline-none transition focus:border-[#caf0f8]"
               />
             </div>
@@ -313,7 +321,7 @@ export default function PhotoAdminEditPage() {
                 htmlFor="takenAt"
                 className="block text-sm font-semibold text-[#f8fcff]"
               >
-                Taken date
+                {copy.takenDate}
               </label>
 
               <input
@@ -331,7 +339,7 @@ export default function PhotoAdminEditPage() {
                 htmlFor="description"
                 className="block text-sm font-semibold text-[#f8fcff]"
               >
-                Description
+                {copy.descriptionLabel}
               </label>
 
               <textarea
@@ -340,7 +348,7 @@ export default function PhotoAdminEditPage() {
                 rows={5}
                 value={formValues.description}
                 onChange={handleFieldChange}
-                placeholder="Write a short note about this photo..."
+                placeholder={copy.descriptionPlaceholder}
                 className="mt-2 w-full resize-none rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/45 px-4 py-3 text-sm leading-6 text-white placeholder:text-[#caf0f8]/60 outline-none transition focus:border-[#caf0f8]"
               />
             </div>
@@ -356,7 +364,7 @@ export default function PhotoAdminEditPage() {
               disabled={isSaving}
               className="w-full rounded-full bg-[#caf0f8] px-5 py-3 text-sm font-semibold text-[#023e8a] transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {isSaving ? "Saving..." : "Save changes"}
+              {isSaving ? copy.saving : copy.saveChanges}
             </button>
           </form>
         )}

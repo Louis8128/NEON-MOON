@@ -4,6 +4,7 @@ import type { FormEvent } from "react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import AdminHeader from "@/components/AdminHeader";
+import { useI18n } from "@/components/I18nProvider";
 import {
   readJsonResponse,
   redirectIfUnauthorized,
@@ -21,6 +22,8 @@ function generateSlugFromTitle(title: string) {
 
 export default function AdminNewBlogPostPage() {
   const router = useRouter();
+  const { t } = useI18n();
+  const copy = t.blogAdmin;
 
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
@@ -76,7 +79,7 @@ export default function AdminNewBlogPostPage() {
       }>(response);
 
       if (!response.ok) {
-        setError(result.error ?? "Failed to create blog post.");
+        setError(result.error ?? copy.failedToCreatePost);
         return;
       }
 
@@ -88,7 +91,7 @@ export default function AdminNewBlogPostPage() {
 
       router.refresh();
     } catch {
-      setError("Something went wrong while creating the blog post.");
+      setError(copy.failedToCreatePostUnexpected);
     } finally {
       setIsSubmitting(false);
     }
@@ -116,16 +119,15 @@ export default function AdminNewBlogPostPage() {
 
         <div className="mt-10">
           <p className="text-xs font-semibold uppercase tracking-[0.4em] text-[#caf0f8]">
-            Blog Admin
+            {copy.adminName}
           </p>
 
           <h1 className="mt-4 text-4xl font-bold tracking-tight text-white md:text-5xl">
-            Create a new post
+            {copy.createTitle}
           </h1>
 
           <p className="mt-4 max-w-2xl text-lg leading-8 text-[#eaf8ff]">
-            Create a new blog post from the admin area and save it into the
-            database.
+            {copy.createDescription}
           </p>
         </div>
           <form
@@ -137,7 +139,7 @@ export default function AdminNewBlogPostPage() {
                 htmlFor="title"
                 className="block text-sm font-semibold text-[#f8fcff]"
               >
-                Title
+                {copy.title}
               </label>
               <input
                 id="title"
@@ -145,7 +147,7 @@ export default function AdminNewBlogPostPage() {
                 required
                 value={title}
                 onChange={(event) => handleTitleChange(event.target.value)}
-                placeholder="Enter a blog title"
+                placeholder={copy.titlePlaceholder}
                 className="mt-2 w-full rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/45 px-4 py-3 text-sm text-white placeholder:text-[#caf0f8]/60 outline-none transition focus:border-[#caf0f8]"
               />
             </div>
@@ -155,7 +157,7 @@ export default function AdminNewBlogPostPage() {
                 htmlFor="slug"
                 className="block text-sm font-semibold text-[#f8fcff]"
               >
-                Slug
+                {copy.slug}
               </label>
               <input
                 id="slug"
@@ -163,12 +165,11 @@ export default function AdminNewBlogPostPage() {
                 required
                 value={slug}
                 onChange={(event) => setSlug(event.target.value)}
-                placeholder="Enter a URL slug"
+                placeholder={copy.slugPlaceholder}
                 className="mt-2 w-full rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/45 px-4 py-3 text-sm text-white placeholder:text-[#caf0f8]/60 outline-none transition focus:border-[#caf0f8]"
               />
               <p className="mt-2 text-xs text-[#caf0f8]/65">
-                Used in the URL. Use lowercase letters, numbers, and hyphens
-                only.
+                {copy.slugCreateHelp}
               </p>
             </div>
 
@@ -177,14 +178,14 @@ export default function AdminNewBlogPostPage() {
                 htmlFor="excerpt"
                 className="block text-sm font-semibold text-[#f8fcff]"
               >
-                Excerpt
+                {copy.excerpt}
               </label>
               <textarea
                 id="excerpt"
                 rows={3}
                 value={excerpt}
                 onChange={(event) => setExcerpt(event.target.value)}
-                placeholder="Write a short summary..."
+                placeholder={copy.excerptPlaceholder}
                 className="mt-2 w-full resize-none rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/45 px-4 py-3 text-sm leading-6 text-white placeholder:text-[#caf0f8]/60 outline-none transition focus:border-[#caf0f8]"
               />
             </div>
@@ -194,14 +195,14 @@ export default function AdminNewBlogPostPage() {
                 htmlFor="coverImageUrl"
                 className="block text-sm font-semibold text-[#f8fcff]"
               >
-                Cover image URL
+                {copy.coverImageUrl}
               </label>
               <input
                 id="coverImageUrl"
                 type="text"
                 value={coverImageUrl}
                 onChange={(event) => setCoverImageUrl(event.target.value)}
-                placeholder="Optional cover image path"
+                placeholder={copy.coverImageUrlPlaceholder}
                 className="mt-2 w-full rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/45 px-4 py-3 text-sm text-white placeholder:text-[#caf0f8]/60 outline-none transition focus:border-[#caf0f8]"
               />
             </div>
@@ -211,7 +212,7 @@ export default function AdminNewBlogPostPage() {
                 htmlFor="content"
                 className="block text-sm font-semibold text-[#f8fcff]"
               >
-                Content
+                {copy.content}
               </label>
               <textarea
                 id="content"
@@ -219,7 +220,7 @@ export default function AdminNewBlogPostPage() {
                 required
                 value={content}
                 onChange={(event) => setContent(event.target.value)}
-                placeholder="Write the full blog content here..."
+                placeholder={copy.contentPlaceholder}
                 className="mt-2 w-full resize-none rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/45 px-4 py-3 text-sm leading-6 text-white placeholder:text-[#caf0f8]/60 outline-none transition focus:border-[#caf0f8]"
               />
             </div>
@@ -231,7 +232,7 @@ export default function AdminNewBlogPostPage() {
                 onChange={(event) => setPublished(event.target.checked)}
                 className="h-4 w-4"
               />
-              Publish this post immediately
+              {copy.publishImmediately}
             </label>
 
             {error && (
@@ -245,7 +246,7 @@ export default function AdminNewBlogPostPage() {
               disabled={isSubmitting}
               className="w-full rounded-full bg-[#caf0f8] px-5 py-3 text-sm font-semibold text-[#023e8a] transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {isSubmitting ? "Creating..." : "Create blog post"}
+              {isSubmitting ? copy.creating : copy.createPost}
             </button>
           </form>
       </div>

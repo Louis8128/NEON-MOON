@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import AdminHeader from "@/components/AdminHeader";
+import { useI18n } from "@/components/I18nProvider";
 import {
   readJsonResponse,
   redirectIfUnauthorized,
@@ -19,19 +20,37 @@ type PhotoSummary = {
   updatedAt: string;
 };
 
-function formatDate(dateValue: string | null) {
+function formatDate(dateValue: string | null, locale: string, unknownText: string) {
   if (!dateValue) {
-    return "Unknown";
+    return unknownText;
   }
 
-  return new Date(dateValue).toLocaleDateString("en-AU", {
+  return new Date(dateValue).toLocaleDateString(locale, {
     year: "numeric",
     month: "short",
     day: "numeric",
   });
 }
 
+function formatCountLabel(
+  locale: string,
+  count: number,
+  singular: string,
+  plural: string,
+  foundSuffix: string,
+) {
+  if (locale === "zh") {
+    return `${count} ${plural}${foundSuffix}`;
+  }
+
+  return `${count} ${count === 1 ? singular : plural} ${foundSuffix}`;
+}
+
 export default function PhotosAdminPage() {
+  const { locale, t } = useI18n();
+  const copy = t.photosAdmin;
+  const dateLocale = locale === "zh" ? "zh-CN" : "en-AU";
+
   // Photo records loaded from the database.
   // 从数据库读取到的照片记录列表。
   const [photos, setPhotos] = useState<PhotoSummary[]>([]);
@@ -54,31 +73,34 @@ export default function PhotosAdminPage() {
 
   // Load all photo records from the protected admin API.
   // 加载后台照片管理列表。
-  const loadPhotos = useCallback(async function loadPhotos() {
-    const response = await fetch("/api/photos/admin/list", {
-      method: "POST",
-      credentials: "same-origin",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({}),
-    });
+  const loadPhotos = useCallback(
+    async function loadPhotos() {
+      const response = await fetch("/api/photos/admin/list", {
+        method: "POST",
+        credentials: "same-origin",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({}),
+      });
 
-    if (redirectIfUnauthorized(response)) {
-      return;
-    }
+      if (redirectIfUnauthorized(response)) {
+        return;
+      }
 
-    const result = await readJsonResponse<{
-      photos?: PhotoSummary[];
-      error?: string;
-    }>(response);
+      const result = await readJsonResponse<{
+        photos?: PhotoSummary[];
+        error?: string;
+      }>(response);
 
-    if (!response.ok) {
-      throw new Error(result.error ?? "Failed to load photos.");
-    }
+      if (!response.ok) {
+        throw new Error(result.error ?? copy.failedToLoadPhotos);
+      }
 
-    setPhotos(result.photos ?? []);
-  }, []);
+      setPhotos(result.photos ?? []);
+    },
+    [copy.failedToLoadPhotos],
+  );
 
   useEffect(() => {
     async function initializePhotos() {
@@ -91,7 +113,7 @@ export default function PhotosAdminPage() {
         setError(
           error instanceof Error
             ? error.message
-            : "Something went wrong while loading photos.",
+            : copy.failedToLoadPhotosUnexpected,
         );
       } finally {
         setIsLoading(false);
@@ -99,11 +121,11 @@ export default function PhotosAdminPage() {
     }
 
     void initializePhotos();
-  }, [loadPhotos]);
+  }, [copy.failedToLoadPhotosUnexpected, loadPhotos]);
 
   async function handleDeletePhoto(photo: PhotoSummary) {
     const shouldDelete = window.confirm(
-      `Delete "${photo.title}"? This cannot be undone.`,
+      `${copy.deleteConfirmPrefix}${photo.title}${copy.deleteConfirmSuffix}`,
     );
 
     if (!shouldDelete) {
@@ -133,18 +155,18 @@ export default function PhotosAdminPage() {
       const result = await readJsonResponse<{ error?: string }>(response);
 
       if (!response.ok) {
-        throw new Error(result.error ?? "Failed to delete photo.");
+        throw new Error(result.error ?? copy.failedToDeletePhoto);
       }
 
       setPhotos((currentPhotos) =>
         currentPhotos.filter((currentPhoto) => currentPhoto.id !== photo.id),
       );
-      setSuccessMessage("Photo deleted successfully.");
+      setSuccessMessage(copy.deletedSuccessfully);
     } catch (error) {
       setError(
         error instanceof Error
           ? error.message
-          : "Something went wrong while deleting the photo.",
+          : copy.failedToDeletePhotoUnexpected,
       );
     } finally {
       setDeletingPhotoId(null);
@@ -173,15 +195,15 @@ export default function PhotosAdminPage() {
 
         <div className="mt-10">
           <p className="text-xs font-semibold uppercase tracking-[0.4em] text-[#caf0f8]">
-            Photos Admin
+            {copy.adminName}
           </p>
 
           <h1 className="mt-4 text-4xl font-bold tracking-tight text-white md:text-5xl">
-            Manage photography records
+            {copy.manageTitle}
           </h1>
 
           <p className="mt-4 max-w-2xl text-lg leading-8 text-[#eaf8ff]">
-            View and manage photo records stored in the database.
+            {copy.manageDescription}
           </p>
         </div>
 
@@ -190,15 +212,21 @@ export default function PhotosAdminPage() {
             <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
               <div className="rounded-2xl border border-[#caf0f8]/30 bg-[#caf0f8]/10 px-4 py-3 text-sm text-[#caf0f8]">
                 {isLoading
-                  ? "Loading photos..."
-                  : `${photos.length} photo${photos.length === 1 ? "" : "s"} found.`}
+                  ? copy.loadingPhotos
+                  : formatCountLabel(
+                      locale,
+                      photos.length,
+                      copy.photoSingular,
+                      copy.photoPlural,
+                      copy.foundSuffix,
+                    )}
               </div>
 
               <Link
                 href="/photos/upload"
                 className="rounded-full bg-[#caf0f8] px-5 py-3 text-sm font-semibold text-[#023e8a] transition hover:bg-white"
               >
-                Upload photo
+                {copy.uploadPhoto}
               </Link>
             </div>
 
@@ -216,16 +244,16 @@ export default function PhotosAdminPage() {
 
             {isLoading ? (
               <div className="rounded-3xl border border-[#caf0f8]/25 bg-[#023e8a]/75 p-8 text-[#eaf8ff]">
-                Loading photos...
+                {copy.loadingPhotos}
               </div>
             ) : photos.length === 0 ? (
               <div className="rounded-3xl border border-dashed border-[#caf0f8]/40 bg-[#03045e]/45 p-10 text-center">
                 <p className="text-lg font-semibold text-[#f8fcff]">
-                  No photos found.
+                  {copy.noPhotosFound}
                 </p>
 
                 <p className="mt-2 text-sm text-[#caf0f8]/80">
-                  Upload a photo to start building the gallery.
+                  {copy.noPhotosHint}
                 </p>
               </div>
             ) : (
@@ -242,12 +270,13 @@ export default function PhotosAdminPage() {
                       style={{
                         backgroundImage: `url(${photo.imageUrl})`,
                       }}
-                      aria-label={`${photo.title} image preview`}
+                      aria-label={`${photo.title}${copy.imagePreviewSuffix}`}
                     />
 
                     <div className="p-6">
                       <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#caf0f8]">
-                        Photo #{photo.id}
+                        {copy.photoNumberPrefix}
+                        {photo.id}
                       </p>
 
                       <h2 className="mt-3 text-2xl font-bold text-white">
@@ -256,18 +285,32 @@ export default function PhotosAdminPage() {
 
                       <div className="mt-4 space-y-2 text-sm text-[#caf0f8]/80">
                         <p>
-                          <span className="text-[#caf0f8]/65">Location: </span>
-                          {photo.location ?? "Unknown"}
+                          <span className="text-[#caf0f8]/65">
+                            {copy.location}:{" "}
+                          </span>
+                          {photo.location ?? copy.unknown}
                         </p>
 
                         <p>
-                          <span className="text-[#caf0f8]/65">Taken: </span>
-                          {formatDate(photo.takenAt)}
+                          <span className="text-[#caf0f8]/65">
+                            {copy.taken}:{" "}
+                          </span>
+                          {formatDate(
+                            photo.takenAt,
+                            dateLocale,
+                            copy.unknown,
+                          )}
                         </p>
 
                         <p>
-                          <span className="text-[#caf0f8]/65">Updated: </span>
-                          {formatDate(photo.updatedAt)}
+                          <span className="text-[#caf0f8]/65">
+                            {copy.updated}:{" "}
+                          </span>
+                          {formatDate(
+                            photo.updatedAt,
+                            dateLocale,
+                            copy.unknown,
+                          )}
                         </p>
                       </div>
 
@@ -286,14 +329,14 @@ export default function PhotosAdminPage() {
                           href={`/photos/${photo.id}`}
                           className="rounded-full border border-[#caf0f8]/40 px-4 py-2 text-xs font-semibold text-[#caf0f8] transition hover:bg-[#caf0f8] hover:text-[#023e8a]"
                         >
-                          View
+                          {copy.view}
                         </Link>
 
                         <Link
                           href={`/photos/admin/edit/${photo.id}`}
                           className="rounded-full bg-[#caf0f8] px-4 py-2 text-xs font-semibold text-[#023e8a] transition hover:bg-white"
                         >
-                          Edit
+                          {copy.edit}
                         </Link>
 
                         <button
@@ -302,7 +345,9 @@ export default function PhotosAdminPage() {
                           onClick={() => void handleDeletePhoto(photo)}
                           className="rounded-full border border-red-300/50 px-4 py-2 text-xs font-semibold text-red-100 transition hover:bg-red-500/20 disabled:cursor-not-allowed disabled:opacity-60"
                         >
-                          {deletingPhotoId === photo.id ? "Deleting..." : "Delete"}
+                          {deletingPhotoId === photo.id
+                            ? copy.deleting
+                            : copy.delete}
                         </button>
                       </div>
                     </div>

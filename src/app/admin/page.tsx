@@ -7,15 +7,18 @@ import { useI18n } from "@/components/I18nProvider";
 const adminCards = [
   {
     key: "blog",
-    href: "/blog/admin",
+    adminHref: "/blog/admin",
+    quickHref: "/blog/admin/new",
   },
   {
     key: "media",
-    href: "/media/admin",
+    adminHref: "/media/admin",
+    quickHref: "/media/admin/new",
   },
   {
     key: "photos",
-    href: "/photos/admin",
+    adminHref: "/photos/admin",
+    quickHref: "/photos/upload",
   },
 ] as const;
 
@@ -66,9 +69,8 @@ export default function AdminDashboardPage() {
             const cardText = t.adminDashboard.cards[card.key];
 
             return (
-              <Link
-                key={card.href}
-                href={card.href}
+              <article
+                key={card.adminHref}
                 className="group rounded-3xl border border-[#caf0f8]/25 bg-[#023e8a]/75 p-6 shadow-lg shadow-[#03045e]/20 backdrop-blur transition hover:-translate-y-1 hover:border-[#caf0f8]/60 hover:bg-[#03045e]/65"
               >
                 <p className="text-xs font-semibold uppercase tracking-[0.35em] text-[#caf0f8]">
@@ -83,10 +85,22 @@ export default function AdminDashboardPage() {
                   {cardText.description}
                 </p>
 
-                <p className="mt-6 text-sm font-semibold text-[#caf0f8] transition group-hover:text-white">
-                  {cardText.label} →
-                </p>
-              </Link>
+                <div className="mt-6 flex flex-wrap gap-3">
+                  <Link
+                    href={card.adminHref}
+                    className="rounded-full bg-[#caf0f8] px-4 py-2 text-xs font-semibold text-[#023e8a] transition hover:bg-white"
+                  >
+                    {cardText.label}
+                  </Link>
+
+                  <Link
+                    href={card.quickHref}
+                    className="rounded-full border border-[#caf0f8]/50 px-4 py-2 text-xs font-semibold text-[#caf0f8] transition hover:bg-[#caf0f8] hover:text-[#023e8a]"
+                  >
+                    {cardText.quickLabel}
+                  </Link>
+                </div>
+              </article>
             );
           })}
         </div>

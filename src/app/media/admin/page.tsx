@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import AdminHeader from "@/components/AdminHeader";
+import { useI18n } from "@/components/I18nProvider";
 import {
   readJsonResponse,
   redirectIfUnauthorized,
@@ -32,11 +33,39 @@ const mediaFilters: MediaFilter[] = [
   "GAME",
 ];
 
-function formatCategory(category: MediaCategory) {
-  return category.charAt(0) + category.slice(1).toLowerCase();
+function formatCountLabel(
+  locale: string,
+  count: number,
+  singular: string,
+  plural: string,
+  foundSuffix: string,
+) {
+  if (locale === "zh") {
+    return `${count} ${plural}${foundSuffix}`;
+  }
+
+  return `${count} ${count === 1 ? singular : plural} ${foundSuffix}`;
+}
+
+function getCategoryLabel(
+  category: MediaCategory,
+  labels: ReturnType<typeof useI18n>["t"]["mediaAdmin"]["categories"],
+) {
+  return labels[category.toLowerCase() as Lowercase<MediaCategory>];
+}
+
+function getFilterLabel(
+  filter: MediaFilter,
+  labels: ReturnType<typeof useI18n>["t"]["mediaAdmin"]["categories"],
+) {
+  return filter === "ALL" ? labels.all : getCategoryLabel(filter, labels);
 }
 
 export default function MediaAdminPage() {
+  const { locale, t } = useI18n();
+  const copy = t.mediaAdmin;
+  const dateLocale = locale === "zh" ? "zh-CN" : "en-AU";
+
   // Media items loaded from the database.
   // 从数据库读取到的媒体收藏列表。
   const [mediaItems, setMediaItems] = useState<MediaItemSummary[]>([]);
@@ -61,31 +90,34 @@ export default function MediaAdminPage() {
 
   // Load all media items from the protected admin API.
   // 加载后台媒体收藏列表。
-  const loadMediaItems = useCallback(async function loadMediaItems() {
-    const response = await fetch("/api/media/admin/list", {
-      method: "POST",
-      credentials: "same-origin",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({}),
-    });
+  const loadMediaItems = useCallback(
+    async function loadMediaItems() {
+      const response = await fetch("/api/media/admin/list", {
+        method: "POST",
+        credentials: "same-origin",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({}),
+      });
 
-    if (redirectIfUnauthorized(response)) {
-      return;
-    }
+      if (redirectIfUnauthorized(response)) {
+        return;
+      }
 
-    const result = await readJsonResponse<{
-      mediaItems?: MediaItemSummary[];
-      error?: string;
-    }>(response);
+      const result = await readJsonResponse<{
+        mediaItems?: MediaItemSummary[];
+        error?: string;
+      }>(response);
 
-    if (!response.ok) {
-      throw new Error(result.error ?? "Failed to load media items.");
-    }
+      if (!response.ok) {
+        throw new Error(result.error ?? copy.failedToLoadMediaItems);
+      }
 
-    setMediaItems(result.mediaItems ?? []);
-  }, []);
+      setMediaItems(result.mediaItems ?? []);
+    },
+    [copy.failedToLoadMediaItems],
+  );
 
   useEffect(() => {
     async function initializeMediaItems() {
@@ -98,7 +130,7 @@ export default function MediaAdminPage() {
         setError(
           error instanceof Error
             ? error.message
-            : "Something went wrong while loading media items.",
+            : copy.failedToLoadMediaItemsUnexpected,
         );
       } finally {
         setIsLoading(false);
@@ -106,13 +138,13 @@ export default function MediaAdminPage() {
     }
 
     void initializeMediaItems();
-  }, [loadMediaItems]);
+  }, [copy.failedToLoadMediaItemsUnexpected, loadMediaItems]);
 
   // Delete one media item after a browser confirmation.
   // 删除前弹出确认框，确认后才调用删除 API。
   async function handleDeleteMediaItem(item: MediaItemSummary) {
     const confirmed = window.confirm(
-      `Delete "${item.title}"? This action cannot be undone.`,
+      `${copy.deleteConfirmPrefix}${item.title}${copy.deleteConfirmSuffix}`,
     );
 
     if (!confirmed) {
@@ -141,7 +173,7 @@ export default function MediaAdminPage() {
       const result = await readJsonResponse<{ error?: string }>(response);
 
       if (!response.ok) {
-        setError(result.error ?? "Failed to delete media item.");
+        setError(result.error ?? copy.failedToDeleteMediaItem);
         return;
       }
 
@@ -151,7 +183,7 @@ export default function MediaAdminPage() {
         currentItems.filter((mediaItem) => mediaItem.id !== item.id),
       );
     } catch {
-      setError("Something went wrong while deleting the media item.");
+      setError(copy.failedToDeleteMediaItemUnexpected);
     } finally {
       setDeletingMediaItemId(null);
     }
@@ -201,15 +233,15 @@ export default function MediaAdminPage() {
 
         <div className="mt-10">
           <p className="text-xs font-semibold uppercase tracking-[0.4em] text-[#caf0f8]">
-            Media Admin
+            {copy.adminName}
           </p>
 
           <h1 className="mt-4 text-4xl font-bold tracking-tight text-white md:text-5xl">
-            Manage media collection
+            {copy.manageTitle}
           </h1>
 
           <p className="mt-4 max-w-2xl text-lg leading-8 text-[#eaf8ff]">
-            View, edit, create, and delete media items stored in the database.
+            {copy.manageDescription}
           </p>
         </div>
 
@@ -218,15 +250,21 @@ export default function MediaAdminPage() {
             <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
               <div className="rounded-2xl border border-[#caf0f8]/30 bg-[#caf0f8]/10 px-4 py-3 text-sm text-[#caf0f8]">
                 {isLoading
-                  ? "Loading media items..."
-                  : `${mediaItems.length} item${mediaItems.length === 1 ? "" : "s"} found.`}
+                  ? copy.loadingMediaItems
+                  : formatCountLabel(
+                      locale,
+                      mediaItems.length,
+                      copy.itemSingular,
+                      copy.itemPlural,
+                      copy.foundSuffix,
+                    )}
               </div>
 
               <Link
                 href="/media/admin/new"
                 className="rounded-full bg-[#caf0f8] px-5 py-3 text-sm font-semibold text-[#023e8a] transition hover:bg-white"
               >
-                New media item
+                {copy.newMediaItem}
               </Link>
             </div>
 
@@ -246,9 +284,7 @@ export default function MediaAdminPage() {
                   onClick={() => setFilter(targetFilter)}
                   className={getFilterButtonClass(targetFilter)}
                 >
-                  {targetFilter === "ALL"
-                    ? "All"
-                    : formatCategory(targetFilter)}{" "}
+                  {getFilterLabel(targetFilter, copy.categories)}{" "}
                   ({getFilterCount(targetFilter)})
                 </button>
               ))}
@@ -256,27 +292,27 @@ export default function MediaAdminPage() {
 
             {isLoading ? (
               <div className="rounded-3xl border border-[#caf0f8]/25 bg-[#023e8a]/75 p-8 text-[#eaf8ff]">
-                Loading media items...
+                {copy.loadingMediaItems}
               </div>
             ) : filteredMediaItems.length === 0 ? (
               // Empty state for the current filter.
               // 当前筛选结果为空时显示提示。
               <div className="rounded-3xl border border-dashed border-[#caf0f8]/40 bg-[#03045e]/45 p-10 text-center">
                 <p className="text-lg font-semibold text-[#f8fcff]">
-                  No media items in this view.
+                  {copy.noMediaItemsInView}
                 </p>
                 <p className="mt-2 text-sm text-[#caf0f8]/80">
-                  Switch filters or add new media items.
+                  {copy.noMediaItemsHint}
                 </p>
               </div>
             ) : (
               <div className="overflow-hidden rounded-3xl border border-[#caf0f8]/25 bg-[#023e8a]/75">
                 <div className="grid grid-cols-12 border-b border-[#caf0f8]/25 px-5 py-4 text-xs font-semibold uppercase tracking-[0.2em] text-[#caf0f8]/65">
-                  <div className="col-span-4">Title</div>
-                  <div className="col-span-2">Category</div>
-                  <div className="col-span-2">Creator</div>
-                  <div className="col-span-2">Rating</div>
-                  <div className="col-span-2 text-right">Actions</div>
+                  <div className="col-span-4">{copy.title}</div>
+                  <div className="col-span-2">{copy.category}</div>
+                  <div className="col-span-2">{copy.creator}</div>
+                  <div className="col-span-2">{copy.rating}</div>
+                  <div className="col-span-2 text-right">{copy.actions}</div>
                 </div>
 
                 <div className="divide-y divide-[#caf0f8]/20">
@@ -292,29 +328,31 @@ export default function MediaAdminPage() {
 
                         {item.releaseYear && (
                           <p className="mt-1 text-xs text-[#caf0f8]/65">
-                            Released in {item.releaseYear}
+                            {copy.releasedIn} {item.releaseYear}
                           </p>
                         )}
 
                         <p className="mt-1 text-xs text-[#caf0f8]/55">
-                          Updated on{" "}
-                          {new Date(item.updatedAt).toLocaleDateString("en-AU")}
+                          {copy.updatedOn}{" "}
+                          {new Date(item.updatedAt).toLocaleDateString(
+                            dateLocale,
+                          )}
                         </p>
                       </div>
 
                       <div className="col-span-2">
                         <span className="rounded-full border border-[#caf0f8]/40 px-3 py-1 text-xs font-semibold text-[#caf0f8]">
-                          {formatCategory(item.category)}
+                          {getCategoryLabel(item.category, copy.categories)}
                         </span>
                       </div>
 
                       <div className="col-span-2 truncate text-[#caf0f8]/80">
-                        {item.creator ?? "Unknown"}
+                        {item.creator ?? copy.unknown}
                       </div>
 
                       <div className="col-span-2 text-[#eaf8ff]">
                         {item.rating === null
-                          ? "Not rated"
+                          ? copy.notRated
                           : `${item.rating}/10`}
                       </div>
 
@@ -326,7 +364,7 @@ export default function MediaAdminPage() {
                             href={`/media/admin/edit/${item.id}`}
                             className="text-xs font-semibold text-[#caf0f8] transition hover:text-white"
                           >
-                            Edit
+                            {copy.edit}
                           </Link>
 
                           <button
@@ -336,8 +374,8 @@ export default function MediaAdminPage() {
                             className="text-xs font-semibold text-red-300 transition hover:text-red-200 disabled:cursor-not-allowed disabled:opacity-50"
                           >
                             {deletingMediaItemId === item.id
-                              ? "Deleting..."
-                              : "Delete"}
+                              ? copy.deleting
+                              : copy.delete}
                           </button>
                         </div>
                       </div>

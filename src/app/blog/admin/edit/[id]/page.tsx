@@ -4,6 +4,7 @@ import type { FormEvent } from "react";
 import { useCallback, useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import AdminHeader from "@/components/AdminHeader";
+import { useI18n } from "@/components/I18nProvider";
 import {
   readJsonResponse,
   redirectIfUnauthorized,
@@ -24,6 +25,9 @@ type BlogPostDetail = {
 export default function AdminEditBlogPostPage() {
   const params = useParams<{ id: string }>();
   const router = useRouter();
+  const { locale, t } = useI18n();
+  const copy = t.blogAdmin;
+  const dateLocale = locale === "zh" ? "zh-CN" : "en-AU";
 
   const [post, setPost] = useState<BlogPostDetail | null>(null);
   const [isLoadingPost, setIsLoadingPost] = useState(true);
@@ -68,7 +72,7 @@ export default function AdminEditBlogPostPage() {
         }>(response);
 
         if (!response.ok) {
-          throw new Error(result.error ?? "Failed to load blog post.");
+          throw new Error(result.error ?? copy.failedToLoadPost);
         }
 
         const loadedPost = result.post as BlogPostDetail;
@@ -84,7 +88,7 @@ export default function AdminEditBlogPostPage() {
         setIsLoadingPost(false);
       }
     },
-    [postId],
+    [copy.failedToLoadPost, postId],
   );
 
   useEffect(() => {
@@ -99,13 +103,13 @@ export default function AdminEditBlogPostPage() {
         setError(
           error instanceof Error
             ? error.message
-            : "Something went wrong while loading the blog post.",
+            : copy.failedToLoadPostUnexpected,
         );
       }
     }
 
     void initializePost();
-  }, [isInvalidPostId, loadPost]);
+  }, [copy.failedToLoadPostUnexpected, isInvalidPostId, loadPost]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -144,7 +148,7 @@ export default function AdminEditBlogPostPage() {
       }>(response);
 
       if (!response.ok) {
-        setError(result.error ?? "Failed to update blog post.");
+        setError(result.error ?? copy.failedToUpdatePost);
         return;
       }
 
@@ -156,7 +160,7 @@ export default function AdminEditBlogPostPage() {
         router.push("/blog/admin");
       }
     } catch {
-      setError("Something went wrong while updating the blog post.");
+      setError(copy.failedToUpdatePostUnexpected);
     } finally {
       setIsSubmitting(false);
     }
@@ -184,26 +188,25 @@ export default function AdminEditBlogPostPage() {
 
         <div className="mt-10">
           <p className="text-xs font-semibold uppercase tracking-[0.4em] text-[#caf0f8]">
-            Blog Admin
+            {copy.adminName}
           </p>
 
           <h1 className="mt-4 text-4xl font-bold tracking-tight text-white md:text-5xl">
-            Edit blog post
+            {copy.editTitle}
           </h1>
 
           <p className="mt-4 max-w-2xl text-lg leading-8 text-[#eaf8ff]">
-            Update an existing blog post, change its publication status, and
-            save the changes back to the database.
+            {copy.editDescription}
           </p>
         </div>
 
         {isInvalidPostId ? (
           <section className="mt-10 rounded-3xl border border-red-500/40 bg-red-500/10 p-8 text-red-200">
-            Invalid blog post id.
+            {copy.invalidPostId}
           </section>
         ) : isLoadingPost ? (
           <section className="mt-10 rounded-3xl border border-[#caf0f8]/25 bg-[#023e8a]/75 p-8 text-[#eaf8ff]">
-            Loading blog post...
+            {copy.loadingPost}
           </section>
         ) : post ? (
           <form
@@ -211,8 +214,8 @@ export default function AdminEditBlogPostPage() {
             className="mt-10 space-y-6 rounded-3xl border border-[#caf0f8]/25 bg-[#023e8a]/75 p-6 shadow-lg shadow-[#03045e]/20 backdrop-blur"
           >
             <div className="rounded-2xl border border-[#caf0f8]/30 bg-[#caf0f8]/10 px-4 py-3 text-sm text-[#caf0f8]">
-              Editing post #{post.id}. Last updated on{" "}
-              {new Date(post.updatedAt).toLocaleDateString("en-AU")}.
+              {copy.editingPostPrefix} #{post.id}. {copy.lastUpdatedOn}{" "}
+              {new Date(post.updatedAt).toLocaleDateString(dateLocale)}.
             </div>
 
             <div>
@@ -220,7 +223,7 @@ export default function AdminEditBlogPostPage() {
                 htmlFor="title"
                 className="block text-sm font-semibold text-[#f8fcff]"
               >
-                Title
+                {copy.title}
               </label>
               <input
                 id="title"
@@ -228,7 +231,7 @@ export default function AdminEditBlogPostPage() {
                 required
                 value={title}
                 onChange={(event) => setTitle(event.target.value)}
-                placeholder="Enter a blog title"
+                placeholder={copy.titlePlaceholder}
                 className="mt-2 w-full rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/45 px-4 py-3 text-sm text-white placeholder:text-[#caf0f8]/60 outline-none transition focus:border-[#caf0f8]"
               />
             </div>
@@ -238,7 +241,7 @@ export default function AdminEditBlogPostPage() {
                 htmlFor="slug"
                 className="block text-sm font-semibold text-[#f8fcff]"
               >
-                Slug
+                {copy.slug}
               </label>
               <input
                 id="slug"
@@ -246,12 +249,11 @@ export default function AdminEditBlogPostPage() {
                 required
                 value={slug}
                 onChange={(event) => setSlug(event.target.value)}
-                placeholder="Enter a URL slug"
+                placeholder={copy.slugPlaceholder}
                 className="mt-2 w-full rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/45 px-4 py-3 text-sm text-white placeholder:text-[#caf0f8]/60 outline-none transition focus:border-[#caf0f8]"
               />
               <p className="mt-2 text-xs text-[#caf0f8]/65">
-                Used in the URL. Changing it will also change the public blog
-                post URL.
+                {copy.slugEditHelp}
               </p>
             </div>
 
@@ -260,14 +262,14 @@ export default function AdminEditBlogPostPage() {
                 htmlFor="excerpt"
                 className="block text-sm font-semibold text-[#f8fcff]"
               >
-                Excerpt
+                {copy.excerpt}
               </label>
               <textarea
                 id="excerpt"
                 rows={3}
                 value={excerpt}
                 onChange={(event) => setExcerpt(event.target.value)}
-                placeholder="Write a short summary..."
+                placeholder={copy.excerptPlaceholder}
                 className="mt-2 w-full resize-none rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/45 px-4 py-3 text-sm leading-6 text-white placeholder:text-[#caf0f8]/60 outline-none transition focus:border-[#caf0f8]"
               />
             </div>
@@ -277,14 +279,14 @@ export default function AdminEditBlogPostPage() {
                 htmlFor="coverImageUrl"
                 className="block text-sm font-semibold text-[#f8fcff]"
               >
-                Cover image URL
+                {copy.coverImageUrl}
               </label>
               <input
                 id="coverImageUrl"
                 type="text"
                 value={coverImageUrl}
                 onChange={(event) => setCoverImageUrl(event.target.value)}
-                placeholder="Optional cover image path"
+                placeholder={copy.coverImageUrlPlaceholder}
                 className="mt-2 w-full rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/45 px-4 py-3 text-sm text-white placeholder:text-[#caf0f8]/60 outline-none transition focus:border-[#caf0f8]"
               />
             </div>
@@ -294,7 +296,7 @@ export default function AdminEditBlogPostPage() {
                 htmlFor="content"
                 className="block text-sm font-semibold text-[#f8fcff]"
               >
-                Content
+                {copy.content}
               </label>
               <textarea
                 id="content"
@@ -302,7 +304,7 @@ export default function AdminEditBlogPostPage() {
                 required
                 value={content}
                 onChange={(event) => setContent(event.target.value)}
-                placeholder="Write the full blog content here..."
+                placeholder={copy.contentPlaceholder}
                 className="mt-2 w-full resize-none rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/45 px-4 py-3 text-sm leading-6 text-white placeholder:text-[#caf0f8]/60 outline-none transition focus:border-[#caf0f8]"
               />
             </div>
@@ -314,7 +316,7 @@ export default function AdminEditBlogPostPage() {
                 onChange={(event) => setPublished(event.target.checked)}
                 className="h-4 w-4"
               />
-              Publish this post
+              {copy.publishThisPost}
             </label>
 
             {error && (
@@ -328,12 +330,12 @@ export default function AdminEditBlogPostPage() {
               disabled={isSubmitting}
               className="w-full rounded-full bg-[#caf0f8] px-5 py-3 text-sm font-semibold text-[#023e8a] transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {isSubmitting ? "Saving..." : "Save changes"}
+              {isSubmitting ? copy.saving : copy.saveChanges}
             </button>
           </form>
         ) : (
           <section className="mt-10 rounded-3xl border border-red-500/40 bg-red-500/10 p-8 text-red-200">
-            Blog post could not be loaded.
+            {copy.postCouldNotLoad}
           </section>
         )}
       </div>
