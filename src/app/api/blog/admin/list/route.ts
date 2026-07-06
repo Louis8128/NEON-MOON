@@ -1,31 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
-import {
-  isAuthorizedAdminRequest,
-  readAdminJsonRequestBody,
-} from "@/lib/adminAuth";
+import { isValidAdminSessionRequest } from "@/lib/adminAuth";
 import { prisma } from "@/lib/prisma";
 
 export const runtime = "nodejs";
 
 export async function POST(request: NextRequest) {
+  if (!(await isValidAdminSessionRequest(request))) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
-    const body = await readAdminJsonRequestBody(request);
-    const adminPassword = body?.adminPassword;
-
-    if (!(await isAuthorizedAdminRequest(request, adminPassword))) {
-      return NextResponse.json(
-        { error: "Invalid admin password." },
-        { status: 401 },
-      );
-    }
-
-    if (!body) {
-      return NextResponse.json(
-        { error: "Invalid request body." },
-        { status: 400 },
-      );
-    }
-
     // Admin list returns both published posts and drafts.
     // 中文关键词：后台管理页可以查看已发布文章和草稿。
     const posts = await prisma.blogPost.findMany({

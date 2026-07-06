@@ -2,7 +2,7 @@ import { randomUUID } from "crypto";
 import { mkdir, writeFile } from "fs/promises";
 import { join } from "path";
 import { NextRequest, NextResponse } from "next/server";
-import { isAuthorizedAdminRequest } from "@/lib/adminAuth";
+import { isValidAdminSessionRequest } from "@/lib/adminAuth";
 import { prisma } from "@/lib/prisma";
 
 export const runtime = "nodejs";
@@ -27,21 +27,17 @@ function getImageExtension(mimeType: string) {
 
 export async function POST(request: NextRequest) {
   try {
+    if (!(await isValidAdminSessionRequest(request))) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const formData = await request.formData();
 
-    const adminPassword = formData.get("adminPassword");
     const file = formData.get("file");
     const title = formData.get("title");
     const location = formData.get("location");
     const description = formData.get("description");
     const takenAt = formData.get("takenAt");
-
-    if (!(await isAuthorizedAdminRequest(request, adminPassword))) {
-      return NextResponse.json(
-        { error: "Invalid upload password." },
-        { status: 401 },
-      );
-    }
 
     if (!(file instanceof File)) {
       return NextResponse.json(

@@ -23,7 +23,7 @@ function getAdminSessionSecret() {
 }
 
 export function getExpectedAdminPassword() {
-  return process.env.ADMIN_PASSWORD ?? process.env.ADMIN_UPLOAD_PASSWORD ?? null;
+  return process.env.ADMIN_PASSWORD ?? null;
 }
 
 export function getAdminSessionMaxAgeSeconds() {
@@ -141,31 +141,6 @@ export async function isValidAdminSessionRequest(request: NextRequest) {
   const adminSession = request.cookies.get(ADMIN_SESSION_COOKIE_NAME)?.value;
 
   return verifyAdminSessionCookie(adminSession);
-}
-
-export async function isAuthorizedAdminRequest(
-  request: NextRequest,
-  legacyPassword?: unknown,
-) {
-  if (await isValidAdminSessionRequest(request)) {
-    return true;
-  }
-
-  return isValidAdminPassword(legacyPassword);
-}
-
-export async function readAdminJsonRequestBody(request: NextRequest) {
-  try {
-    const body = (await request.json()) as unknown;
-
-    if (!body || typeof body !== "object" || Array.isArray(body)) {
-      return null;
-    }
-
-    return body as Record<string, unknown>;
-  } catch {
-    return null;
-  }
 }
 
 function decodeAdminSessionPayload(

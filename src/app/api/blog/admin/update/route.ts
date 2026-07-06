@@ -1,8 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import {
-  isAuthorizedAdminRequest,
-  readAdminJsonRequestBody,
-} from "@/lib/adminAuth";
+import { isValidAdminSessionRequest } from "@/lib/adminAuth";
 import { prisma } from "@/lib/prisma";
 
 export const runtime = "nodejs";
@@ -12,24 +9,12 @@ function isValidSlug(slug: string) {
 }
 
 export async function POST(request: NextRequest) {
+  if (!(await isValidAdminSessionRequest(request))) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
-    const body = await readAdminJsonRequestBody(request);
-
-    const adminPassword = body?.adminPassword;
-
-    if (!(await isAuthorizedAdminRequest(request, adminPassword))) {
-      return NextResponse.json(
-        { error: "Invalid admin password." },
-        { status: 401 },
-      );
-    }
-
-    if (!body) {
-      return NextResponse.json(
-        { error: "Invalid request body." },
-        { status: 400 },
-      );
-    }
+    const body = (await request.json()) as Record<string, unknown>;
 
     const postId = Number(body.id);
     const title = body.title;
