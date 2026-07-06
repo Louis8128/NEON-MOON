@@ -46,6 +46,14 @@ function getResultSummary(
   return `${t.search.resultsForPrefix} ${totalResults} ${t.search.result}${totalResults === 1 ? "" : "s"} ${t.search.resultsForSuffix} “${query}”.`;
 }
 
+function getNoResultsMessage(query: string, locale: "en" | "zh", label: string) {
+  if (locale === "zh") {
+    return `${label}：“${query}”。`;
+  }
+
+  return `${label}: “${query}”.`;
+}
+
 export default function SearchContent({
   query,
   mediaItems,
@@ -104,7 +112,7 @@ export default function SearchContent({
         ) : totalResults === 0 ? (
           <section className="rounded-3xl border border-dashed border-[#caf0f8]/40 bg-[#03045e]/45 p-10 text-center">
             <p className="text-lg font-semibold text-[#f8fcff]">
-              {t.search.noResultsFound}: “{query}”.
+              {getNoResultsMessage(query, locale, t.search.noResultsFound)}
             </p>
             <p className="mt-2 text-sm text-[#caf0f8]/80">
               {t.search.tryAnotherKeyword}

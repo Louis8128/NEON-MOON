@@ -59,7 +59,7 @@ export default function MediaDetailContent({
                 style={{
                   backgroundImage: `url(${mediaItem.coverUrl})`,
                 }}
-                aria-label={`${mediaItem.title} cover image`}
+                aria-label={`${mediaItem.title}${t.media.coverImageLabelSuffix}`}
               />
             ) : (
               <div className="flex min-h-[420px] items-center justify-center bg-[#03045e]/65 px-8 text-center">

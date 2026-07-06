@@ -207,6 +207,22 @@ type PhotosAdminTranslations = {
   failedToSavePhotoUnexpected: string;
 };
 
+type AdminLoginTranslations = {
+  backToHome: string;
+  eyebrow: string;
+  title: string;
+  description: string;
+  passwordLabel: string;
+  passwordPlaceholder: string;
+  submit: string;
+  errors: {
+    invalid: string;
+    missingSecret: string;
+    missingPassword: string;
+    invalidRequest: string;
+  };
+};
+
 type TranslationDictionary = {
   nav: {
     home: string;
@@ -229,6 +245,7 @@ type TranslationDictionary = {
     backToDashboard: string;
     logout: string;
   };
+  adminLogin: AdminLoginTranslations;
   home: {
     eyebrow: string;
     title: string;
@@ -243,6 +260,7 @@ type TranslationDictionary = {
     eyebrow: string;
     title: string;
     description: string;
+    backToHome: string;
     cardKicker: string;
     directNoticePrefix: string;
     directNoticeSuffix: string;
@@ -288,6 +306,7 @@ type TranslationDictionary = {
     unknownCreator: string;
     releasedIn: string;
     noCover: string;
+    coverImageLabelSuffix: string;
     mediaDetail: string;
     personalNote: string;
     noNote: string;
@@ -361,6 +380,21 @@ export const translations: Record<Locale, TranslationDictionary> = {
       backToDashboard: "← Back to Admin Dashboard",
       logout: "Logout",
     },
+    adminLogin: {
+      backToHome: "← Back to Home",
+      eyebrow: "Admin Login",
+      title: "Sign in to NEON MOON",
+      description: "Use the private admin password to open the dashboard.",
+      passwordLabel: "Admin password",
+      passwordPlaceholder: "Enter password",
+      submit: "Sign in",
+      errors: {
+        invalid: "Invalid admin password.",
+        missingSecret: "Admin session secret is not configured.",
+        missingPassword: "Admin password is not configured.",
+        invalidRequest: "Unable to read the login request. Please try again.",
+      },
+    },
     home: {
       eyebrow: "Personal Full-Stack Website",
       title: "Welcome to My Life Site - Neon Moon",
@@ -386,6 +420,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       title: "Control your NEON MOON content",
       description:
         "A private entry point for managing blog posts, media collections, and photography uploads.",
+      backToHome: "← Back to Home",
       cardKicker: "Admin",
       directNoticePrefix:
         "This page is intentionally not shown in the public navigation bar. Access it directly through ",
@@ -677,6 +712,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       unknownCreator: "Unknown creator",
       releasedIn: "Released in",
       noCover: "No Cover",
+      coverImageLabelSuffix: " cover image",
       mediaDetail: "Media Detail",
       personalNote: "Personal note",
       noNote: "No note has been added for this media item yet.",
@@ -752,6 +788,21 @@ export const translations: Record<Locale, TranslationDictionary> = {
       backToDashboard: "← 返回后台首页",
       logout: "退出登录",
     },
+    adminLogin: {
+      backToHome: "← 返回首页",
+      eyebrow: "后台登录",
+      title: "登录 NEON MOON",
+      description: "使用私密后台密码打开管理首页。",
+      passwordLabel: "后台密码",
+      passwordPlaceholder: "输入密码",
+      submit: "登录",
+      errors: {
+        invalid: "后台密码无效。",
+        missingSecret: "后台会话密钥尚未配置。",
+        missingPassword: "后台密码尚未配置。",
+        invalidRequest: "无法读取登录请求，请重试。",
+      },
+    },
     home: {
       eyebrow: "个人全栈网站",
       title: "欢迎来到我的生活网站 - Neon Moon",
@@ -776,6 +827,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       eyebrow: "后台首页",
       title: "管理你的 NEON MOON 内容",
       description: "用于管理博客文章、媒体收藏和照片上传的私密入口。",
+      backToHome: "← 返回首页",
       cardKicker: "后台",
       directNoticePrefix: "此页面不会显示在公开导航栏中，请直接通过 ",
       directNoticeSuffix: " 访问。",
@@ -1033,6 +1085,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       unknownCreator: "未知创作者",
       releasedIn: "发行于",
       noCover: "无封面",
+      coverImageLabelSuffix: " 封面图片",
       mediaDetail: "媒体详情",
       personalNote: "个人备注",
       noNote: "这条媒体收藏还没有添加备注。",

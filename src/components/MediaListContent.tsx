@@ -101,7 +101,7 @@ export default function MediaListContent({
                     style={{
                       backgroundImage: `url(${item.coverUrl})`,
                     }}
-                    aria-label={`${item.title} cover image`}
+                    aria-label={`${item.title}${t.media.coverImageLabelSuffix}`}
                   />
                 ) : (
                   <div className="flex h-56 items-center justify-center bg-[#03045e]/65 px-6 text-center">

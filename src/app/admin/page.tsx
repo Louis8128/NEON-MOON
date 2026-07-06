@@ -29,18 +29,12 @@ export default function AdminDashboardPage() {
     <main className="min-h-screen bg-[#0077b6] px-6 py-20 text-white">
       <section className="mx-auto max-w-6xl">
         <AdminHeader
-          section={{
-            en: "Dashboard",
-            zh: "后台首页",
-          }}
+          section={t.adminDashboard.eyebrow}
           showDashboardLink={false}
           links={[
             {
               href: "/",
-              label: {
-                en: "← Back to Home",
-                zh: "← 返回首页",
-              },
+              label: t.adminDashboard.backToHome,
               muted: true,
             },
           ]}

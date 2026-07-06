@@ -69,25 +69,16 @@ export default function PhotoUploadPage() {
     <main className="min-h-screen bg-[#0077b6] px-6 py-20 text-white">
       <div className="mx-auto max-w-3xl">
         <AdminHeader
-          section={{
-            en: "Photos Admin",
-            zh: "照片管理",
-          }}
+          section={copy.adminName}
           links={[
             {
               href: "/photos/admin",
-              label: {
-                en: "Back to Photos Admin",
-                zh: "返回照片管理",
-              },
+              label: copy.backToPhotosAdmin,
               muted: true,
             },
             {
               href: "/photos",
-              label: {
-                en: "View public gallery",
-                zh: "查看公开相册",
-              },
+              label: copy.viewPublicGallery,
               muted: true,
             },
           ]}

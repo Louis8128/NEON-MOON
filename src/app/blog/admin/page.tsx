@@ -209,17 +209,11 @@ export default function BlogAdminPage() {
     <main className="min-h-screen bg-[#0077b6] px-6 py-20 text-white">
       <div className="mx-auto max-w-5xl">
         <AdminHeader
-          section={{
-            en: "Blog Admin",
-            zh: "博客管理",
-          }}
+          section={copy.adminName}
           links={[
             {
               href: "/blog",
-              label: {
-                en: "View public blog",
-                zh: "查看公开博客",
-              },
+              label: copy.viewPublicBlog,
               muted: true,
             },
           ]}

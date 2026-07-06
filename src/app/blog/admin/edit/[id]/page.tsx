@@ -170,17 +170,11 @@ export default function AdminEditBlogPostPage() {
     <main className="min-h-screen bg-[#0077b6] px-6 py-20 text-white">
       <div className="mx-auto max-w-3xl">
         <AdminHeader
-          section={{
-            en: "Blog Admin",
-            zh: "博客管理",
-          }}
+          section={copy.adminName}
           links={[
             {
               href: "/blog/admin",
-              label: {
-                en: "Back to Blog Admin",
-                zh: "返回博客管理",
-              },
+              label: copy.backToBlogAdmin,
               muted: true,
             },
           ]}
