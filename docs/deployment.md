@@ -168,6 +168,8 @@ backups/
 
 The Raspberry Pi is a good future backup node, but it should not be the primary production server for this app. Keep production on the VPS and use the Pi for offsite redundancy.
 
+For backup and restore procedures, see [Backup and Restore](backup.md).
+
 ## 7. Domain and HTTPS plan
 
 Follow-up steps:
@@ -276,7 +278,6 @@ Do not expose MySQL to the public internet. The MySQL service has no host port m
 
 Recommended follow-up phases:
 
-- `41D`: Add backup scripts and uploads volume docs.
 - `41E`: Oracle VPS deployment rehearsal.
 - `41F`: Domain, Cloudflare DNS, Nginx, HTTPS.
 - `42A`: Raspberry Pi backup automation.
