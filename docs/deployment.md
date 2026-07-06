@@ -64,6 +64,7 @@ Create the production `.env` from `.env.example`. Never commit `.env`, and never
 | `DATABASE_USER` | MySQL user used by the app runtime Prisma adapter. |
 | `DATABASE_PASSWORD` | MySQL password used by the app runtime Prisma adapter. |
 | `DATABASE_NAME` | MySQL database name used by the app runtime Prisma adapter. |
+| `MYSQL_ROOT_PASSWORD` | Root password for the MySQL container in production Docker Compose. |
 | `ADMIN_PASSWORD` | The single admin login password for the current MVP. |
 | `ADMIN_SESSION_SECRET` | HMAC signing secret for HttpOnly admin session cookies. |
 
@@ -71,6 +72,8 @@ Important notes:
 
 - `DATABASE_URL` is for Prisma CLI and migration commands.
 - `DATABASE_HOST`, `DATABASE_PORT`, `DATABASE_USER`, `DATABASE_PASSWORD`, and `DATABASE_NAME` are used by the app runtime Prisma adapter.
+- For `docker-compose.prod.yml`, set `DATABASE_HOST` to `mysql`.
+- For `docker-compose.prod.yml`, set `DATABASE_URL` to use the internal MySQL host, for example `mysql://<db_user>:<db_password>@mysql:3306/<db_name>`.
 - `ADMIN_PASSWORD` is currently the only admin login password.
 - `ADMIN_SESSION_SECRET` must be generated fresh for production.
 - Do not reuse local development values.
@@ -204,11 +207,75 @@ Server preparation checklist:
 - Configure daily MySQL and uploads backups.
 - Verify public pages, admin login, uploads, logout, and backup restore basics.
 
-## 9. Next steps
+## 9. Production Docker Compose deployment
+
+Production Docker assets:
+
+- `Dockerfile`: builds the Next.js app with `npm ci`, runs `npx prisma generate`, runs `npm run build`, and starts with `npm run start`.
+- `.dockerignore`: keeps local dependencies, build output, Git metadata, `.env` files, compose files, and local `public/uploads` content out of the Docker build context.
+- `docker-compose.prod.yml`: runs the `app` and `mysql` services on an internal Docker network.
+
+The production compose file intentionally does not include Nginx or HTTPS yet. That belongs to the later `41F` phase.
+
+Initial deployment flow:
+
+1. Copy `.env.example` to `.env`.
+2. Fill in production secrets.
+3. For Docker Compose, set `DATABASE_HOST` to `mysql`.
+4. For Docker Compose, set `DATABASE_URL` to use `@mysql:3306`.
+5. Build the production image.
+6. Start MySQL and the app.
+7. Run Prisma migrations.
+8. Verify the app at `http://server-ip:3000`.
+9. Confirm `mysql_data` and `uploads_data` exist and are backed up.
+
+Example commands:
+
+```powershell
+docker compose -f docker-compose.prod.yml build
+docker compose -f docker-compose.prod.yml up -d
+docker compose -f docker-compose.prod.yml ps
+docker compose -f docker-compose.prod.yml logs -f app
+docker compose -f docker-compose.prod.yml exec app npx prisma migrate deploy
+```
+
+If the app container is not ready yet, run migrations after MySQL is healthy with:
+
+```powershell
+docker compose -f docker-compose.prod.yml run --rm app npx prisma migrate deploy
+```
+
+Persistent storage:
+
+- `mysql_data` is mounted to `/var/lib/mysql`.
+- `uploads_data` is mounted to `/app/public/uploads`.
+
+The photos upload API writes uploaded images below:
+
+```text
+public/uploads/photos
+```
+
+Inside the production app container, that resolves under:
+
+```text
+/app/public/uploads/photos
+```
+
+If `uploads_data` is not mounted, uploaded images can be lost when the app container is rebuilt or replaced. If `mysql_data` is not mounted, database data can be lost when the MySQL container is replaced.
+
+During the initial test phase, the app service publishes:
+
+```text
+3000:3000
+```
+
+Do not expose MySQL to the public internet. The MySQL service has no host port mapping and is reachable by the app through the internal Docker network as `mysql`.
+
+## 10. Next steps
 
 Recommended follow-up phases:
 
-- `41C`: Add production Dockerfile and docker-compose.
 - `41D`: Add backup scripts and uploads volume docs.
 - `41E`: Oracle VPS deployment rehearsal.
 - `41F`: Domain, Cloudflare DNS, Nginx, HTTPS.

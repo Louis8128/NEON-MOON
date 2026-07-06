@@ -1,0 +1,14 @@
+node_modules
+.next
+.git
+.env
+.env.*
+public/uploads
+npm-debug.log
+Dockerfile
+docker-compose*.yml
+
+.vercel
+coverage
+*.tsbuildinfo
+.DS_Store
