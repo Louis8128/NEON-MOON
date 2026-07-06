@@ -2,8 +2,8 @@
 
 import type { ChangeEvent, FormEvent } from "react";
 import { useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
+import AdminHeader from "@/components/AdminHeader";
 import {
   readJsonResponse,
   redirectIfUnauthorized,
@@ -65,28 +65,21 @@ export default function PhotoUploadPage() {
   return (
     <main className="min-h-screen bg-[#0077b6] px-6 py-20 text-white">
       <div className="mx-auto max-w-3xl">
-        <div className="flex flex-wrap gap-3">
-          <Link
-            href="/admin"
-            className="text-sm font-semibold text-[#caf0f8] transition hover:text-white"
-          >
-            ← Back to Admin Dashboard
-          </Link>
-
-          <Link
-            href="/photos/admin"
-            className="text-sm font-semibold text-[#caf0f8]/80 transition hover:text-white"
-          >
-            Back to Photos Admin
-          </Link>
-
-          <Link
-            href="/photos"
-            className="text-sm font-semibold text-[#caf0f8]/80 transition hover:text-white"
-          >
-            View public gallery
-          </Link>
-        </div>
+        <AdminHeader
+          section="Photos Admin"
+          links={[
+            {
+              href: "/photos/admin",
+              label: "Back to Photos Admin",
+              muted: true,
+            },
+            {
+              href: "/photos",
+              label: "View public gallery",
+              muted: true,
+            },
+          ]}
+        />
 
         <div className="mt-10">
           <p className="text-xs font-semibold uppercase tracking-[0.4em] text-[#caf0f8]">

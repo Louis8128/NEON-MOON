@@ -1,4 +1,5 @@
 import Link from "next/link";
+import AdminHeader from "@/components/AdminHeader";
 
 const adminCards = [
   {
@@ -28,12 +29,17 @@ export default function AdminDashboardPage() {
   return (
     <main className="min-h-screen bg-[#0077b6] px-6 py-20 text-white">
       <section className="mx-auto max-w-6xl">
-        <Link
-          href="/"
-          className="text-sm font-semibold text-[#caf0f8] transition hover:text-white"
-        >
-          ← Back to Home
-        </Link>
+        <AdminHeader
+          section="Dashboard"
+          showDashboardLink={false}
+          links={[
+            {
+              href: "/",
+              label: "← Back to Home",
+              muted: true,
+            },
+          ]}
+        />
 
         {/* Admin dashboard header. */}
         {/* 统一后台入口页面标题。 */}
@@ -49,19 +55,6 @@ export default function AdminDashboardPage() {
           <p className="mt-5 max-w-2xl text-lg leading-8 text-[#eaf8ff]">
             A private entry point for managing blog posts, media collections,
             and photography uploads.
-          </p>
-        </div>
-
-        {/* Temporary security notice. */}
-        {/* 当前后台仍然使用临时密码系统，正式上线前需要升级。 */}
-        <div className="mt-8 rounded-3xl border border-amber-400/30 bg-amber-400/10 p-5 text-sm leading-7 text-amber-100">
-          <p className="font-semibold text-amber-200">
-            Development-stage admin area
-          </p>
-          <p className="mt-2 text-amber-50/90">
-            These admin pages still use the temporary password-based protection.
-            Before public deployment, this should be upgraded to a unified login
-            system with protected sessions.
           </p>
         </div>
 

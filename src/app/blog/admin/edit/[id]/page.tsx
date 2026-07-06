@@ -2,8 +2,8 @@
 
 import type { FormEvent } from "react";
 import { useCallback, useEffect, useState } from "react";
-import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
+import AdminHeader from "@/components/AdminHeader";
 import {
   readJsonResponse,
   redirectIfUnauthorized,
@@ -165,23 +165,16 @@ export default function AdminEditBlogPostPage() {
   return (
     <main className="min-h-screen bg-[#0077b6] px-6 py-20 text-white">
       <div className="mx-auto max-w-3xl">
-        <div className="flex flex-wrap gap-3">
-          {" "}
-          <Link
-            href="/admin"
-            className="text-sm font-semibold text-[#caf0f8] transition hover:text-white"
-          >
-            {" "}
-            ← Back to Admin Dashboard{" "}
-          </Link>{" "}
-          <Link
-            href="/blog/admin"
-            className="text-sm font-semibold text-[#caf0f8]/80 transition hover:text-white"
-          >
-            {" "}
-            Back to Blog Admin{" "}
-          </Link>{" "}
-        </div>
+        <AdminHeader
+          section="Blog Admin"
+          links={[
+            {
+              href: "/blog/admin",
+              label: "Back to Blog Admin",
+              muted: true,
+            },
+          ]}
+        />
 
         <div className="mt-10">
           <p className="text-xs font-semibold uppercase tracking-[0.4em] text-[#caf0f8]">

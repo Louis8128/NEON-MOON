@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
+import AdminHeader from "@/components/AdminHeader";
 import {
   readJsonResponse,
   redirectIfUnauthorized,
@@ -181,23 +182,16 @@ export default function MediaAdminPage() {
   return (
     <main className="min-h-screen bg-[#0077b6] px-6 py-20 text-white">
       <div className="mx-auto max-w-5xl">
-        <div className="flex flex-wrap gap-3">
-          {" "}
-          <Link
-            href="/admin"
-            className="text-sm font-semibold text-[#caf0f8] transition hover:text-white"
-          >
-            {" "}
-            ← Back to Admin Dashboard{" "}
-          </Link>{" "}
-          <Link
-            href="/media"
-            className="text-sm font-semibold text-[#caf0f8]/80 transition hover:text-white"
-          >
-            {" "}
-            View public media{" "}
-          </Link>{" "}
-        </div>
+        <AdminHeader
+          section="Media Admin"
+          links={[
+            {
+              href: "/media",
+              label: "View public media",
+              muted: true,
+            },
+          ]}
+        />
 
         <div className="mt-10">
           <p className="text-xs font-semibold uppercase tracking-[0.4em] text-[#caf0f8]">
