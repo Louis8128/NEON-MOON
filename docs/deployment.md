@@ -209,6 +209,8 @@ Server preparation checklist:
 - Configure daily MySQL and uploads backups.
 - Verify public pages, admin login, uploads, logout, and backup restore basics.
 
+For Oracle VPS deployment rehearsal, see [Oracle VPS Deployment Rehearsal](oracle-vps-deployment.md).
+
 ## 9. Production Docker Compose deployment
 
 Production Docker assets:
@@ -278,6 +280,5 @@ Do not expose MySQL to the public internet. The MySQL service has no host port m
 
 Recommended follow-up phases:
 
-- `41E`: Oracle VPS deployment rehearsal.
 - `41F`: Domain, Cloudflare DNS, Nginx, HTTPS.
 - `42A`: Raspberry Pi backup automation.
