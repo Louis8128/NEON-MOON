@@ -7,9 +7,12 @@ import MediaListContent, {
 import { prisma } from "@/lib/prisma";
 
 export const metadata: Metadata = {
-  title: "Media | NEON MOON",
+  title: "Media",
   description:
     "Films, music, books, anime, games, and other works I like, with short notes from the time.",
+  alternates: {
+    canonical: "/media",
+  },
 };
 
 type MediaPageProps = {

@@ -57,8 +57,11 @@ export async function generateMetadata({
 
   if (!Number.isInteger(mediaItemId) || mediaItemId <= 0) {
     return {
-      title: "Media | NEON MOON",
+      title: "Media",
       description: "Media notes from NEON MOON.",
+      alternates: {
+        canonical: "/media",
+      },
     };
   }
 
@@ -74,14 +77,20 @@ export async function generateMetadata({
 
   if (!mediaItem) {
     return {
-      title: "Media | NEON MOON",
+      title: "Media",
       description: "Media notes from NEON MOON.",
+      alternates: {
+        canonical: "/media",
+      },
     };
   }
 
   return {
-    title: `${mediaItem.title} | NEON MOON`,
+    title: mediaItem.title,
     description: mediaItem.note ?? "A media note from NEON MOON.",
+    alternates: {
+      canonical: `/media/${id}`,
+    },
   };
 }
 

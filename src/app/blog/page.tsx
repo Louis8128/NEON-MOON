@@ -7,9 +7,12 @@ import { prisma } from "@/lib/prisma";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Blog | NEON MOON",
+  title: "Blog",
   description:
     "Life notes, essays, travel notes, and project updates from NEON MOON.",
+  alternates: {
+    canonical: "/blog",
+  },
 };
 
 export default async function BlogPage() {

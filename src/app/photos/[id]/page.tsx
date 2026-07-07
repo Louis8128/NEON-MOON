@@ -31,8 +31,11 @@ export async function generateMetadata({
 
   if (!Number.isInteger(photoId) || photoId <= 0) {
     return {
-      title: "Photos | NEON MOON",
+      title: "Photos",
       description: "Photos from NEON MOON.",
+      alternates: {
+        canonical: "/photos",
+      },
     };
   }
 
@@ -49,16 +52,22 @@ export async function generateMetadata({
 
   if (!photo) {
     return {
-      title: "Photos | NEON MOON",
+      title: "Photos",
       description: "Photos from NEON MOON.",
+      alternates: {
+        canonical: "/photos",
+      },
     };
   }
 
   return {
-    title: `${photo.title} | NEON MOON`,
+    title: photo.title,
     description:
       photo.description ??
       (photo.location ? `A photo from ${photo.location}.` : "A photo from NEON MOON."),
+    alternates: {
+      canonical: `/photos/${id}`,
+    },
   };
 }
 

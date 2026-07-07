@@ -58,6 +58,7 @@ Create the production `.env` from `.env.example`. Never commit `.env`, and never
 | Variable | Purpose |
 | --- | --- |
 | `NODE_ENV` | Set to `production` for production runtime behavior. |
+| `NEXT_PUBLIC_SITE_URL` | Public origin used for metadata, Open Graph, sitemap, robots, RSS, and manifest links. |
 | `DATABASE_URL` | Used by Prisma CLI and migrations. |
 | `DATABASE_HOST` | MySQL host used by the app runtime Prisma adapter. |
 | `DATABASE_PORT` | MySQL port used by the app runtime Prisma adapter. |
@@ -71,6 +72,7 @@ Create the production `.env` from `.env.example`. Never commit `.env`, and never
 Important notes:
 
 - `DATABASE_URL` is for Prisma CLI and migration commands.
+- `NEXT_PUBLIC_SITE_URL` should be set to the final public origin, for example `https://your-domain.example`. During server testing it can temporarily point to the test origin, but update it before a real public launch.
 - `DATABASE_HOST`, `DATABASE_PORT`, `DATABASE_USER`, `DATABASE_PASSWORD`, and `DATABASE_NAME` are used by the app runtime Prisma adapter.
 - For `docker-compose.prod.yml`, set `DATABASE_HOST` to `mysql`.
 - For `docker-compose.prod.yml`, set `DATABASE_URL` to use the internal MySQL host, for example `mysql://<db_user>:<db_password>@mysql:3306/<db_name>`.

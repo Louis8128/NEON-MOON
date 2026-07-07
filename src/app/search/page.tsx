@@ -10,9 +10,12 @@ import { prisma } from "@/lib/prisma";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Search | NEON MOON",
+  title: "Search",
   description:
     "Search writing, media notes, photos, and remembered details across NEON MOON.",
+  alternates: {
+    canonical: "/search",
+  },
 };
 
 type SearchPageProps = {

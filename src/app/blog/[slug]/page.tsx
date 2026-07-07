@@ -31,14 +31,20 @@ export async function generateMetadata({
 
   if (!post || !post.published) {
     return {
-      title: "Blog | NEON MOON",
+      title: "Blog",
       description: "Writing and notes from NEON MOON.",
+      alternates: {
+        canonical: "/blog",
+      },
     };
   }
 
   return {
-    title: `${post.title} | NEON MOON`,
+    title: post.title,
     description: post.excerpt ?? "A blog post from NEON MOON.",
+    alternates: {
+      canonical: `/blog/${slug}`,
+    },
   };
 }
 
