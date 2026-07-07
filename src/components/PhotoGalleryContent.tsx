@@ -37,9 +37,11 @@ export default function PhotoGalleryContent({
             {t.photos.title}
           </h1>
 
-          <p className="max-w-2xl text-lg leading-8 text-[#eaf8ff]">
-            {t.photos.description}
-          </p>
+          {t.photos.description ? (
+            <p className="max-w-2xl text-lg leading-8 text-[#eaf8ff]">
+              {t.photos.description}
+            </p>
+          ) : null}
         </div>
 
         {photos.length === 0 ? (

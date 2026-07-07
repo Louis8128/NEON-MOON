@@ -63,7 +63,6 @@ type AboutTranslations = {
   interestsIntro: string;
   interests: string[];
   quoteTitle: string;
-  quoteIntro: string;
   quote: string;
   quoteAuthor: string;
 };
@@ -454,9 +453,9 @@ export const translations: Record<Locale, TranslationDictionary> = {
     },
     home: {
       eyebrow: "NEON MOON",
-      title: "Welcome to my personal site — Neon Moon",
+      title: "Welcome to Neon Moon",
       description:
-        "A quiet digital space for writing, media notes, photos, and small experiments.",
+        "A quiet island in the online ocean, where I keep writing, photos, media notes, and small thoughts that grow slowly over time.",
     },
     about: {
       eyebrow: "About NEON MOON",
@@ -657,8 +656,6 @@ export const translations: Record<Locale, TranslationDictionary> = {
         "Literature / novels",
       ],
       quoteTitle: "Motto",
-      quoteIntro:
-        "A sentence for the site, less slogan and more operating principle.",
       quote:
         "Where my will leads, I move forward — stronger after every setback.",
       quoteAuthor: "Sun Yat-sen",
@@ -921,7 +918,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       eyebrow: "Blog",
       title: "Notes, essays, and development logs",
       description:
-        "A personal writing space for technical notes, reflections, music thoughts, and project updates.",
+        "A personal writing space for life reflections, travel notes, and project updates.",
       posts: "Posts",
       latestPosts: "Latest posts",
       publishedPosts: "Published posts",
@@ -930,7 +927,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       backToBlog: "← Back to Blog",
       noPostsYet: "No posts yet.",
       noPostsDescription:
-        "Add posts to the database and they will appear here.",
+        "New posts will appear here once they are added.",
       blogPost: "Blog Post",
       postedOn: "Posted on",
       updatedOn: "Updated on",
@@ -941,7 +938,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       mediaCollection: "Media Collection",
       title: "Movies, music, books, anime, and games",
       description:
-        "A personal archive of media that shaped my taste, memory, and creative references.",
+        "A place to share films, music, books, anime, games, and other works I like, along with short notes on how they felt at the time.",
       categories: {
         all: "All",
         music: "Music",
@@ -976,8 +973,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       gallery: "Gallery",
       photoGallery: "Photo Gallery",
       title: "Visual notes from places, days, and small moments",
-      description:
-        "A personal photo archive loaded from the MySQL database through Prisma.",
+      description: "",
       photoDetail: "Photo Detail",
       location: "Location",
       takenAt: "Taken at",
@@ -988,7 +984,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       backToGallery: "← Back to Gallery",
       noPhotosYet: "No photos yet.",
       noPhotosDescription:
-        "Add photo records to the database and they will appear here.",
+        "New photos will appear here once they are added.",
     },
     search: {
       eyebrow: "Search",
@@ -1054,9 +1050,9 @@ export const translations: Record<Locale, TranslationDictionary> = {
     },
     home: {
       eyebrow: "NEON MOON",
-      title: "欢迎来到我的生活网站 - Neon Moon",
+      title: "欢迎来到 Neon Moon",
       description:
-        "这里会成为我的个人数字空间，用来记录博客、媒体收藏、照片和一些想法。",
+        "网络海洋里的一座宁静小岛，安静存放我的文章、照片、媒体收藏和一些慢慢生长的想法。",
     },
     about: {
       eyebrow: "关于 NEON MOON",
@@ -1253,7 +1249,6 @@ export const translations: Record<Locale, TranslationDictionary> = {
         "文学小说",
       ],
       quoteTitle: "座右铭",
-      quoteIntro: "给这个网站的一句话，与其说是口号，不如说是工作原则。",
       quote: "吾志所向，一往无前；愈挫愈奋，再接再厉。",
       quoteAuthor: "孙文",
     },
@@ -1482,7 +1477,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
     blog: {
       eyebrow: "博客",
       title: "笔记、随笔和开发日志",
-      description: "记录技术笔记、生活思考、音乐想法和项目更新的个人写作空间。",
+      description: "记录生活思考、旅游见闻和项目更新的个人写作空间。",
       posts: "文章",
       latestPosts: "最新文章",
       publishedPosts: "已发布文章",
@@ -1490,7 +1485,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       readMore: "阅读更多",
       backToBlog: "← 返回博客",
       noPostsYet: "暂无文章。",
-      noPostsDescription: "添加文章到数据库后，它们会显示在这里。",
+      noPostsDescription: "新的文章会在添加后出现在这里。",
       blogPost: "博客文章",
       postedOn: "发布于",
       updatedOn: "更新于",
@@ -1500,7 +1495,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       collection: "收藏",
       mediaCollection: "媒体收藏",
       title: "电影、音乐、书籍、动画和游戏",
-      description: "一个记录审美、记忆和创作参考的个人媒体档案。",
+      description: "分享我喜欢的电影、音乐、书籍、动画、游戏和其他作品，也记录一些当时的感受。",
       categories: {
         all: "全部",
         music: "音乐",
@@ -1534,7 +1529,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       gallery: "图库",
       photoGallery: "照片图库",
       title: "来自地点、日子和小瞬间的视觉记录",
-      description: "通过 Prisma 从 MySQL 数据库读取的个人照片档案。",
+      description: "",
       photoDetail: "照片详情",
       location: "地点",
       takenAt: "拍摄时间",
@@ -1544,7 +1539,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       backToPhotos: "← 返回相册",
       backToGallery: "← 返回图库",
       noPhotosYet: "暂无照片。",
-      noPhotosDescription: "添加照片记录到数据库后，它们会显示在这里。",
+      noPhotosDescription: "新的照片会在添加后出现在这里。",
     },
     search: {
       eyebrow: "搜索",

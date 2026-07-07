@@ -12,7 +12,7 @@ const dropdownPanelClass =
   "invisible absolute left-0 top-full z-50 min-w-full pt-2 opacity-0 transition group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100";
 
 const dropdownLinkClass =
-  "block rounded-xl px-4 py-2 text-center text-sm text-[#eaf8ff] transition hover:bg-[#caf0f8]/15 hover:text-white whitespace-nowrap";
+  "block rounded-xl px-3 py-2 text-center text-sm text-[#eaf8ff] transition hover:bg-[#caf0f8]/15 hover:text-white whitespace-nowrap";
 
 export default function SiteHeader() {
   const { t } = useI18n();
@@ -41,13 +41,6 @@ export default function SiteHeader() {
               {t.nav.home}
             </Link>
 
-            <Link
-              href="/about"
-              className={navItemClass}
-            >
-              {t.nav.about}
-            </Link>
-
             <div className="group relative">
               <button
                 type="button"
@@ -60,7 +53,7 @@ export default function SiteHeader() {
               </button>
 
               <div className={dropdownPanelClass}>
-                <div className="min-w-[76px] rounded-2xl border border-[#caf0f8]/20 bg-[#023e8a]/95 p-1.5 shadow-xl shadow-[#03045e]/30">
+                <div className="min-w-[76px] rounded-2xl border border-[#caf0f8]/20 bg-[#023e8a]/95 p-1 shadow-xl shadow-[#03045e]/30">
                   <Link
                     href="/blog"
                     className={dropdownLinkClass}
@@ -83,7 +76,7 @@ export default function SiteHeader() {
               </button>
 
               <div className={dropdownPanelClass}>
-                <div className="min-w-[76px] rounded-2xl border border-[#caf0f8]/20 bg-[#023e8a]/95 p-1.5 shadow-xl shadow-[#03045e]/30">
+                <div className="min-w-[76px] rounded-2xl border border-[#caf0f8]/20 bg-[#023e8a]/95 p-1 shadow-xl shadow-[#03045e]/30">
                   <Link
                     href="/media"
                     className={dropdownLinkClass}
@@ -106,7 +99,7 @@ export default function SiteHeader() {
               </button>
 
               <div className={dropdownPanelClass}>
-                <div className="min-w-[76px] rounded-2xl border border-[#caf0f8]/20 bg-[#023e8a]/95 p-1.5 shadow-xl shadow-[#03045e]/30">
+                <div className="min-w-[76px] rounded-2xl border border-[#caf0f8]/20 bg-[#023e8a]/95 p-1 shadow-xl shadow-[#03045e]/30">
                   <Link
                     href="/photos"
                     className={dropdownLinkClass}
@@ -116,6 +109,13 @@ export default function SiteHeader() {
                 </div>
               </div>
             </div>
+
+            <Link
+              href="/about"
+              className={navItemClass}
+            >
+              {t.nav.about}
+            </Link>
           </div>
         </div>
 

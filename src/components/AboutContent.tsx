@@ -209,7 +209,7 @@ export default function AboutContent() {
             </div>
           </Panel>
 
-          <Panel title={about.quoteTitle} description={about.quoteIntro}>
+          <Panel title={about.quoteTitle}>
             <blockquote className="rounded-2xl border border-[#caf0f8]/20 bg-[#0077b6]/35 p-6">
               <p className="text-2xl font-semibold leading-10 text-white">
                 &ldquo;{about.quote}&rdquo;
@@ -250,16 +250,18 @@ function Panel({
   children,
 }: {
   title: string;
-  description: string;
+  description?: string;
   children: ReactNode;
 }) {
   return (
     <section className="rounded-2xl border border-[#caf0f8]/25 bg-[#023e8a]/75 p-6 shadow-xl shadow-[#023e8a]/20">
       <div className="mb-6">
         <h2 className="text-2xl font-bold text-white">{title}</h2>
-        <p className="mt-2 text-sm leading-6 text-[#caf0f8]/80">
-          {description}
-        </p>
+        {description ? (
+          <p className="mt-2 text-sm leading-6 text-[#caf0f8]/80">
+            {description}
+          </p>
+        ) : null}
       </div>
       {children}
     </section>
