@@ -310,11 +310,6 @@ type TranslationDictionary = {
     eyebrow: string;
     title: string;
     description: string;
-    cards: {
-      blog: FeatureCardTranslation;
-      media: FeatureCardTranslation;
-      photos: FeatureCardTranslation;
-    };
   };
   about: AboutTranslations;
   adminDashboard: {
@@ -458,24 +453,10 @@ export const translations: Record<Locale, TranslationDictionary> = {
       },
     },
     home: {
-      eyebrow: "Personal Full-Stack Website",
-      title: "Welcome to My Life Site - Neon Moon",
+      eyebrow: "NEON MOON",
+      title: "Welcome to my personal site — Neon Moon",
       description:
-        "This website will become my personal digital space for blogs, media collections, photos, music, books, movies, anime, and games.",
-      cards: {
-        blog: {
-          title: "Blog",
-          description: "Technical notes and life reflections.",
-        },
-        media: {
-          title: "Media Library",
-          description: "Music, books, movies, anime, and games I like.",
-        },
-        photos: {
-          title: "Photos",
-          description: "Travel and daily-life photography.",
-        },
-      },
+        "A quiet digital space for writing, media notes, photos, and small experiments.",
     },
     about: {
       eyebrow: "About NEON MOON",
@@ -1072,24 +1053,10 @@ export const translations: Record<Locale, TranslationDictionary> = {
       },
     },
     home: {
-      eyebrow: "个人全栈网站",
+      eyebrow: "NEON MOON",
       title: "欢迎来到我的生活网站 - Neon Moon",
       description:
-        "这里会成为我的个人数字空间，用来记录博客、媒体收藏、照片、音乐、书籍、电影、动画和游戏。",
-      cards: {
-        blog: {
-          title: "博客",
-          description: "技术笔记和生活随想。",
-        },
-        media: {
-          title: "媒体收藏",
-          description: "我喜欢的音乐、书籍、电影、动画和游戏。",
-        },
-        photos: {
-          title: "相册",
-          description: "旅行和日常生活摄影。",
-        },
-      },
+        "这里会成为我的个人数字空间，用来记录博客、媒体收藏、照片和一些想法。",
     },
     about: {
       eyebrow: "关于 NEON MOON",

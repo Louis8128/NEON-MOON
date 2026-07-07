@@ -19,7 +19,7 @@ export default function SiteHeader() {
   const pathname = usePathname();
   const isHomePage = pathname === "/";
   const headerClassName = isHomePage
-    ? "fixed left-0 right-0 top-0 z-50 border-b border-[#caf0f8]/15 bg-[#023e8a]/70 backdrop-blur-md"
+    ? "fixed left-0 right-0 top-0 z-50 border-b border-white/10 bg-[#023e8a]/35 backdrop-blur-md"
     : "sticky top-0 z-50 border-b border-[#caf0f8]/20 bg-[#023e8a]/95 backdrop-blur";
 
   return (

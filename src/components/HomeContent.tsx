@@ -1,22 +1,6 @@
 "use client";
 
-import Link from "next/link";
 import { useI18n } from "@/components/I18nProvider";
-
-const featureCards = [
-  {
-    key: "blog",
-    href: "/blog",
-  },
-  {
-    key: "media",
-    href: "/media",
-  },
-  {
-    key: "photos",
-    href: "/photos",
-  },
-] as const;
 
 export default function HomeContent() {
   const { t } = useI18n();
@@ -24,40 +8,21 @@ export default function HomeContent() {
   return (
     <main className="min-h-screen bg-[#0077b6] text-white">
       <section className="relative min-h-screen overflow-hidden bg-[#0077b6] bg-[url('/images/home-ocean-sky.png')] bg-cover bg-center">
-        <div className="absolute inset-0 bg-[#023e8a]/45" />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#023e8a]/35 via-[#0077b6]/20 to-[#0077b6]/70" />
+        <div className="absolute inset-0 bg-black/10" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#023e8a]/10 via-transparent to-[#0077b6]/18" />
 
-        <div className="relative mx-auto flex min-h-screen max-w-5xl flex-col justify-center px-6 pb-20 pt-32">
-          <p className="mb-4 text-sm font-medium uppercase tracking-[0.3em] text-[#caf0f8]">
+        <div className="relative mx-auto flex min-h-screen max-w-6xl flex-col justify-center px-6 pb-16 pt-32 sm:px-8 lg:px-10">
+          <p className="mb-4 text-sm font-medium uppercase tracking-[0.28em] text-[#caf0f8] drop-shadow-[0_2px_8px_rgba(2,62,138,0.55)]">
             {t.home.eyebrow}
           </p>
 
-          <h1 className="mb-6 max-w-4xl text-5xl font-bold tracking-tight drop-shadow-lg">
+          <h1 className="max-w-4xl text-4xl font-bold tracking-tight text-white drop-shadow-[0_4px_18px_rgba(3,4,94,0.55)] sm:text-5xl lg:text-6xl">
             {t.home.title}
           </h1>
 
-          <p className="max-w-2xl text-lg leading-8 text-[#eaf8ff] drop-shadow">
+          <p className="mt-6 max-w-2xl text-base leading-8 text-[#eaf8ff] drop-shadow-[0_3px_12px_rgba(3,4,94,0.55)] sm:text-lg">
             {t.home.description}
           </p>
-
-          <div className="mt-10 grid gap-4 sm:grid-cols-3">
-            {featureCards.map((card) => {
-              const cardText = t.home.cards[card.key];
-
-              return (
-                <Link
-                  key={card.href}
-                  href={card.href}
-                  className="rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/75 p-5 shadow-xl shadow-[#023e8a]/20 backdrop-blur-sm transition hover:-translate-y-1 hover:border-[#caf0f8]/70 hover:bg-[#023e8a]/85"
-                >
-                  <h2 className="text-xl font-semibold">{cardText.title}</h2>
-                  <p className="mt-2 text-sm text-[#caf0f8]/85">
-                    {cardText.description}
-                  </p>
-                </Link>
-              );
-            })}
-          </div>
         </div>
       </section>
     </main>
