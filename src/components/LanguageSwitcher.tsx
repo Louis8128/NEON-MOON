@@ -15,7 +15,7 @@ export default function LanguageSwitcher() {
   return (
     <div
       aria-label={t.language.label}
-      className="inline-flex rounded-full border border-[#caf0f8]/30 bg-[#023e8a]/45 p-1"
+      className="inline-flex h-10 w-full min-w-[132px] rounded-full border border-[#caf0f8]/30 bg-[#023e8a]/45 p-1 sm:w-auto"
     >
       {localeOptions.map((targetLocale) => {
         const isActive = locale === targetLocale;
@@ -28,8 +28,8 @@ export default function LanguageSwitcher() {
             onClick={() => setLocale(targetLocale)}
             className={
               isActive
-                ? "rounded-full bg-[#caf0f8] px-3 py-1.5 text-xs font-semibold text-[#023e8a] transition"
-                : "rounded-full px-3 py-1.5 text-xs font-semibold text-[#caf0f8] transition hover:bg-[#caf0f8]/15 hover:text-white"
+                ? "flex h-8 min-w-[58px] items-center justify-center rounded-full bg-[#caf0f8] px-3 text-xs font-semibold text-[#023e8a] transition whitespace-nowrap"
+                : "flex h-8 min-w-[58px] items-center justify-center rounded-full px-3 text-xs font-semibold text-[#caf0f8] transition hover:bg-[#caf0f8]/15 hover:text-white whitespace-nowrap"
             }
           >
             {getLocaleLabel(targetLocale)}

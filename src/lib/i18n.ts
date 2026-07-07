@@ -9,6 +9,65 @@ type FeatureCardTranslation = {
   description: string;
 };
 
+type AboutMetricTranslation = {
+  label: string;
+  value: string;
+};
+
+type AboutEducationTranslation = {
+  school: string;
+  program: string;
+  years: string;
+  note: string;
+};
+
+type AboutSkillTranslation = {
+  name: string;
+  level: number;
+  note: string;
+};
+
+type AboutSkillGroupTranslation = {
+  title: string;
+  items: AboutSkillTranslation[];
+};
+
+type AboutLanguageTranslation = {
+  name: string;
+  level: string;
+  note: string;
+  value: number;
+};
+
+type AboutTranslations = {
+  eyebrow: string;
+  heroTitle: string;
+  heroSubtitle: string;
+  avatarLabel: string;
+  profileName: string;
+  profileLine: string;
+  identity: AboutMetricTranslation[];
+  introEyebrow: string;
+  introTitle: string;
+  introParagraphs: string[];
+  educationTitle: string;
+  educationIntro: string;
+  education: AboutEducationTranslation[];
+  skillsTitle: string;
+  skillsIntro: string;
+  skillGroups: AboutSkillGroupTranslation[];
+  languagesTitle: string;
+  languagesIntro: string;
+  languages: AboutLanguageTranslation[];
+  interestsTitle: string;
+  interestsIntro: string;
+  interests: string[];
+  quoteTitle: string;
+  quoteIntro: string;
+  quote: string;
+  quoteAuthor: string;
+};
+
 type MediaCategoryTranslations = {
   all: string;
   music: string;
@@ -226,6 +285,7 @@ type AdminLoginTranslations = {
 type TranslationDictionary = {
   nav: {
     home: string;
+    about: string;
     blog: string;
     posts: string;
     media: string;
@@ -256,6 +316,7 @@ type TranslationDictionary = {
       photos: FeatureCardTranslation;
     };
   };
+  about: AboutTranslations;
   adminDashboard: {
     eyebrow: string;
     title: string;
@@ -361,6 +422,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
   en: {
     nav: {
       home: "Home",
+      about: "About",
       blog: "Blog",
       posts: "Posts",
       media: "Media",
@@ -414,6 +476,211 @@ export const translations: Record<Locale, TranslationDictionary> = {
           description: "Travel and daily-life photography.",
         },
       },
+    },
+    about: {
+      eyebrow: "About NEON MOON",
+      heroTitle: "NEON MOON",
+      heroSubtitle:
+        "A personal archive for writing, photos, media, and small technical experiments.",
+      avatarLabel: "Avatar image for Louis",
+      profileName: "Louis",
+      profileLine:
+        "Building a small personal site slowly, honestly, and for the long run.",
+      identity: [
+        {
+          label: "Name",
+          value: "Louis",
+        },
+        {
+          label: "Role",
+          value: "IT student and personal site builder",
+        },
+      ],
+      introEyebrow: "Personal space",
+      introTitle: "A quiet page for a site that is still growing.",
+      introParagraphs: [
+        "I am building this site as a long-term personal space for writing, media notes, travel photos, and technical experiments.",
+        "NEON MOON does not need to be loud. I want it to be useful, personal, and easy to keep improving over time.",
+      ],
+      educationTitle: "Education",
+      educationIntro:
+        "A compact academic timeline without turning the page into a resume wall.",
+      education: [
+        {
+          school: "University of Queensland",
+          program: "Master of Information Technology",
+          years: "2026 -",
+          note: "Current graduate study focused on software, systems, and practical full-stack development.",
+        },
+        {
+          school: "McMaster University",
+          program: "Finance-focused commerce background, Minor in Mathematics",
+          years: "Completed",
+          note: "A finance-focused commerce background with a mathematics minor, which shaped how I think about data, products, and research questions.",
+        },
+      ],
+      skillsTitle: "Skills",
+      skillsIntro:
+        "A practical toolkit for building this site. The bars show comfort, not perfection.",
+      skillGroups: [
+        {
+          title: "Frontend",
+          items: [
+            {
+              name: "HTML",
+              level: 70,
+              note: "Page structure",
+            },
+            {
+              name: "React",
+              level: 76,
+              note: "Product UI",
+            },
+            {
+              name: "Next.js App Router",
+              level: 74,
+              note: "Routes and data",
+            },
+            {
+              name: "TypeScript",
+              level: 72,
+              note: "Safer code",
+            },
+            {
+              name: "Tailwind CSS",
+              level: 70,
+              note: "Site styling",
+            },
+          ],
+        },
+        {
+          title: "Backend",
+          items: [
+            {
+              name: "Prisma and MySQL",
+              level: 68,
+              note: "Data layer",
+            },
+            {
+              name: "API Routes",
+              level: 66,
+              note: "Server endpoints",
+            },
+            {
+              name: "HttpOnly Cookie auth",
+              level: 62,
+              note: "Admin login",
+            },
+            {
+              name: "CRUD flows",
+              level: 65,
+              note: "CMS basics",
+            },
+          ],
+        },
+        {
+          title: "Programming",
+          items: [
+            {
+              name: "Java",
+              level: 62,
+              note: "Coursework",
+            },
+            {
+              name: "Python",
+              level: 64,
+              note: "Scripts",
+            },
+            {
+              name: "JavaScript",
+              level: 68,
+              note: "Browser logic",
+            },
+            {
+              name: "TypeScript",
+              level: 72,
+              note: "Typed apps",
+            },
+          ],
+        },
+        {
+          title: "Tools",
+          items: [
+            {
+              name: "Git",
+              level: 70,
+              note: "Version control",
+            },
+            {
+              name: "GitHub",
+              level: 68,
+              note: "Repo workflow",
+            },
+            {
+              name: "Docker",
+              level: 60,
+              note: "Deployment",
+            },
+            {
+              name: "Oracle Cloud",
+              level: 52,
+              note: "VPS learning",
+            },
+          ],
+        },
+      ],
+      languagesTitle: "Languages",
+      languagesIntro:
+        "Language ability as actually used: study, reading, writing, and daily communication.",
+      languages: [
+        {
+          name: "Simplified Chinese",
+          level: "Native",
+          note: "Daily thinking and writing",
+          value: 96,
+        },
+        {
+          name: "Traditional Chinese",
+          level: "Reading",
+          note: "Comfortable reading",
+          value: 78,
+        },
+        {
+          name: "English",
+          level: "Study and academic use",
+          note: "Study, research, and projects",
+          value: 86,
+        },
+        {
+          name: "Japanese",
+          level: "Beginner, currently learning",
+          note: "Early-stage study",
+          value: 28,
+        },
+        {
+          name: "French",
+          level: "Beginner, currently learning",
+          note: "Early-stage study",
+          value: 20,
+        },
+      ],
+      interestsTitle: "Interests",
+      interestsIntro:
+        "A smaller list of things I keep coming back to.",
+      interests: [
+        "Photography",
+        "Movies",
+        "Anime",
+        "Games",
+        "History",
+        "Literature / novels",
+      ],
+      quoteTitle: "Motto",
+      quoteIntro:
+        "A sentence for the site, less slogan and more operating principle.",
+      quote:
+        "Where my will leads, I move forward — stronger after every setback.",
+      quoteAuthor: "Sun Yat-sen",
     },
     adminDashboard: {
       eyebrow: "Admin Dashboard",
@@ -769,6 +1036,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
   zh: {
     nav: {
       home: "首页",
+      about: "关于",
       blog: "博客",
       posts: "博客文章",
       media: "媒体收藏",
@@ -822,6 +1090,205 @@ export const translations: Record<Locale, TranslationDictionary> = {
           description: "旅行和日常生活摄影。",
         },
       },
+    },
+    about: {
+      eyebrow: "关于 NEON MOON",
+      heroTitle: "NEON MOON",
+      heroSubtitle:
+        "一个用来存放文章、照片、媒体记录和小型技术实验的个人档案馆。",
+      avatarLabel: "Louis 的头像",
+      profileName: "Louis",
+      profileLine:
+        "慢慢搭建一个小而稳定、能够长期使用的个人网站。",
+      identity: [
+        {
+          label: "名字",
+          value: "Louis",
+        },
+        {
+          label: "身份",
+          value: "IT 学生，正在搭建自己的长期个人网站",
+        },
+      ],
+      introEyebrow: "个人空间",
+      introTitle: "一个仍在慢慢生长的安静页面。",
+      introParagraphs: [
+        "我希望把这个网站做成一个长期使用的个人空间，用来记录文章、媒体笔记、旅行照片和技术实验。",
+        "NEON MOON 不需要很夸张。它只要足够有用、足够个人，并且可以随着时间继续改进。",
+      ],
+      educationTitle: "教育经历",
+      educationIntro: "简洁记录学习背景，不把页面变成过度拥挤的简历墙。",
+      education: [
+        {
+          school: "University of Queensland",
+          program: "Master of Information Technology",
+          years: "2026 -",
+          note: "当前研究生阶段，重点放在软件、系统和实际全栈开发能力上。",
+        },
+        {
+          school: "McMaster University",
+          program: "商科金融方向背景，辅修数学",
+          years: "已完成",
+          note: "商科与金融训练，加上数学辅修背景，影响了我理解数据、产品和研究问题的方式。",
+        },
+      ],
+      skillsTitle: "技能",
+      skillsIntro: "构建这个网站会用到的实用工具箱。进度条表示熟悉度，不代表满分。",
+      skillGroups: [
+        {
+          title: "前端",
+          items: [
+            {
+              name: "HTML",
+              level: 70,
+              note: "页面结构",
+            },
+            {
+              name: "React",
+              level: 76,
+              note: "产品界面",
+            },
+            {
+              name: "Next.js App Router",
+              level: 74,
+              note: "路由与数据",
+            },
+            {
+              name: "TypeScript",
+              level: 72,
+              note: "类型安全",
+            },
+            {
+              name: "Tailwind CSS",
+              level: 70,
+              note: "样式系统",
+            },
+          ],
+        },
+        {
+          title: "后端",
+          items: [
+            {
+              name: "Prisma and MySQL",
+              level: 68,
+              note: "数据层",
+            },
+            {
+              name: "API Routes",
+              level: 66,
+              note: "服务端接口",
+            },
+            {
+              name: "HttpOnly Cookie auth",
+              level: 62,
+              note: "后台登录",
+            },
+            {
+              name: "CRUD flows",
+              level: 65,
+              note: "CMS 基础",
+            },
+          ],
+        },
+        {
+          title: "编程",
+          items: [
+            {
+              name: "Java",
+              level: 62,
+              note: "课程学习",
+            },
+            {
+              name: "Python",
+              level: 64,
+              note: "脚本",
+            },
+            {
+              name: "JavaScript",
+              level: 68,
+              note: "浏览器逻辑",
+            },
+            {
+              name: "TypeScript",
+              level: 72,
+              note: "类型应用",
+            },
+          ],
+        },
+        {
+          title: "工具",
+          items: [
+            {
+              name: "Git",
+              level: 70,
+              note: "版本管理",
+            },
+            {
+              name: "GitHub",
+              level: 68,
+              note: "仓库流程",
+            },
+            {
+              name: "Docker",
+              level: 60,
+              note: "部署",
+            },
+            {
+              name: "Oracle Cloud",
+              level: 52,
+              note: "VPS 学习中",
+            },
+          ],
+        },
+      ],
+      languagesTitle: "语言能力",
+      languagesIntro: "按真实使用场景来描述：学习、阅读、写作和日常沟通。",
+      languages: [
+        {
+          name: "简体中文",
+          level: "母语",
+          note: "日常思考和写作",
+          value: 96,
+        },
+        {
+          name: "繁体中文",
+          level: "阅读",
+          note: "阅读较顺畅",
+          value: 78,
+        },
+        {
+          name: "英文",
+          level: "学习和学术使用",
+          note: "学习、研究和项目",
+          value: 86,
+        },
+        {
+          name: "日语",
+          level: "初学，学习中",
+          note: "初学阶段",
+          value: 28,
+        },
+        {
+          name: "法语",
+          level: "初学，学习中",
+          note: "初学阶段",
+          value: 20,
+        },
+      ],
+      interestsTitle: "兴趣爱好",
+      interestsIntro: "一些我会反复回到的主题。",
+      interests: [
+        "摄影",
+        "电影",
+        "动画",
+        "游戏",
+        "历史",
+        "文学小说",
+      ],
+      quoteTitle: "座右铭",
+      quoteIntro: "给这个网站的一句话，与其说是口号，不如说是工作原则。",
+      quote: "吾志所向，一往无前；愈挫愈奋，再接再厉。",
+      quoteAuthor: "孙文",
     },
     adminDashboard: {
       eyebrow: "后台首页",
