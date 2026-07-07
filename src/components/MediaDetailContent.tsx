@@ -14,7 +14,6 @@ export type MediaDetailItem = {
   rating: number | null;
   note: string | null;
   createdAt: string;
-  updatedAt: string;
 };
 
 function formatDate(dateValue: string, locale: string) {
@@ -117,19 +116,10 @@ export default function MediaDetailContent({
 
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#caf0f8]/65">
-                  {t.media.created}
+                  {t.media.addedToCollection}
                 </p>
                 <p className="mt-2 text-base text-white">
                   {formatDate(mediaItem.createdAt, dateLocale)}
-                </p>
-              </div>
-
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#caf0f8]/65">
-                  {t.media.updated}
-                </p>
-                <p className="mt-2 text-base text-white">
-                  {formatDate(mediaItem.updatedAt, dateLocale)}
                 </p>
               </div>
             </div>

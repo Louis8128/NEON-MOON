@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import SearchContent, {
   type SearchBlogPost,
   type SearchMediaItem,
@@ -7,6 +8,12 @@ import { type MediaCategory } from "@/components/MediaListContent";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Search | NEON MOON",
+  description:
+    "Search writing, media notes, photos, and remembered details across NEON MOON.",
+};
 
 type SearchPageProps = {
   searchParams: Promise<{

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import PhotoDetailContent, {
   type PhotoDetailItem,
@@ -12,6 +13,55 @@ type PhotoDetailPageProps = {
   }>;
 };
 
+function parsePhotoId(id: string) {
+  const photoId = Number(id);
+
+  if (!Number.isInteger(photoId) || photoId <= 0) {
+    notFound();
+  }
+
+  return photoId;
+}
+
+export async function generateMetadata({
+  params,
+}: PhotoDetailPageProps): Promise<Metadata> {
+  const { id } = await params;
+  const photoId = Number(id);
+
+  if (!Number.isInteger(photoId) || photoId <= 0) {
+    return {
+      title: "Photos | NEON MOON",
+      description: "Photos from NEON MOON.",
+    };
+  }
+
+  const photo = await prisma.photo.findUnique({
+    where: {
+      id: photoId,
+    },
+    select: {
+      title: true,
+      location: true,
+      description: true,
+    },
+  });
+
+  if (!photo) {
+    return {
+      title: "Photos | NEON MOON",
+      description: "Photos from NEON MOON.",
+    };
+  }
+
+  return {
+    title: `${photo.title} | NEON MOON`,
+    description:
+      photo.description ??
+      (photo.location ? `A photo from ${photo.location}.` : "A photo from NEON MOON."),
+  };
+}
+
 export default async function PhotoDetailPage({
   params,
 }: PhotoDetailPageProps) {
@@ -19,13 +69,7 @@ export default async function PhotoDetailPage({
   // Example: /photos/3 gives id = "3".
   // 动态路由参数，读取照片 id。
   const { id } = await params;
-  const photoId = Number(id);
-
-  // If the URL id is not a valid number, show 404.
-  // 无效 id 直接显示 404。
-  if (Number.isNaN(photoId)) {
-    notFound();
-  }
+  const photoId = parsePhotoId(id);
 
   // Find one photo record by its primary key.
   // 用数据库主键 id 查询单张照片。

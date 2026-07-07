@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import MediaDetailContent, {
   type MediaDetailItem,
@@ -11,12 +12,18 @@ type MediaDetailPageProps = {
   }>;
 };
 
-async function getMediaItem(id: string) {
+function parseMediaItemId(id: string) {
   const mediaItemId = Number(id);
 
   if (!Number.isInteger(mediaItemId) || mediaItemId <= 0) {
     notFound();
   }
+
+  return mediaItemId;
+}
+
+async function getMediaItem(id: string) {
+  const mediaItemId = parseMediaItemId(id);
 
   const mediaItem = await prisma.mediaItem.findUnique({
     where: {
@@ -32,7 +39,6 @@ async function getMediaItem(id: string) {
       rating: true,
       note: true,
       createdAt: true,
-      updatedAt: true,
     },
   });
 
@@ -41,6 +47,42 @@ async function getMediaItem(id: string) {
   }
 
   return mediaItem;
+}
+
+export async function generateMetadata({
+  params,
+}: MediaDetailPageProps): Promise<Metadata> {
+  const { id } = await params;
+  const mediaItemId = Number(id);
+
+  if (!Number.isInteger(mediaItemId) || mediaItemId <= 0) {
+    return {
+      title: "Media | NEON MOON",
+      description: "Media notes from NEON MOON.",
+    };
+  }
+
+  const mediaItem = await prisma.mediaItem.findUnique({
+    where: {
+      id: mediaItemId,
+    },
+    select: {
+      title: true,
+      note: true,
+    },
+  });
+
+  if (!mediaItem) {
+    return {
+      title: "Media | NEON MOON",
+      description: "Media notes from NEON MOON.",
+    };
+  }
+
+  return {
+    title: `${mediaItem.title} | NEON MOON`,
+    description: mediaItem.note ?? "A media note from NEON MOON.",
+  };
 }
 
 export default async function MediaDetailPage({
@@ -59,7 +101,6 @@ export default async function MediaDetailPage({
     rating: mediaItem.rating,
     note: mediaItem.note,
     createdAt: mediaItem.createdAt.toISOString(),
-    updatedAt: mediaItem.updatedAt.toISOString(),
   };
 
   return <MediaDetailContent mediaItem={serializedMediaItem} />;

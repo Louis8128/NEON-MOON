@@ -134,7 +134,7 @@ export default function SearchContent({
                   {mediaItems.map((item) => (
                     <Link
                       key={item.id}
-                      href={`/media?category=${item.category}`}
+                      href={`/media/${item.id}`}
                       className="rounded-3xl border border-[#caf0f8]/25 bg-[#023e8a]/75 p-5 transition hover:-translate-y-1 hover:border-[#caf0f8]/60"
                     >
                       <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#caf0f8]">
@@ -199,7 +199,7 @@ export default function SearchContent({
                   {photos.map((photo) => (
                     <Link
                       key={photo.id}
-                      href="/photos"
+                      href={`/photos/${photo.id}`}
                       className="rounded-3xl border border-[#caf0f8]/25 bg-[#023e8a]/75 p-5 transition hover:-translate-y-1 hover:border-[#caf0f8]/60"
                     >
                       <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#caf0f8]">

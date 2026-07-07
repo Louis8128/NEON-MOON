@@ -7,7 +7,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "NEON MOON",
   description:
-    "A personal full-stack portfolio website for blogs, media collections, and photography.",
+    "NEON MOON is a quiet personal site for writing, photos, media notes, and slowly growing ideas.",
 };
 
 export default function RootLayout({

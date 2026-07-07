@@ -1,9 +1,16 @@
+import type { Metadata } from "next";
 import MediaListContent, {
   type MediaCategory,
   type MediaFilter,
   type MediaListItem,
 } from "@/components/MediaListContent";
 import { prisma } from "@/lib/prisma";
+
+export const metadata: Metadata = {
+  title: "Media | NEON MOON",
+  description:
+    "Films, music, books, anime, games, and other works I like, with short notes from the time.",
+};
 
 type MediaPageProps = {
   searchParams: Promise<{

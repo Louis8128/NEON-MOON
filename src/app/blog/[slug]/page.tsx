@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import BlogPostContent, {
   type BlogPostDetail,
@@ -11,6 +12,35 @@ type BlogPostPageProps = {
     slug: string;
   }>;
 };
+
+export async function generateMetadata({
+  params,
+}: BlogPostPageProps): Promise<Metadata> {
+  const { slug } = await params;
+
+  const post = await prisma.blogPost.findUnique({
+    where: {
+      slug,
+    },
+    select: {
+      title: true,
+      excerpt: true,
+      published: true,
+    },
+  });
+
+  if (!post || !post.published) {
+    return {
+      title: "Blog | NEON MOON",
+      description: "Writing and notes from NEON MOON.",
+    };
+  }
+
+  return {
+    title: `${post.title} | NEON MOON`,
+    description: post.excerpt ?? "A blog post from NEON MOON.",
+  };
+}
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
   // Read the dynamic route parameter from the URL.

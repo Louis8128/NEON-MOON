@@ -4,7 +4,7 @@ import AboutContent from "@/components/AboutContent";
 export const metadata: Metadata = {
   title: "About | NEON MOON",
   description:
-    "A personal introduction page for NEON MOON, including background, skills, languages, interests, and site sections.",
+    "A quiet introduction to Louis, his background, languages, interests, and the personal site he is building over time.",
 };
 
 export default function AboutPage() {

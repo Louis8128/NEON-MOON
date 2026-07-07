@@ -1,9 +1,16 @@
+import type { Metadata } from "next";
 import PhotoGalleryContent, {
   type PhotoGalleryItem,
 } from "@/components/PhotoGalleryContent";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Photos | NEON MOON",
+  description:
+    "Photos from trips, ordinary days, and small moments worth keeping.",
+};
 
 export default async function PhotosPage() {
   // Query photo records from MySQL through Prisma.

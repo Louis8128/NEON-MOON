@@ -355,8 +355,7 @@ type TranslationDictionary = {
     releaseYear: string;
     rating: string;
     notes: string;
-    created: string;
-    updated: string;
+    addedToCollection: string;
     unknown: string;
     unknownCreator: string;
     releasedIn: string;
@@ -534,17 +533,17 @@ export const translations: Record<Locale, TranslationDictionary> = {
           ],
         },
         {
-          title: "Backend",
+          title: "Site systems",
           items: [
             {
-              name: "Prisma and MySQL",
+              name: "Content systems",
               level: 68,
-              note: "Data layer",
+              note: "Data-backed pages",
             },
             {
-              name: "API Routes",
+              name: "Admin workflows",
               level: 66,
-              note: "Server endpoints",
+              note: "Private tools",
             },
             {
               name: "HttpOnly Cookie auth",
@@ -552,9 +551,9 @@ export const translations: Record<Locale, TranslationDictionary> = {
               note: "Admin login",
             },
             {
-              name: "CRUD flows",
+              name: "Web development",
               level: 65,
-              note: "CMS basics",
+              note: "Practical flows",
             },
           ],
         },
@@ -916,7 +915,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
     },
     blog: {
       eyebrow: "Blog",
-      title: "Notes, essays, and development logs",
+      title: "Life notes, essays, and project updates",
       description:
         "A personal writing space for life reflections, travel notes, and project updates.",
       posts: "Posts",
@@ -951,8 +950,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       releaseYear: "Release Year",
       rating: "Rating",
       notes: "Notes",
-      created: "Created",
-      updated: "Updated",
+      addedToCollection: "Added to collection",
       unknown: "Unknown",
       unknownCreator: "Unknown creator",
       releasedIn: "Released in",
@@ -973,7 +971,8 @@ export const translations: Record<Locale, TranslationDictionary> = {
       gallery: "Gallery",
       photoGallery: "Photo Gallery",
       title: "Visual notes from places, days, and small moments",
-      description: "",
+      description:
+        "Photos from trips, ordinary days, and small moments worth keeping.",
       photoDetail: "Photo Detail",
       location: "Location",
       takenAt: "Taken at",
@@ -995,7 +994,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       button: "Search",
       noQueryTitle: "Enter keywords to search.",
       noQueryDescription:
-        "Try words like moon, Tokyo, music, website, or Interstellar.",
+        "Search by post title, media name, photo location, or any detail you remember.",
       noResultsFound: "No results found",
       tryAnotherKeyword: "Try another keyword.",
       results: "Results",
@@ -1129,17 +1128,17 @@ export const translations: Record<Locale, TranslationDictionary> = {
           ],
         },
         {
-          title: "后端",
+          title: "网站系统",
           items: [
             {
-              name: "Prisma and MySQL",
+              name: "内容管理",
               level: 68,
-              note: "数据层",
+              note: "数据驱动页面",
             },
             {
-              name: "API Routes",
+              name: "后台工作流",
               level: 66,
-              note: "服务端接口",
+              note: "私密工具",
             },
             {
               name: "HttpOnly Cookie auth",
@@ -1147,9 +1146,9 @@ export const translations: Record<Locale, TranslationDictionary> = {
               note: "后台登录",
             },
             {
-              name: "CRUD flows",
+              name: "网页开发",
               level: 65,
-              note: "CMS 基础",
+              note: "实用流程",
             },
           ],
         },
@@ -1476,7 +1475,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
     },
     blog: {
       eyebrow: "博客",
-      title: "笔记、随笔和开发日志",
+      title: "生活记录、随笔和项目更新",
       description: "记录生活思考、旅游见闻和项目更新的个人写作空间。",
       posts: "文章",
       latestPosts: "最新文章",
@@ -1508,8 +1507,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       releaseYear: "发行年份",
       rating: "评分",
       notes: "备注",
-      created: "创建于",
-      updated: "更新于",
+      addedToCollection: "加入收藏",
       unknown: "未知",
       unknownCreator: "未知创作者",
       releasedIn: "发行于",
@@ -1529,7 +1527,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       gallery: "图库",
       photoGallery: "照片图库",
       title: "来自地点、日子和小瞬间的视觉记录",
-      description: "",
+      description: "一些来自旅途、日常和小瞬间的照片记录。",
       photoDetail: "照片详情",
       location: "地点",
       takenAt: "拍摄时间",
@@ -1549,7 +1547,8 @@ export const translations: Record<Locale, TranslationDictionary> = {
       placeholder: "输入关键词",
       button: "搜索",
       noQueryTitle: "输入关键词开始搜索。",
-      noQueryDescription: "可以尝试 moon、Tokyo、music、website 或 Interstellar。",
+      noQueryDescription:
+        "可以搜索文章标题、媒体名称、照片地点，或者你记得的关键词。",
       noResultsFound: "没有找到结果",
       tryAnotherKeyword: "请尝试其他关键词。",
       results: "搜索结果",

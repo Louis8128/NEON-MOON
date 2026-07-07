@@ -1,9 +1,16 @@
+import type { Metadata } from "next";
 import BlogListContent, {
   type BlogListPost,
 } from "@/components/BlogListContent";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Blog | NEON MOON",
+  description:
+    "Life notes, essays, travel notes, and project updates from NEON MOON.",
+};
 
 export default async function BlogPage() {
   // Query only published blog posts for the public blog page.
