@@ -2,11 +2,17 @@
 
 import Link from "next/link";
 import { useI18n } from "@/components/I18nProvider";
+import {
+  type BlogCategorySummary,
+  type BlogTagSummary,
+} from "@/lib/blogTypes";
 
 export type BlogPostDetail = {
   title: string;
   excerpt: string | null;
   content: string;
+  category: BlogCategorySummary | null;
+  tags: BlogTagSummary[];
   createdAt: string;
   updatedAt: string;
 };
@@ -46,6 +52,29 @@ export default function BlogPostContent({ post }: { post: BlogPostDetail }) {
               {t.blog.updatedOn} {formatDate(post.updatedAt, dateLocale)}
             </p>
           </div>
+
+          {(post.category || post.tags.length > 0) && (
+            <div className="mt-6 flex flex-wrap gap-2 text-xs font-semibold text-[#caf0f8]">
+              {post.category && (
+                <Link
+                  href={`/blog/categories/${post.category.slug}`}
+                  className="rounded-full border border-[#caf0f8]/35 px-3 py-1 transition hover:bg-[#caf0f8] hover:text-[#023e8a]"
+                >
+                  {t.blog.category}: {post.category.name}
+                </Link>
+              )}
+
+              {post.tags.map((tag) => (
+                <Link
+                  key={tag.slug}
+                  href={`/blog/tags/${tag.slug}`}
+                  className="rounded-full border border-[#caf0f8]/25 px-3 py-1 text-[#eaf8ff] transition hover:bg-[#caf0f8] hover:text-[#023e8a]"
+                >
+                  #{tag.name}
+                </Link>
+              ))}
+            </div>
+          )}
 
           {post.excerpt && (
             <p className="mt-8 text-xl leading-8 text-[#eaf8ff]">

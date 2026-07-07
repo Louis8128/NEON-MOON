@@ -56,10 +56,30 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
               { title: { contains: query } },
               { excerpt: { contains: query } },
               { content: { contains: query } },
+              { category: { name: { contains: query } } },
+              { tags: { some: { tag: { name: { contains: query } } } } },
             ],
           },
           orderBy: {
             createdAt: "desc",
+          },
+          include: {
+            category: {
+              select: {
+                name: true,
+                slug: true,
+              },
+            },
+            tags: {
+              select: {
+                tag: {
+                  select: {
+                    name: true,
+                    slug: true,
+                  },
+                },
+              },
+            },
           },
         }),
 
@@ -90,6 +110,8 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
     title: post.title,
     slug: post.slug,
     excerpt: post.excerpt,
+    category: post.category,
+    tags: post.tags.map((item) => item.tag),
   }));
   const serializedPhotos: SearchPhoto[] = photos.map((photo) => ({
     id: photo.id,

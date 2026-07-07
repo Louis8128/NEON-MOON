@@ -24,6 +24,24 @@ function getStaticRoutes(now: Date): MetadataRoute.Sitemap {
       priority: 0.8,
     },
     {
+      url: getAbsoluteUrl("/blog/archive"),
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.6,
+    },
+    {
+      url: getAbsoluteUrl("/blog/categories"),
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.6,
+    },
+    {
+      url: getAbsoluteUrl("/blog/tags"),
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.6,
+    },
+    {
       url: getAbsoluteUrl("/media"),
       lastModified: now,
       changeFrequency: "weekly",
@@ -57,41 +75,78 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
     const { prisma } = await import("@/lib/prisma");
 
-    const [blogPosts, mediaItems, photos] = await Promise.all([
-      prisma.blogPost.findMany({
-        where: {
-          published: true,
-        },
-        select: {
-          slug: true,
-          updatedAt: true,
-          createdAt: true,
-        },
-        orderBy: {
-          updatedAt: "desc",
-        },
-      }),
-      prisma.mediaItem.findMany({
-        select: {
-          id: true,
-          updatedAt: true,
-          createdAt: true,
-        },
-        orderBy: {
-          updatedAt: "desc",
-        },
-      }),
-      prisma.photo.findMany({
-        select: {
-          id: true,
-          updatedAt: true,
-          createdAt: true,
-        },
-        orderBy: {
-          updatedAt: "desc",
-        },
-      }),
-    ]);
+    const [blogPosts, blogCategories, blogTags, mediaItems, photos] =
+      await Promise.all([
+        prisma.blogPost.findMany({
+          where: {
+            published: true,
+          },
+          select: {
+            slug: true,
+            updatedAt: true,
+            createdAt: true,
+          },
+          orderBy: {
+            updatedAt: "desc",
+          },
+        }),
+        prisma.blogCategory.findMany({
+          where: {
+            posts: {
+              some: {
+                published: true,
+              },
+            },
+          },
+          select: {
+            slug: true,
+            updatedAt: true,
+            createdAt: true,
+          },
+          orderBy: {
+            updatedAt: "desc",
+          },
+        }),
+        prisma.blogTag.findMany({
+          where: {
+            posts: {
+              some: {
+                post: {
+                  published: true,
+                },
+              },
+            },
+          },
+          select: {
+            slug: true,
+            updatedAt: true,
+            createdAt: true,
+          },
+          orderBy: {
+            updatedAt: "desc",
+          },
+        }),
+        prisma.mediaItem.findMany({
+          select: {
+            id: true,
+            updatedAt: true,
+            createdAt: true,
+          },
+          orderBy: {
+            updatedAt: "desc",
+          },
+        }),
+        prisma.photo.findMany({
+          select: {
+            id: true,
+            updatedAt: true,
+            createdAt: true,
+          },
+          orderBy: {
+            updatedAt: "desc",
+          },
+        }),
+      ]);
 
     return [
       ...staticRoutes,
@@ -100,6 +155,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         lastModified: post.updatedAt ?? post.createdAt,
         changeFrequency: "monthly" as const,
         priority: 0.7,
+      })),
+      ...blogCategories.map((category) => ({
+        url: getAbsoluteUrl(`/blog/categories/${category.slug}`),
+        lastModified: category.updatedAt ?? category.createdAt,
+        changeFrequency: "monthly" as const,
+        priority: 0.5,
+      })),
+      ...blogTags.map((tag) => ({
+        url: getAbsoluteUrl(`/blog/tags/${tag.slug}`),
+        lastModified: tag.updatedAt ?? tag.createdAt,
+        changeFrequency: "monthly" as const,
+        priority: 0.5,
       })),
       ...mediaItems.map((item) => ({
         url: getAbsoluteUrl(`/media/${item.id}`),

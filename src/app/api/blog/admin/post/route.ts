@@ -35,6 +35,22 @@ export async function POST(request: NextRequest) {
         content: true,
         coverImageUrl: true,
         published: true,
+        category: {
+          select: {
+            name: true,
+            slug: true,
+          },
+        },
+        tags: {
+          select: {
+            tag: {
+              select: {
+                name: true,
+                slug: true,
+              },
+            },
+          },
+        },
         createdAt: true,
         updatedAt: true,
       },

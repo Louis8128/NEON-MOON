@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import BlogListContent, {
   type BlogListPost,
 } from "@/components/BlogListContent";
+import { blogPostCardSelect, serializeBlogPostCard } from "@/lib/blogPublic";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
@@ -26,15 +27,10 @@ export default async function BlogPage() {
     orderBy: {
       createdAt: "desc",
     },
+    select: blogPostCardSelect,
   });
 
-  const serializedPosts: BlogListPost[] = posts.map((post) => ({
-    id: post.id,
-    title: post.title,
-    slug: post.slug,
-    excerpt: post.excerpt,
-    createdAt: post.createdAt.toISOString(),
-  }));
+  const serializedPosts: BlogListPost[] = posts.map(serializeBlogPostCard);
 
   return <BlogListContent posts={serializedPosts} />;
 }

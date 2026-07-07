@@ -61,6 +61,24 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     where: {
       slug,
     },
+    include: {
+      category: {
+        select: {
+          name: true,
+          slug: true,
+        },
+      },
+      tags: {
+        select: {
+          tag: {
+            select: {
+              name: true,
+              slug: true,
+            },
+          },
+        },
+      },
+    },
   });
 
   // Do not show missing or unpublished posts to public visitors.
@@ -74,6 +92,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     title: post.title,
     excerpt: post.excerpt,
     content: post.content,
+    category: post.category,
+    tags: post.tags.map((item) => item.tag),
     createdAt: post.createdAt.toISOString(),
     updatedAt: post.updatedAt.toISOString(),
   };

@@ -10,6 +10,15 @@ import {
   redirectIfUnauthorized,
 } from "@/lib/adminClientAuth";
 
+type BlogTagSummary = {
+  name: string;
+  slug: string;
+};
+
+function formatTagsText(tags: BlogTagSummary[]) {
+  return tags.map((tag) => tag.name).join(", ");
+}
+
 type BlogPostDetail = {
   id: number;
   title: string;
@@ -18,6 +27,13 @@ type BlogPostDetail = {
   content: string;
   coverImageUrl: string | null;
   published: boolean;
+  category: {
+    name: string;
+    slug: string;
+  } | null;
+  tags: {
+    tag: BlogTagSummary;
+  }[];
   createdAt: string;
   updatedAt: string;
 };
@@ -37,6 +53,8 @@ export default function AdminEditBlogPostPage() {
   const [excerpt, setExcerpt] = useState("");
   const [content, setContent] = useState("");
   const [coverImageUrl, setCoverImageUrl] = useState("");
+  const [categoryName, setCategoryName] = useState("");
+  const [tagsText, setTagsText] = useState("");
   const [published, setPublished] = useState(true);
 
   const [error, setError] = useState("");
@@ -83,6 +101,8 @@ export default function AdminEditBlogPostPage() {
         setExcerpt(loadedPost.excerpt ?? "");
         setContent(loadedPost.content);
         setCoverImageUrl(loadedPost.coverImageUrl ?? "");
+        setCategoryName(loadedPost.category?.name ?? "");
+        setTagsText(formatTagsText(loadedPost.tags.map((item) => item.tag)));
         setPublished(loadedPost.published);
       } finally {
         setIsLoadingPost(false);
@@ -131,6 +151,8 @@ export default function AdminEditBlogPostPage() {
           excerpt,
           content,
           coverImageUrl,
+          categoryName,
+          tagsText,
           published,
         }),
       });
@@ -266,6 +288,43 @@ export default function AdminEditBlogPostPage() {
                 placeholder={copy.excerptPlaceholder}
                 className="mt-2 w-full resize-none rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/45 px-4 py-3 text-sm leading-6 text-white placeholder:text-[#caf0f8]/60 outline-none transition focus:border-[#caf0f8]"
               />
+            </div>
+
+            <div>
+              <label
+                htmlFor="categoryName"
+                className="block text-sm font-semibold text-[#f8fcff]"
+              >
+                {copy.category}
+              </label>
+              <input
+                id="categoryName"
+                type="text"
+                value={categoryName}
+                onChange={(event) => setCategoryName(event.target.value)}
+                placeholder={copy.categoryPlaceholder}
+                className="mt-2 w-full rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/45 px-4 py-3 text-sm text-white placeholder:text-[#caf0f8]/60 outline-none transition focus:border-[#caf0f8]"
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="tagsText"
+                className="block text-sm font-semibold text-[#f8fcff]"
+              >
+                {copy.tags}
+              </label>
+              <input
+                id="tagsText"
+                type="text"
+                value={tagsText}
+                onChange={(event) => setTagsText(event.target.value)}
+                placeholder={copy.tagsPlaceholder}
+                className="mt-2 w-full rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/45 px-4 py-3 text-sm text-white placeholder:text-[#caf0f8]/60 outline-none transition focus:border-[#caf0f8]"
+              />
+              <p className="mt-2 text-xs text-[#caf0f8]/65">
+                {copy.tagsHelp}
+              </p>
             </div>
 
             <div>

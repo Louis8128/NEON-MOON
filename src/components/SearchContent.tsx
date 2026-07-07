@@ -3,6 +3,10 @@
 import Link from "next/link";
 import { useI18n } from "@/components/I18nProvider";
 import { type MediaCategory } from "@/components/MediaListContent";
+import {
+  type BlogCategorySummary,
+  type BlogTagSummary,
+} from "@/lib/blogTypes";
 
 export type SearchMediaItem = {
   id: number;
@@ -17,6 +21,8 @@ export type SearchBlogPost = {
   title: string;
   slug: string;
   excerpt: string | null;
+  category: BlogCategorySummary | null;
+  tags: BlogTagSummary[];
 };
 
 export type SearchPhoto = {
@@ -182,6 +188,23 @@ export default function SearchContent({
                         <p className="mt-3 text-sm leading-6 text-[#eaf8ff]">
                           {post.excerpt}
                         </p>
+                      )}
+                      {(post.category || post.tags.length > 0) && (
+                        <div className="mt-4 flex flex-wrap gap-2 text-xs font-semibold text-[#caf0f8]">
+                          {post.category && (
+                            <span className="rounded-full border border-[#caf0f8]/30 px-3 py-1">
+                              {post.category.name}
+                            </span>
+                          )}
+                          {post.tags.slice(0, 3).map((tag) => (
+                            <span
+                              key={tag.slug}
+                              className="rounded-full border border-[#caf0f8]/20 px-3 py-1 text-[#eaf8ff]"
+                            >
+                              #{tag.name}
+                            </span>
+                          ))}
+                        </div>
                       )}
                     </Link>
                   ))}

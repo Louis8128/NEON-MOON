@@ -2,14 +2,9 @@
 
 import Link from "next/link";
 import { useI18n } from "@/components/I18nProvider";
+import { type BlogPostCard } from "@/lib/blogTypes";
 
-export type BlogListPost = {
-  id: number;
-  title: string;
-  slug: string;
-  excerpt: string | null;
-  createdAt: string;
-};
+export type BlogListPost = BlogPostCard;
 
 function formatDate(dateValue: string, locale: string) {
   return new Date(dateValue).toLocaleDateString(locale);
@@ -61,6 +56,29 @@ export default function BlogListContent({ posts }: { posts: BlogListPost[] }) {
                     {t.blog.postedOn} {formatDate(post.createdAt, dateLocale)}
                   </span>
                 </div>
+
+                {(post.category || post.tags.length > 0) && (
+                  <div className="mb-4 flex flex-wrap gap-2 text-xs font-semibold text-[#caf0f8]">
+                    {post.category && (
+                      <Link
+                        href={`/blog/categories/${post.category.slug}`}
+                        className="rounded-full border border-[#caf0f8]/35 px-3 py-1 transition hover:bg-[#caf0f8] hover:text-[#023e8a]"
+                      >
+                        {t.blog.category}: {post.category.name}
+                      </Link>
+                    )}
+
+                    {post.tags.slice(0, 4).map((tag) => (
+                      <Link
+                        key={tag.slug}
+                        href={`/blog/tags/${tag.slug}`}
+                        className="rounded-full border border-[#caf0f8]/25 px-3 py-1 text-[#eaf8ff] transition hover:bg-[#caf0f8] hover:text-[#023e8a]"
+                      >
+                        #{tag.name}
+                      </Link>
+                    ))}
+                  </div>
+                )}
 
                 <h2 className="text-2xl font-bold text-white">{post.title}</h2>
 

@@ -53,12 +53,30 @@ export default function SiteHeader() {
               </button>
 
               <div className={dropdownPanelClass}>
-                <div className="min-w-[76px] rounded-2xl border border-[#caf0f8]/20 bg-[#023e8a]/95 p-1 shadow-xl shadow-[#03045e]/30">
+                <div className="min-w-[9.5rem] rounded-2xl border border-[#caf0f8]/20 bg-[#023e8a]/95 p-1 shadow-xl shadow-[#03045e]/30">
                   <Link
                     href="/blog"
                     className={dropdownLinkClass}
                   >
                     {t.nav.posts}
+                  </Link>
+                  <Link
+                    href="/blog/archive"
+                    className={dropdownLinkClass}
+                  >
+                    {t.nav.archives}
+                  </Link>
+                  <Link
+                    href="/blog/categories"
+                    className={dropdownLinkClass}
+                  >
+                    {t.nav.categories}
+                  </Link>
+                  <Link
+                    href="/blog/tags"
+                    className={dropdownLinkClass}
+                  >
+                    {t.nav.tags}
                   </Link>
                 </div>
               </div>

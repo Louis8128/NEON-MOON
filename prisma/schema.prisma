@@ -1,4 +1,3 @@
-prisma id="f4ny9o"
 generator client {
   // Generates the Prisma Client used by the Next.js app and scripts.
   // 生成 TypeScript 可用的 Prisma Client。
@@ -62,8 +61,49 @@ model BlogPost {
   // 发布状态，未发布文章不公开显示。
   published     Boolean  @default(false)
 
+  categoryId    Int?
+  category      BlogCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  tags          BlogPostTag[]
+
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+
+  @@index([categoryId])
+}
+
+// Optional one-to-many category for blog posts.
+// 博客分类：一篇文章最多属于一个分类。
+model BlogCategory {
+  id        Int        @id @default(autoincrement())
+  name      String
+  slug      String     @unique
+  posts     BlogPost[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+// Reusable tags for blog posts.
+// 博客标签：一篇文章可以有多个标签。
+model BlogTag {
+  id        Int           @id @default(autoincrement())
+  name      String
+  slug      String        @unique
+  posts     BlogPostTag[]
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+}
+
+// Join table for the BlogPost <-> BlogTag many-to-many relationship.
+// 博客文章和标签的多对多关联表。
+model BlogPostTag {
+  postId Int
+  tagId  Int
+
+  post BlogPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  tag  BlogTag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([postId, tagId])
+  @@index([tagId])
 }
 
 // Stores photo records shown on /photos.

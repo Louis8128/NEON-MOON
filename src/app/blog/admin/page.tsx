@@ -16,6 +16,16 @@ type BlogPostSummary = {
   title: string;
   slug: string;
   published: boolean;
+  category: {
+    name: string;
+    slug: string;
+  } | null;
+  tags: {
+    tag: {
+      name: string;
+      slug: string;
+    };
+  }[];
   createdAt: string;
   updatedAt: string;
 };
@@ -330,6 +340,23 @@ export default function BlogAdminPage() {
                             dateLocale,
                           )}
                         </p>
+                        {(post.category || post.tags.length > 0) && (
+                          <div className="mt-2 flex flex-wrap gap-2 text-[11px] font-semibold text-[#caf0f8]">
+                            {post.category && (
+                              <span className="rounded-full border border-[#caf0f8]/30 px-2 py-1">
+                                {copy.category}: {post.category.name}
+                              </span>
+                            )}
+                            {post.tags.slice(0, 3).map((item) => (
+                              <span
+                                key={item.tag.slug}
+                                className="rounded-full border border-[#caf0f8]/20 px-2 py-1 text-[#eaf8ff]"
+                              >
+                                #{item.tag.name}
+                              </span>
+                            ))}
+                          </div>
+                        )}
                       </div>
 
                       <div className="col-span-3 truncate text-[#caf0f8]/80">

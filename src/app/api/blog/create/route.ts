@@ -1,12 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { isValidAdminSessionRequest } from "@/lib/adminAuth";
+import {
+  BlogTaxonomyError,
+  getOrCreateBlogCategory,
+  getOrCreateBlogTags,
+} from "@/lib/blogTaxonomy";
 import { prisma } from "@/lib/prisma";
+import { isValidSlug, normalizeSlug } from "@/lib/slug";
 
 export const runtime = "nodejs";
-
-function isValidSlug(slug: string) {
-  return /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug);
-}
 
 export async function POST(request: NextRequest) {
   if (!(await isValidAdminSessionRequest(request))) {
@@ -22,6 +24,8 @@ export async function POST(request: NextRequest) {
     const content = body.content;
     const coverImageUrl = body.coverImageUrl;
     const published = body.published;
+    const categoryName = body.categoryName;
+    const tagsText = body.tagsText;
 
     if (typeof title !== "string" || title.trim().length === 0) {
       return NextResponse.json(
@@ -34,13 +38,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Slug is required." }, { status: 400 });
     }
 
-    const normalizedSlug = slug.trim().toLowerCase();
+    const normalizedSlug = normalizeSlug(slug);
 
     if (!isValidSlug(normalizedSlug)) {
       return NextResponse.json(
         {
           error:
-            "Slug can only use lowercase letters, numbers, and hyphens, for example: my-first-post.",
+            "Slug can only use letters, numbers, and hyphens, for example: my-first-post.",
         },
         { status: 400 },
       );
@@ -66,6 +70,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const [category, tags] = await Promise.all([
+      getOrCreateBlogCategory({
+        name: categoryName,
+      }),
+      getOrCreateBlogTags(tagsText),
+    ]);
+
     const post = await prisma.blogPost.create({
       data: {
         title: title.trim(),
@@ -78,6 +89,19 @@ export async function POST(request: NextRequest) {
             ? coverImageUrl.trim()
             : null,
         published: Boolean(published),
+        categoryId: category?.id ?? null,
+        tags:
+          tags.length > 0
+            ? {
+                create: tags.map((tag) => ({
+                  tag: {
+                    connect: {
+                      id: tag.id,
+                    },
+                  },
+                })),
+              }
+            : undefined,
       },
     });
 
@@ -93,6 +117,10 @@ export async function POST(request: NextRequest) {
       { status: 201 },
     );
   } catch (error) {
+    if (error instanceof BlogTaxonomyError) {
+      return NextResponse.json({ error: error.message }, { status: 409 });
+    }
+
     console.error("Failed to create blog post:", error);
 
     return NextResponse.json(

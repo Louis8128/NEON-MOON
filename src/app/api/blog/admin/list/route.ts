@@ -21,6 +21,22 @@ export async function POST(request: NextRequest) {
         title: true,
         slug: true,
         published: true,
+        category: {
+          select: {
+            name: true,
+            slug: true,
+          },
+        },
+        tags: {
+          select: {
+            tag: {
+              select: {
+                name: true,
+                slug: true,
+              },
+            },
+          },
+        },
         createdAt: true,
         updatedAt: true,
       },

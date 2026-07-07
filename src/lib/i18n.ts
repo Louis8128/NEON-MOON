@@ -115,6 +115,11 @@ type BlogAdminTranslations = {
   slugPlaceholder: string;
   excerpt: string;
   excerptPlaceholder: string;
+  category: string;
+  categoryPlaceholder: string;
+  tags: string;
+  tagsPlaceholder: string;
+  tagsHelp: string;
   coverImageUrl: string;
   coverImageUrlPlaceholder: string;
   content: string;
@@ -287,6 +292,9 @@ type TranslationDictionary = {
     about: string;
     blog: string;
     posts: string;
+    archives: string;
+    categories: string;
+    tags: string;
     media: string;
     collection: string;
     photos: string;
@@ -332,7 +340,21 @@ type TranslationDictionary = {
     eyebrow: string;
     title: string;
     description: string;
+    post: string;
     posts: string;
+    archives: string;
+    archiveDescription: string;
+    categories: string;
+    categoriesDescription: string;
+    tags: string;
+    tagsDescription: string;
+    category: string;
+    categoryDetailDescription: string;
+    tagDetailDescription: string;
+    noPostsInCategory: string;
+    noPostsWithTag: string;
+    backToCategories: string;
+    backToTags: string;
     latestPosts: string;
     publishedPosts: string;
     published: string;
@@ -417,7 +439,10 @@ export const translations: Record<Locale, TranslationDictionary> = {
       home: "Home",
       about: "About",
       blog: "Blog",
-      posts: "Posts",
+      posts: "All Posts",
+      archives: "Archives",
+      categories: "Categories",
+      tags: "Tags",
       media: "Media",
       collection: "Collection",
       photos: "Photos",
@@ -735,12 +760,17 @@ export const translations: Record<Locale, TranslationDictionary> = {
       slugPlaceholder: "Enter a URL slug",
       excerpt: "Excerpt",
       excerptPlaceholder: "Write a short summary...",
+      category: "Category",
+      categoryPlaceholder: "Optional category, for example Travel",
+      tags: "Tags",
+      tagsPlaceholder: "travel, japan, thoughts",
+      tagsHelp: "Separate tags with commas.",
       coverImageUrl: "Cover image URL",
       coverImageUrlPlaceholder: "Optional cover image path",
       content: "Content",
       contentPlaceholder: "Write the full blog content here...",
       slugCreateHelp:
-        "Used in the URL. Use lowercase letters, numbers, and hyphens only.",
+        "Used in the URL. Use letters, numbers, and hyphens only.",
       slugEditHelp:
         "Used in the URL. Changing it will also change the public blog post URL.",
       publishImmediately: "Publish this post immediately",
@@ -918,7 +948,21 @@ export const translations: Record<Locale, TranslationDictionary> = {
       title: "Life notes, essays, and project updates",
       description:
         "A personal writing space for life reflections, travel notes, and project updates.",
+      post: "post",
       posts: "Posts",
+      archives: "Archives",
+      archiveDescription: "Published posts organized by time.",
+      categories: "Categories",
+      categoriesDescription: "Browse posts by category.",
+      tags: "Tags",
+      tagsDescription: "Browse posts by tag.",
+      category: "Category",
+      categoryDetailDescription: "Published posts in this category.",
+      tagDetailDescription: "Published posts with this tag.",
+      noPostsInCategory: "No posts in this category yet.",
+      noPostsWithTag: "No posts with this tag yet.",
+      backToCategories: "← Back to Categories",
+      backToTags: "← Back to Tags",
       latestPosts: "Latest posts",
       publishedPosts: "Published posts",
       published: "Published",
@@ -1014,7 +1058,10 @@ export const translations: Record<Locale, TranslationDictionary> = {
       home: "首页",
       about: "关于",
       blog: "博客",
-      posts: "博客文章",
+      posts: "全部文章",
+      archives: "归档",
+      categories: "分类",
+      tags: "标签",
       media: "媒体收藏",
       collection: "收藏列表",
       photos: "相册",
@@ -1319,11 +1366,16 @@ export const translations: Record<Locale, TranslationDictionary> = {
       slugPlaceholder: "输入 URL slug",
       excerpt: "摘要",
       excerptPlaceholder: "写一段简短摘要...",
+      category: "分类",
+      categoryPlaceholder: "可选分类，例如：旅行",
+      tags: "标签",
+      tagsPlaceholder: "旅行，日本，随笔",
+      tagsHelp: "多个标签用逗号分隔。",
       coverImageUrl: "封面图片链接",
       coverImageUrlPlaceholder: "可选的封面图片路径",
       content: "正文",
       contentPlaceholder: "在这里写完整博客正文...",
-      slugCreateHelp: "用于 URL。请只使用小写字母、数字和连字符。",
+      slugCreateHelp: "用于 URL。请使用字母、数字和连字符。",
       slugEditHelp: "用于 URL。修改后，公开博客文章 URL 也会改变。",
       publishImmediately: "立即发布这篇文章",
       publishThisPost: "发布这篇文章",
@@ -1477,7 +1529,21 @@ export const translations: Record<Locale, TranslationDictionary> = {
       eyebrow: "博客",
       title: "生活记录、随笔和项目更新",
       description: "记录生活思考、旅游见闻和项目更新的个人写作空间。",
+      post: "篇文章",
       posts: "文章",
+      archives: "归档",
+      archiveDescription: "按时间整理已经公开的文章。",
+      categories: "分类",
+      categoriesDescription: "按分类浏览文章。",
+      tags: "标签",
+      tagsDescription: "按标签浏览文章。",
+      category: "分类",
+      categoryDetailDescription: "这个分类下已经公开的文章。",
+      tagDetailDescription: "带有这个标签的公开文章。",
+      noPostsInCategory: "这个分类下暂时没有公开文章。",
+      noPostsWithTag: "这个标签下暂时没有公开文章。",
+      backToCategories: "← 返回分类",
+      backToTags: "← 返回标签",
       latestPosts: "最新文章",
       publishedPosts: "已发布文章",
       published: "已发布",

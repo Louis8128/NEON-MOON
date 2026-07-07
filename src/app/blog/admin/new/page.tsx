@@ -9,16 +9,7 @@ import {
   readJsonResponse,
   redirectIfUnauthorized,
 } from "@/lib/adminClientAuth";
-
-function generateSlugFromTitle(title: string) {
-  return title
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9\s-]/g, "")
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-")
-    .replace(/^-|-$/g, "");
-}
+import { normalizeSlug } from "@/lib/slug";
 
 export default function AdminNewBlogPostPage() {
   const router = useRouter();
@@ -30,6 +21,8 @@ export default function AdminNewBlogPostPage() {
   const [excerpt, setExcerpt] = useState("");
   const [content, setContent] = useState("");
   const [coverImageUrl, setCoverImageUrl] = useState("");
+  const [categoryName, setCategoryName] = useState("");
+  const [tagsText, setTagsText] = useState("");
   const [published, setPublished] = useState(true);
 
   const [error, setError] = useState("");
@@ -39,7 +32,7 @@ export default function AdminNewBlogPostPage() {
     setTitle(value);
 
     if (!slug) {
-      setSlug(generateSlugFromTitle(value));
+      setSlug(normalizeSlug(value));
     }
   }
 
@@ -62,6 +55,8 @@ export default function AdminNewBlogPostPage() {
           excerpt,
           content,
           coverImageUrl,
+          categoryName,
+          tagsText,
           published,
         }),
       });
@@ -182,6 +177,43 @@ export default function AdminNewBlogPostPage() {
                 placeholder={copy.excerptPlaceholder}
                 className="mt-2 w-full resize-none rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/45 px-4 py-3 text-sm leading-6 text-white placeholder:text-[#caf0f8]/60 outline-none transition focus:border-[#caf0f8]"
               />
+            </div>
+
+            <div>
+              <label
+                htmlFor="categoryName"
+                className="block text-sm font-semibold text-[#f8fcff]"
+              >
+                {copy.category}
+              </label>
+              <input
+                id="categoryName"
+                type="text"
+                value={categoryName}
+                onChange={(event) => setCategoryName(event.target.value)}
+                placeholder={copy.categoryPlaceholder}
+                className="mt-2 w-full rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/45 px-4 py-3 text-sm text-white placeholder:text-[#caf0f8]/60 outline-none transition focus:border-[#caf0f8]"
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="tagsText"
+                className="block text-sm font-semibold text-[#f8fcff]"
+              >
+                {copy.tags}
+              </label>
+              <input
+                id="tagsText"
+                type="text"
+                value={tagsText}
+                onChange={(event) => setTagsText(event.target.value)}
+                placeholder={copy.tagsPlaceholder}
+                className="mt-2 w-full rounded-2xl border border-[#caf0f8]/30 bg-[#023e8a]/45 px-4 py-3 text-sm text-white placeholder:text-[#caf0f8]/60 outline-none transition focus:border-[#caf0f8]"
+              />
+              <p className="mt-2 text-xs text-[#caf0f8]/65">
+                {copy.tagsHelp}
+              </p>
             </div>
 
             <div>
