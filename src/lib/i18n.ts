@@ -315,8 +315,12 @@ type TranslationDictionary = {
   adminLogin: AdminLoginTranslations;
   home: {
     eyebrow: string;
+    poemLine: string;
+    poemSource: string;
+    poemTranslation: string;
     title: string;
     description: string;
+    scrollLabel: string;
   };
   about: AboutTranslations;
   adminDashboard: {
@@ -477,9 +481,14 @@ export const translations: Record<Locale, TranslationDictionary> = {
     },
     home: {
       eyebrow: "NEON MOON",
+      poemLine: "春江潮水连海平，海上明月共潮生。",
+      poemSource: "— Zhang Ruoxu, A Moonlit Night on the Spring River",
+      poemTranslation:
+        "The spring tide meets the sea; above the sea, the bright moon rises with the tide.",
       title: "Welcome to Neon Moon",
       description:
         "A quiet island in the online ocean, where I keep writing, photos, media notes, and small thoughts that grow slowly over time.",
+      scrollLabel: "Scroll down",
     },
     about: {
       eyebrow: "About NEON MOON",
@@ -1096,9 +1105,13 @@ export const translations: Record<Locale, TranslationDictionary> = {
     },
     home: {
       eyebrow: "NEON MOON",
+      poemLine: "春江潮水连海平，海上明月共潮生。",
+      poemSource: "—— 张若虚《春江花月夜》",
+      poemTranslation: "",
       title: "欢迎来到 Neon Moon",
       description:
         "网络海洋里的一座宁静小岛，安静存放我的文章、照片、媒体收藏和一些慢慢生长的想法。",
+      scrollLabel: "向下滚动",
     },
     about: {
       eyebrow: "关于 NEON MOON",
