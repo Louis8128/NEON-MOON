@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Categories",
-  description: "Browse posts by category.",
+  description: "Themes that collect related NEON MOON writing.",
   alternates: {
     canonical: "/blog/categories",
   },

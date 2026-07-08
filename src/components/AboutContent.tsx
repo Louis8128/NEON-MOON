@@ -4,26 +4,24 @@ import type { ReactNode } from "react";
 import Image from "next/image";
 import { useI18n } from "@/components/I18nProvider";
 
-const skillGradientClasses = [
-  "from-[#90e0ef] to-[#48cae4]",
-  "from-[#caf0f8] to-[#00b4d8]",
-  "from-[#48cae4] to-[#0096c7]",
-  "from-[#ade8f4] to-[#0077b6]",
-] as const;
-
 const interestClasses = [
   "border-[#caf0f8]/30 bg-[#caf0f8]/10 text-[#eaf8ff]",
   "border-[#90e0ef]/30 bg-[#90e0ef]/10 text-[#eaf8ff]",
   "border-[#48cae4]/30 bg-[#48cae4]/10 text-[#eaf8ff]",
 ] as const;
 
+const quoteFontStyle = {
+  fontFamily:
+    '"Noto Serif SC", "Source Han Serif SC", "Songti SC", "SimSun", serif',
+};
+
 export default function AboutContent() {
   const { t } = useI18n();
   const about = t.about;
 
   return (
-    <main className="min-h-screen overflow-hidden bg-[#0077b6] text-white">
-      <section className="border-b border-[#caf0f8]/20 bg-[#0077b6]">
+    <main className="min-h-screen overflow-hidden bg-[radial-gradient(circle_at_12%_0%,rgba(202,240,248,0.16),transparent_32%),linear-gradient(180deg,#0077b6_0%,#005f8f_48%,#003b73_100%)] text-white">
+      <section className="border-b border-[#caf0f8]/20 bg-[#0077b6]/25">
         <div className="mx-auto grid max-w-6xl gap-10 px-6 py-20 lg:grid-cols-[1.15fr_0.85fr] lg:items-center lg:py-24">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.32em] text-[#caf0f8]">
@@ -154,7 +152,7 @@ export default function AboutContent() {
         <section className="mt-12">
           <Panel title={about.skillsTitle} description={about.skillsIntro}>
             <div className="grid gap-5 lg:grid-cols-2">
-              {about.skillGroups.map((group, groupIndex) => (
+              {about.skillGroups.map((group) => (
                 <article
                   key={group.title}
                   className="rounded-2xl border border-[#caf0f8]/20 bg-[#0077b6]/35 p-5"
@@ -163,28 +161,19 @@ export default function AboutContent() {
                     {group.title}
                   </h3>
 
-                  <div className="mt-5 space-y-4">
+                  <div className="mt-5 flex flex-wrap gap-2">
                     {group.items.map((skill) => (
-                      <div key={skill.name}>
-                        <div className="flex items-center justify-between gap-4">
-                          <span className="text-sm font-semibold text-white">
-                            {skill.name}
-                          </span>
-                          <span className="text-xs text-[#caf0f8]/80">
-                            {skill.note}
-                          </span>
-                        </div>
-                        <div className="mt-2 h-2.5 overflow-hidden rounded-full bg-[#0077b6]/35">
-                          <div
-                            className={`h-full rounded-full bg-gradient-to-r ${
-                              skillGradientClasses[
-                                groupIndex % skillGradientClasses.length
-                              ]
-                            }`}
-                            style={{ width: `${skill.level}%` }}
-                          />
-                        </div>
-                      </div>
+                      <span
+                        key={skill.name}
+                        className="inline-flex items-center gap-2 rounded-full border border-[#caf0f8]/20 bg-[#023e8a]/35 px-3 py-2 text-sm text-[#eaf8ff]"
+                      >
+                        <span className="font-semibold text-white">
+                          {skill.name}
+                        </span>
+                        <span className="text-xs text-[#caf0f8]/75">
+                          {skill.note}
+                        </span>
+                      </span>
                     ))}
                   </div>
                 </article>
@@ -211,10 +200,16 @@ export default function AboutContent() {
 
           <Panel title={about.quoteTitle}>
             <blockquote className="rounded-2xl border border-[#caf0f8]/20 bg-[#0077b6]/35 p-6">
-              <p className="text-2xl font-semibold leading-10 text-white">
+              <p
+                className="text-2xl font-semibold leading-10 tracking-[0.02em] text-white"
+                style={quoteFontStyle}
+              >
                 &ldquo;{about.quote}&rdquo;
               </p>
-              <footer className="mt-4 text-sm font-semibold text-[#caf0f8]">
+              <footer
+                className="mt-4 text-sm font-normal tracking-[0.02em] text-[#caf0f8]"
+                style={quoteFontStyle}
+              >
                 &mdash; {about.quoteAuthor}
               </footer>
             </blockquote>

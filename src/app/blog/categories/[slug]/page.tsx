@@ -36,7 +36,7 @@ export async function generateMetadata({
   if (!category || category.posts.length === 0) {
     return {
       title: "Categories",
-      description: "Browse posts by category.",
+      description: "Themes that collect related NEON MOON writing.",
       alternates: {
         canonical: "/blog/categories",
       },
@@ -45,7 +45,7 @@ export async function generateMetadata({
 
   return {
     title: category.name,
-    description: `Published posts in ${category.name}.`,
+    description: `NEON MOON writing collected under ${category.name}.`,
     alternates: {
       canonical: `/blog/categories/${slug}`,
     },

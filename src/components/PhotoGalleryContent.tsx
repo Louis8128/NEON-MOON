@@ -26,7 +26,7 @@ export default function PhotoGalleryContent({
   const dateLocale = locale === "zh" ? "zh-CN" : "en-AU";
 
   return (
-    <main className="min-h-screen bg-[#0077b6] px-6 py-20 text-white">
+    <main className="min-h-screen bg-[radial-gradient(circle_at_12%_0%,rgba(202,240,248,0.16),transparent_32%),linear-gradient(180deg,#0077b6_0%,#005f8f_46%,#003b73_100%)] px-6 py-20 text-white">
       <div className="mx-auto max-w-6xl">
         <div className="mb-10">
           <p className="mb-4 text-sm font-medium uppercase tracking-[0.3em] text-[#caf0f8]">

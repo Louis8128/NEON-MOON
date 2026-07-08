@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Archives",
-  description: "Published posts organized by time.",
+  description: "Older NEON MOON writing gathered by month.",
   alternates: {
     canonical: "/blog/archive",
   },

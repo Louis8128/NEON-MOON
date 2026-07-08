@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Tags",
-  description: "Browse posts by tag.",
+  description: "Small threads that connect NEON MOON notes over time.",
   alternates: {
     canonical: "/blog/tags",
   },

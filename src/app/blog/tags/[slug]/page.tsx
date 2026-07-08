@@ -38,7 +38,7 @@ export async function generateMetadata({
   if (!tag || tag.posts.length === 0) {
     return {
       title: "Tags",
-      description: "Browse posts by tag.",
+      description: "Small threads that connect NEON MOON notes over time.",
       alternates: {
         canonical: "/blog/tags",
       },
@@ -47,7 +47,7 @@ export async function generateMetadata({
 
   return {
     title: tag.name,
-    description: `Published posts tagged ${tag.name}.`,
+    description: `NEON MOON notes connected by ${tag.name}.`,
     alternates: {
       canonical: `/blog/tags/${slug}`,
     },

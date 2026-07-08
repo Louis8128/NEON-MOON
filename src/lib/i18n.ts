@@ -494,7 +494,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       eyebrow: "About NEON MOON",
       heroTitle: "NEON MOON",
       heroSubtitle:
-        "A personal archive for writing, photos, media, and small technical experiments.",
+        "A personal archive for writing, photos, media notes, and quiet things I want to keep.",
       avatarLabel: "Avatar image for Louis",
       profileName: "Louis",
       profileLine:
@@ -512,18 +512,18 @@ export const translations: Record<Locale, TranslationDictionary> = {
       introEyebrow: "Personal space",
       introTitle: "A quiet page for a site that is still growing.",
       introParagraphs: [
-        "I am building this site as a long-term personal space for writing, media notes, travel photos, and technical experiments.",
+        "I am building this site as a long-term personal space for writing, media notes, travel photos, and small thoughts that are easier to keep when they have a home.",
         "NEON MOON does not need to be loud. I want it to be useful, personal, and easy to keep improving over time.",
       ],
       educationTitle: "Education",
       educationIntro:
-        "A compact academic timeline without turning the page into a resume wall.",
+        "A compact academic timeline, kept here as part of the larger personal archive.",
       education: [
         {
           school: "University of Queensland",
           program: "Master of Information Technology",
           years: "2026 -",
-          note: "Current graduate study focused on software, systems, and practical full-stack development.",
+          note: "Current graduate study in information technology, with attention to how useful web tools are planned, built, and maintained.",
         },
         {
           school: "McMaster University",
@@ -534,7 +534,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       ],
       skillsTitle: "Skills",
       skillsIntro:
-        "A practical toolkit for building this site. The bars show comfort, not perfection.",
+        "A practical toolkit I use while building and maintaining this site. These are notes, not scores.",
       skillGroups: [
         {
           title: "Frontend",
@@ -552,7 +552,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
             {
               name: "Next.js App Router",
               level: 74,
-              note: "Routes and data",
+              note: "Site structure",
             },
             {
               name: "TypeScript",
@@ -567,27 +567,27 @@ export const translations: Record<Locale, TranslationDictionary> = {
           ],
         },
         {
-          title: "Site systems",
+          title: "Site practice",
           items: [
             {
-              name: "Content systems",
+              name: "Writing pages",
               level: 68,
-              note: "Data-backed pages",
+              note: "Organizing posts",
             },
             {
-              name: "Admin workflows",
+              name: "Private editing",
               level: 66,
-              note: "Private tools",
+              note: "Keeping updates tidy",
             },
             {
-              name: "HttpOnly Cookie auth",
+              name: "Privacy basics",
               level: 62,
-              note: "Admin login",
+              note: "Careful access",
             },
             {
-              name: "Web development",
+              name: "Responsive pages",
               level: 65,
-              note: "Practical flows",
+              note: "Desktop and mobile",
             },
           ],
         },
@@ -597,7 +597,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
             {
               name: "Java",
               level: 62,
-              note: "Coursework",
+              note: "Learning",
             },
             {
               name: "Python",
@@ -632,7 +632,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
             {
               name: "Docker",
               level: 60,
-              note: "Deployment",
+              note: "Deployment learning",
             },
             {
               name: "Oracle Cloud",
@@ -960,14 +960,15 @@ export const translations: Record<Locale, TranslationDictionary> = {
       post: "post",
       posts: "Posts",
       archives: "Archives",
-      archiveDescription: "Published posts organized by time.",
+      archiveDescription:
+        "Older writing gathered by month, like a quiet shelf for the site.",
       categories: "Categories",
-      categoriesDescription: "Browse posts by category.",
+      categoriesDescription: "A few broad themes for finding related posts.",
       tags: "Tags",
-      tagsDescription: "Browse posts by tag.",
+      tagsDescription: "Smaller threads that connect notes across time.",
       category: "Category",
-      categoryDetailDescription: "Published posts in this category.",
-      tagDetailDescription: "Published posts with this tag.",
+      categoryDetailDescription: "Writing collected under this theme.",
+      tagDetailDescription: "Notes connected by this tag.",
       noPostsInCategory: "No posts in this category yet.",
       noPostsWithTag: "No posts with this tag yet.",
       backToCategories: "← Back to Categories",
@@ -1117,7 +1118,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
       eyebrow: "关于 NEON MOON",
       heroTitle: "NEON MOON",
       heroSubtitle:
-        "一个用来存放文章、照片、媒体记录和小型技术实验的个人档案馆。",
+        "一个用来存放文章、照片、媒体记录和安静想法的个人档案馆。",
       avatarLabel: "Louis 的头像",
       profileName: "Louis",
       profileLine:
@@ -1135,17 +1136,17 @@ export const translations: Record<Locale, TranslationDictionary> = {
       introEyebrow: "个人空间",
       introTitle: "一个仍在慢慢生长的安静页面。",
       introParagraphs: [
-        "我希望把这个网站做成一个长期使用的个人空间，用来记录文章、媒体笔记、旅行照片和技术实验。",
+        "我希望把这个网站做成一个长期使用的个人空间，用来记录文章、媒体笔记、旅行照片，以及那些需要一个地方慢慢存放的小想法。",
         "NEON MOON 不需要很夸张。它只要足够有用、足够个人，并且可以随着时间继续改进。",
       ],
       educationTitle: "教育经历",
-      educationIntro: "简洁记录学习背景，不把页面变成过度拥挤的简历墙。",
+      educationIntro: "简洁记录学习背景，把它作为个人档案的一部分保留下来。",
       education: [
         {
           school: "University of Queensland",
           program: "Master of Information Technology",
           years: "2026 -",
-          note: "当前研究生阶段，重点放在软件、系统和实际全栈开发能力上。",
+          note: "当前研究生阶段，学习信息技术，也关注实用网页工具如何被规划、搭建和长期维护。",
         },
         {
           school: "McMaster University",
@@ -1155,7 +1156,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
         },
       ],
       skillsTitle: "技能",
-      skillsIntro: "构建这个网站会用到的实用工具箱。进度条表示熟悉度，不代表满分。",
+      skillsIntro: "构建和维护这个网站会用到的实用工具箱。这里是状态记录，不是能力打分。",
       skillGroups: [
         {
           title: "前端",
@@ -1173,7 +1174,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
             {
               name: "Next.js App Router",
               level: 74,
-              note: "路由与数据",
+              note: "站点结构",
             },
             {
               name: "TypeScript",
@@ -1188,27 +1189,27 @@ export const translations: Record<Locale, TranslationDictionary> = {
           ],
         },
         {
-          title: "网站系统",
+          title: "网站实践",
           items: [
             {
-              name: "内容管理",
+              name: "文章页面",
               level: 68,
-              note: "数据驱动页面",
+              note: "整理写作",
             },
             {
-              name: "后台工作流",
+              name: "私密编辑",
               level: 66,
-              note: "私密工具",
+              note: "保持更新有序",
             },
             {
-              name: "HttpOnly Cookie auth",
+              name: "隐私基础",
               level: 62,
-              note: "后台登录",
+              note: "谨慎访问",
             },
             {
-              name: "网页开发",
+              name: "响应式页面",
               level: 65,
-              note: "实用流程",
+              note: "桌面与移动端",
             },
           ],
         },
@@ -1218,7 +1219,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
             {
               name: "Java",
               level: 62,
-              note: "课程学习",
+              note: "学习中",
             },
             {
               name: "Python",
@@ -1253,7 +1254,7 @@ export const translations: Record<Locale, TranslationDictionary> = {
             {
               name: "Docker",
               level: 60,
-              note: "部署",
+              note: "部署学习中",
             },
             {
               name: "Oracle Cloud",
@@ -1545,14 +1546,15 @@ export const translations: Record<Locale, TranslationDictionary> = {
       post: "篇文章",
       posts: "文章",
       archives: "归档",
-      archiveDescription: "按时间整理已经公开的文章。",
+      archiveDescription:
+        "按月份收起旧文章，像给这个网站留下一层安静的书架。",
       categories: "分类",
-      categoriesDescription: "按分类浏览文章。",
+      categoriesDescription: "用几个较大的主题整理相关的文章。",
       tags: "标签",
-      tagsDescription: "按标签浏览文章。",
+      tagsDescription: "用更细的小线索串起不同时候的记录。",
       category: "分类",
-      categoryDetailDescription: "这个分类下已经公开的文章。",
-      tagDetailDescription: "带有这个标签的公开文章。",
+      categoryDetailDescription: "收在这个主题下的文章。",
+      tagDetailDescription: "由这个标签连接起来的记录。",
       noPostsInCategory: "这个分类下暂时没有公开文章。",
       noPostsWithTag: "这个标签下暂时没有公开文章。",
       backToCategories: "← 返回分类",
