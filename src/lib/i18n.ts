@@ -989,9 +989,9 @@ export const translations: Record<Locale, TranslationDictionary> = {
       eyebrow: "Media",
       collection: "Collection",
       mediaCollection: "Media Collection",
-      title: "Movies, music, books, anime, and games",
+      title: "Media Collection",
       description:
-        "A place to share films, music, books, anime, games, and other works I like, along with short notes on how they felt at the time.",
+        "A slowly arranged personal shelf for films, music, books, anime, games, and the feelings they left behind.",
       categories: {
         all: "All",
         music: "Music",
@@ -1574,8 +1574,9 @@ export const translations: Record<Locale, TranslationDictionary> = {
       eyebrow: "媒体收藏",
       collection: "收藏",
       mediaCollection: "媒体收藏",
-      title: "电影、音乐、书籍、动画和游戏",
-      description: "分享我喜欢的电影、音乐、书籍、动画、游戏和其他作品，也记录一些当时的感受。",
+      title: "我的媒体收藏",
+      description:
+        "一座慢慢整理的私人书架，存放喜欢的电影、音乐、书籍、动画、游戏和一些当时的感受。",
       categories: {
         all: "全部",
         music: "音乐",

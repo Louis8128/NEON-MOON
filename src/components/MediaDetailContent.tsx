@@ -2,7 +2,10 @@
 
 import Link from "next/link";
 import { useI18n } from "@/components/I18nProvider";
-import { type MediaCategory } from "@/components/MediaListContent";
+import {
+  MediaCoverPlaceholder,
+  type MediaCategory,
+} from "@/components/MediaListContent";
 
 export type MediaDetailItem = {
   id: number;
@@ -32,6 +35,10 @@ function getCategoryLabel(
   return labels[categoryKey];
 }
 
+function getRatingLabel(rating: number) {
+  return `${rating} / 10`;
+}
+
 export default function MediaDetailContent({
   mediaItem,
 }: {
@@ -53,24 +60,25 @@ export default function MediaDetailContent({
         <div className="mt-10 grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
           <div className="overflow-hidden rounded-3xl border border-[#caf0f8]/25 bg-[#023e8a]/75 shadow-xl shadow-[#03045e]/20 backdrop-blur">
             {mediaItem.coverUrl ? (
-              <div
-                className="min-h-[420px] bg-cover bg-center"
-                style={{
-                  backgroundImage: `url(${mediaItem.coverUrl})`,
-                }}
-                aria-label={`${mediaItem.title}${t.media.coverImageLabelSuffix}`}
-              />
-            ) : (
-              <div className="flex min-h-[420px] items-center justify-center bg-[#03045e]/65 px-8 text-center">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.35em] text-[#caf0f8]">
-                    {t.media.noCover}
-                  </p>
-                  <p className="mt-4 text-2xl font-bold text-white">
-                    {mediaItem.title}
-                  </p>
-                </div>
+              <div className="overflow-hidden bg-[#03045e]/45">
+                <div
+                  className="min-h-[420px] bg-cover bg-center"
+                  style={{
+                    backgroundImage: `url(${mediaItem.coverUrl})`,
+                  }}
+                  aria-label={`${mediaItem.title}${t.media.coverImageLabelSuffix}`}
+                />
               </div>
+            ) : (
+              <MediaCoverPlaceholder
+                category={mediaItem.category}
+                label={getCategoryLabel(
+                  mediaItem.category,
+                  t.media.categories,
+                )}
+                title={mediaItem.title}
+                variant="detail"
+              />
             )}
           </div>
 
@@ -85,8 +93,8 @@ export default function MediaDetailContent({
               </span>
 
               {mediaItem.rating !== null && (
-                <span className="rounded-full border border-amber-400/40 bg-amber-400/10 px-3 py-1 text-xs font-semibold text-amber-300">
-                  {mediaItem.rating}/10
+                <span className="rounded-full border border-[#caf0f8]/25 bg-[#caf0f8]/[0.08] px-3 py-1 text-xs font-semibold text-[#caf0f8]/80">
+                  {getRatingLabel(mediaItem.rating)}
                 </span>
               )}
             </div>

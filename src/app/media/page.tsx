@@ -9,7 +9,7 @@ import { prisma } from "@/lib/prisma";
 export const metadata: Metadata = {
   title: "Media",
   description:
-    "Films, music, books, anime, games, and other works I like, with short notes from the time.",
+    "A slowly arranged personal shelf for films, music, books, anime, games, and the feelings they left behind.",
   alternates: {
     canonical: "/media",
   },
