@@ -4,13 +4,15 @@ import {
   isProtectedAdminPath,
   verifyAdminSessionCookie,
 } from "@/lib/adminAuth";
+import { getAbsoluteUrl } from "@/lib/site";
 
 function shouldProtectPath(pathname: string) {
   return pathname !== "/admin/login" && isProtectedAdminPath(pathname);
 }
 
 function buildLoginUrl(request: NextRequest) {
-  const loginUrl = new URL("/admin/login", request.url);
+  const loginUrl = new URL(getAbsoluteUrl("/admin/login"));
+
   const nextPath = `${request.nextUrl.pathname}${request.nextUrl.search}`;
 
   loginUrl.searchParams.set("next", nextPath);
@@ -26,6 +28,7 @@ export async function middleware(request: NextRequest) {
   }
 
   const adminSession = request.cookies.get(ADMIN_SESSION_COOKIE_NAME)?.value;
+
   const isAdmin = await verifyAdminSessionCookie(adminSession);
 
   if (isAdmin) {

@@ -8,6 +8,7 @@ import {
   isProductionEnvironment,
   isValidAdminPassword,
 } from "@/lib/adminAuth";
+import { getAbsoluteUrl } from "@/lib/site";
 
 export const runtime = "nodejs";
 
@@ -22,12 +23,9 @@ type LoginRequestBody = {
   next: string;
 };
 
-function buildLoginRedirect(
-  request: NextRequest,
-  error: LoginRedirectError,
-  nextPath: string,
-) {
-  const loginUrl = new URL("/admin/login", request.url);
+function buildLoginRedirect(error: LoginRedirectError, nextPath: string) {
+  const loginUrl = new URL(getAbsoluteUrl("/admin/login"));
+
   loginUrl.searchParams.set("error", error);
   loginUrl.searchParams.set("next", nextPath);
 
@@ -74,17 +72,17 @@ export async function POST(request: NextRequest) {
   try {
     loginBody = await readLoginRequestBody(request);
   } catch {
-    return buildLoginRedirect(request, "invalid-request", "/admin");
+    return buildLoginRedirect("invalid-request", "/admin");
   }
 
   const nextPath = getSafeAdminRedirectPath(loginBody.next);
 
   if (!getExpectedAdminPassword()) {
-    return buildLoginRedirect(request, "missing-password", nextPath);
+    return buildLoginRedirect("missing-password", nextPath);
   }
 
   if (!isValidAdminPassword(loginBody.password)) {
-    return buildLoginRedirect(request, "invalid", nextPath);
+    return buildLoginRedirect("invalid", nextPath);
   }
 
   let cookieValue: string;
@@ -92,10 +90,10 @@ export async function POST(request: NextRequest) {
   try {
     cookieValue = await createAdminSessionCookieValue();
   } catch {
-    return buildLoginRedirect(request, "missing-secret", nextPath);
+    return buildLoginRedirect("missing-secret", nextPath);
   }
 
-  const response = NextResponse.redirect(new URL(nextPath, request.url), {
+  const response = NextResponse.redirect(new URL(getAbsoluteUrl(nextPath)), {
     status: 303,
   });
 
