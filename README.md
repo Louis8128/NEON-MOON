@@ -14,7 +14,13 @@ A personal full-stack website for writing, photography, media collections, and s
 - Responsive desktop and mobile UI
 
 ## Tech Stack
-Next.js · TypeScript · Tailwind CSS · Prisma · MySQL · Docker
+- Next.js
+- TypeScript
+- Tailwind CSS
+- Prisma
+- MySQL
+- Docker
+- Cloudflare
 
 ## Deployment
 Self-hosted on a Raspberry Pi using Docker and Cloudflare Tunnel.
