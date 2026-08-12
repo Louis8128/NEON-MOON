@@ -1,9 +1,8 @@
-# NEON MOON 🌙
+# NEON MOON 
 
-A personal full-stack website for writing, photography,
-media collections, and slowly growing ideas.
+A personal full-stack website for writing, photography, media collections, and slowly growing ideas.
 
-Live: https://neon-moonzeta.com
+**Live site:**: https://neon-moonzeta.com
 
 ## Features
 - Blog with categories, tags and archives
