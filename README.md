@@ -1,36 +1,50 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# NEON MOON 🌙
 
-## Getting Started
+A personal full-stack website for writing, photography,
+media collections, and slowly growing ideas.
 
-First, run the development server:
+Live: https://neon-moonzeta.com
 
-```bash
+## Features
+- Blog with categories, tags and archives
+- Media collection
+- Photo gallery and uploads
+- Search
+- English / 中文
+- Private admin CMS
+- Responsive desktop and mobile UI
+
+## Tech Stack
+Next.js · TypeScript · Tailwind CSS · Prisma · MySQL · Docker
+
+## Deployment
+Self-hosted on a Raspberry Pi using Docker and Cloudflare Tunnel.
+
+Browser
+  ↓
+Cloudflare
+  ↓
+Cloudflare Tunnel
+  ↓
+Raspberry Pi
+  ↓
+Next.js + MySQL
+
+## Local Development
+npm install
+docker compose up -d
+npx prisma migrate deploy
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+See `.env.example` for required environment variables.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Roadmap
+- Music player
+- Analytics
+- Off-site backups
+- Monitoring
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## About
+NEON MOON started as a personal project for practising full-stack
+development beyond coursework. I plan to keep developing it as a
+website that I actually use.
