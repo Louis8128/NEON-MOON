@@ -57,3 +57,10 @@ website that I actually use.
 ## Development Status
 
 NEON-MOON is currently under active development.
+
+Current focus:
+
+- Improving the admin CMS
+- Refining mobile responsiveness
+- Expanding the media collection
+- Improving deployment reliability
