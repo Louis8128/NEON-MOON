@@ -53,3 +53,7 @@ See `.env.example` for required environment variables.
 NEON MOON started as a personal project for practising full-stack
 development beyond coursework. I plan to keep developing it as a
 website that I actually use.
+
+## Development Status
+
+NEON-MOON is currently under active development.
